@@ -1,6 +1,6 @@
 # PCI AI Autonomous Growth OS — Phase 0/1 Specification Set
 
-**Status:** Phase 1 (Software Requirements Specification) — AWAITING APPROVAL
+**Status:** Phase 2 (Architecture) — AWAITING APPROVAL. Phase 1 delivered; five blocking prerequisites still unanswered and carried as explicit assumptions in document 08.
 **Source of truth:** `PCI_AI_Growth_OS.xlsx` (42 worksheets, read in full 18 Aug 2026)
 **Rule:** No application code, schema migrations, frontend, or deployment artefacts are produced until Phase 1 is explicitly approved.
 
@@ -16,6 +16,13 @@
 | 06 | [Software Requirements Specification](06-srs.md) | The full SRS, sections 1–36, with testable requirement IDs |
 | 07 | [Decisions, Risks, Gaps, MVP](07-decisions-risks-mvp.md) | Architecture Decisions Requiring Approval; Automation Risk Register; Workbook Gaps; Open Questions; Recommended MVP; Phase 2 Prerequisites |
 | — | [`phase-1-specification.html`](phase-1-specification.html) | The whole of Phase 1 as a single readable document, in the 17-section order the brief requires (published version of documents 01–07) |
+| 08 | [System & Deployment Architecture](08-system-architecture.md) | Assumptions taken; four containers; 13 modules with ownership and event contracts; the execution gate; named seams; environments, release, backup, observability |
+| 09 | [Agent Architecture](09-agent-architecture.md) | AgentVersion as data; the execution loop; six memory layers; the model gateway; structured output contracts; prompt promotion; four-eyes as a predicate |
+| 10 | [Data Architecture](10-data-architecture.md) | Storage topology; row-level isolation; aggregates and invariants; outbox; the external action ledger; KPI lineage; health checks as constraints; retention |
+| 11 | [Security Architecture](11-security-architecture.md) | Trust zones and egress matrix; seven authorisation layers; secrets; the three-point kill switch; four-layer injection defence; hash-chained audit |
+| 12 | [Integration Architecture](12-integration-architecture.md) | Connector manifest; health state machine; human-assisted channels as first-class; rate limiting; retry taxonomy; MVP connector set |
+| 13 | [Sequences & Workflows](13-sequences-and-workflows.md) | Seven sequence diagrams and three workflow state machines |
+| — | [`phase-2-architecture.html`](phase-2-architecture.html) | The whole of Phase 2 as a single readable document with six architecture figures (published version of documents 08–13) |
 
 ## Requirement ID namespaces
 

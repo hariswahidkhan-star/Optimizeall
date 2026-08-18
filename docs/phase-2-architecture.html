@@ -1,0 +1,1215 @@
+<title>PCI AI Growth OS Phase 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --paper:#F4F6F5;
+  --surface:#FFFFFF;
+  --surface-2:#EDF1EF;
+  --ink:#16211E;
+  --ink-2:#3D4E49;
+  --ink-3:#697A75;
+  --rule:#D5DDDA;
+  --rule-strong:#B6C3BF;
+  --accent:#0F5F52;
+  --accent-soft:#DCEBE7;
+  --warn:#8A6212;
+  --warn-soft:#F5EBD6;
+  --crit:#9B3A2E;
+  --crit-soft:#F6E2DE;
+  --ok:#2C6E49;
+  --ok-soft:#DFEDE4;
+
+  --f-display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --f-body:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --f-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+
+  --nav-w:16.5rem;
+  --measure:70ch;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#0D1412;
+    --surface:#141D1A;
+    --surface-2:#1B2724;
+    --ink:#E3EAE7;
+    --ink-2:#B4C2BE;
+    --ink-3:#849791;
+    --rule:#2A3733;
+    --rule-strong:#3C4B47;
+    --accent:#5BBBA6;
+    --accent-soft:#12332C;
+    --warn:#D9AC5B;
+    --warn-soft:#33290F;
+    --crit:#E28879;
+    --crit-soft:#37201B;
+    --ok:#6FBF8F;
+    --ok-soft:#14301F;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0D1412;
+  --surface:#141D1A;
+  --surface-2:#1B2724;
+  --ink:#E3EAE7;
+  --ink-2:#B4C2BE;
+  --ink-3:#849791;
+  --rule:#2A3733;
+  --rule-strong:#3C4B47;
+  --accent:#5BBBA6;
+  --accent-soft:#12332C;
+  --warn:#D9AC5B;
+  --warn-soft:#33290F;
+  --crit:#E28879;
+  --crit-soft:#37201B;
+  --ok:#6FBF8F;
+  --ok-soft:#14301F;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--f-body);
+  font-size:16.5px;
+  line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:var(--accent);text-underline-offset:.18em;text-decoration-thickness:.06em}
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+
+.skip{position:absolute;left:-9999px;top:0}
+.skip:focus{left:.75rem;top:.75rem;z-index:99;background:var(--surface);color:var(--ink);padding:.5rem .8rem;border:1px solid var(--rule-strong)}
+
+/* ---------- shell ---------- */
+.shell{display:grid;grid-template-columns:var(--nav-w) minmax(0,1fr);gap:0;align-items:start}
+
+/* ---------- nav ---------- */
+.nav{
+  position:sticky;top:0;height:100vh;overflow-y:auto;
+  border-right:1px solid var(--rule);
+  background:var(--surface);
+  padding:1.9rem 1.15rem 3rem 1.5rem;
+  font-family:var(--f-display);
+}
+.brandmark{font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+.brandname{font-size:1.06rem;font-weight:700;line-height:1.25;margin:.45rem 0 .1rem;letter-spacing:-.01em}
+.brandsub{font-size:.78rem;color:var(--ink-3);line-height:1.4}
+.navstatus{
+  margin:1.15rem 0 1.3rem;padding:.5rem .6rem;
+  background:var(--warn-soft);color:var(--warn);
+  font-size:.68rem;letter-spacing:.09em;text-transform:uppercase;font-weight:600;
+  border-left:2px solid currentColor;
+}
+.navlist{display:flex;flex-direction:column;gap:.06rem;margin:0;padding:0;list-style:none}
+.navlist a{
+  display:grid;grid-template-columns:1.5rem 1fr;gap:.4rem;
+  padding:.3rem .35rem;border-radius:2px;
+  font-size:.82rem;line-height:1.32;color:var(--ink-2);text-decoration:none;
+}
+.navlist a:hover{background:var(--surface-2);color:var(--ink)}
+.navlist a .n{font-family:var(--f-mono);font-size:.68rem;color:var(--ink-3);padding-top:.16em;font-variant-numeric:tabular-nums}
+.navlist a[aria-current="true"]{background:var(--accent-soft);color:var(--ink);font-weight:600}
+.navlist a[aria-current="true"] .n{color:var(--accent)}
+.navdiv{height:1px;background:var(--rule);margin:.85rem 0}
+
+/* ---------- main ---------- */
+main{padding:0 clamp(1.1rem,3.4vw,3.4rem) 7rem;min-width:0}
+.inner{max-width:76rem;margin:0 auto}
+.prose{max-width:var(--measure)}
+
+/* masthead */
+.masthead{padding:3.4rem 0 1.6rem;border-bottom:2px solid var(--ink)}
+.eyebrow{font-family:var(--f-display);font-size:.7rem;letter-spacing:.19em;text-transform:uppercase;color:var(--accent);font-weight:600}
+h1{
+  font-family:var(--f-display);font-weight:700;letter-spacing:-.026em;
+  font-size:clamp(2.1rem,5.2vw,3.4rem);line-height:1.03;margin:.55rem 0 .7rem;text-wrap:balance;
+}
+.standfirst{font-size:1.11rem;line-height:1.55;color:var(--ink-2);max-width:56ch;margin:0}
+
+/* doc control block */
+.control{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(11rem,1fr));
+  gap:0;border:1px solid var(--rule-strong);margin:1.9rem 0 0;background:var(--surface);
+}
+.control div{padding:.72rem .85rem;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.control div:last-child{border-right:none}
+.control dt{font-family:var(--f-display);font-size:.63rem;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);font-weight:600;margin:0 0 .25rem}
+.control dd{margin:0;font-family:var(--f-display);font-size:.9rem;font-weight:500;line-height:1.3}
+
+/* sections */
+section{padding-top:3.6rem;scroll-margin-top:1rem}
+.sechead{display:flex;align-items:baseline;gap:.8rem;border-top:1px solid var(--rule-strong);padding-top:.75rem;margin-bottom:1.15rem}
+.secnum{font-family:var(--f-mono);font-size:.78rem;color:var(--accent);font-weight:600;font-variant-numeric:tabular-nums;padding-top:.35em}
+h2{font-family:var(--f-display);font-weight:700;letter-spacing:-.018em;font-size:clamp(1.42rem,2.7vw,1.92rem);line-height:1.14;margin:0;text-wrap:balance}
+h3{font-family:var(--f-display);font-weight:600;font-size:1.08rem;letter-spacing:-.005em;margin:2.1rem 0 .55rem;text-wrap:balance}
+h4{font-family:var(--f-display);font-weight:600;font-size:.72rem;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);margin:1.7rem 0 .5rem}
+p{margin:0 0 .95rem}
+ul,ol{margin:0 0 1rem;padding-left:1.15rem}
+li{margin-bottom:.32rem}
+strong{font-weight:600}
+em{font-style:italic}
+
+/* callouts */
+.note{
+  border-left:3px solid var(--accent);background:var(--surface);
+  padding:.9rem 1.1rem;margin:1.3rem 0;max-width:var(--measure);
+}
+.note.warn{border-left-color:var(--warn);background:var(--warn-soft)}
+.note.crit{border-left-color:var(--crit);background:var(--crit-soft)}
+.note p:last-child{margin-bottom:0}
+.note .lbl{font-family:var(--f-display);font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--accent);display:block;margin-bottom:.35rem}
+.note.warn .lbl{color:var(--warn)}
+.note.crit .lbl{color:var(--crit)}
+
+/* tables */
+.scroller{overflow-x:auto;margin:1.15rem 0 1.5rem;border:1px solid var(--rule);background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-family:var(--f-display);font-size:.83rem;line-height:1.42}
+caption{text-align:left;font-family:var(--f-display);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);font-weight:600;padding:.7rem .85rem .1rem}
+th,td{padding:.52rem .8rem;text-align:left;vertical-align:top;border-bottom:1px solid var(--rule)}
+thead th{
+  font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:600;
+  background:var(--surface-2);border-bottom:1px solid var(--rule-strong);white-space:nowrap;position:sticky;top:0;
+}
+tbody tr:last-child td{border-bottom:none}
+td.num,th.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+.rid{font-family:var(--f-mono);font-size:.76rem;font-weight:600;color:var(--accent);white-space:nowrap;font-variant-numeric:tabular-nums}
+code{font-family:var(--f-mono);font-size:.86em;background:var(--surface-2);padding:.08em .32em;border-radius:2px}
+
+/* pills */
+.pill{
+  display:inline-block;font-family:var(--f-display);font-size:.65rem;font-weight:600;
+  letter-spacing:.07em;text-transform:uppercase;padding:.14rem .44rem;white-space:nowrap;border-radius:2px;
+}
+.p-ok{background:var(--ok-soft);color:var(--ok)}
+.p-warn{background:var(--warn-soft);color:var(--warn)}
+.p-crit{background:var(--crit-soft);color:var(--crit)}
+.p-neut{background:var(--surface-2);color:var(--ink-2)}
+.p-acc{background:var(--accent-soft);color:var(--accent)}
+
+/* severity stripe rows */
+tr.sev-h td:first-child{box-shadow:inset 3px 0 0 var(--crit)}
+tr.sev-m td:first-child{box-shadow:inset 3px 0 0 var(--warn)}
+tr.sev-l td:first-child{box-shadow:inset 3px 0 0 var(--ok)}
+tr.sev-x td:first-child{box-shadow:inset 3px 0 0 var(--ink)}
+
+/* stat strip */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(8.2rem,1fr));gap:0;border:1px solid var(--rule-strong);margin:1.4rem 0 1.8rem;background:var(--surface)}
+.stat{padding:.9rem .95rem;border-right:1px solid var(--rule)}
+.stat:last-child{border-right:none}
+.stat b{display:block;font-family:var(--f-display);font-weight:700;font-size:1.55rem;letter-spacing:-.02em;line-height:1;font-variant-numeric:tabular-nums}
+.stat span{display:block;font-family:var(--f-display);font-size:.67rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:600;margin-top:.4rem;line-height:1.3}
+
+/* decision cards */
+.dec{border:1px solid var(--rule);background:var(--surface);margin:1rem 0;padding:1rem 1.15rem}
+.dec .id{font-family:var(--f-mono);font-size:.72rem;font-weight:600;color:var(--accent)}
+.dec h3{margin:.25rem 0 .7rem;font-size:1.02rem}
+.dec dl{display:grid;grid-template-columns:7.2rem 1fr;gap:.3rem .9rem;margin:0;font-family:var(--f-display);font-size:.85rem;line-height:1.5}
+.dec dt{font-size:.65rem;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3);font-weight:600;padding-top:.28em}
+.dec dd{margin:0}
+
+/* agent grid */
+.agents{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);margin:1.1rem 0 1.6rem}
+.agent{background:var(--surface);padding:.8rem .9rem}
+.agent .code{font-family:var(--f-mono);font-size:.72rem;font-weight:600;color:var(--accent)}
+.agent .nm{font-family:var(--f-display);font-weight:600;font-size:.94rem;margin:.15rem 0 .3rem;line-height:1.25}
+.agent p{font-size:.82rem;font-family:var(--f-display);color:var(--ink-2);margin:0;line-height:1.45}
+.divhead{font-family:var(--f-display);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:700;margin:1.5rem 0 .5rem}
+
+footer{margin-top:4.5rem;border-top:2px solid var(--ink);padding:1.5rem 0 0;font-family:var(--f-display);font-size:.83rem;color:var(--ink-3);max-width:var(--measure)}
+
+@media (max-width:900px){
+  .shell{grid-template-columns:1fr}
+  .nav{position:static;height:auto;border-right:none;border-bottom:1px solid var(--rule-strong);padding:1.3rem 1.2rem}
+  .navlist{display:grid;grid-template-columns:repeat(auto-fit,minmax(13rem,1fr));gap:.05rem}
+  thead th{position:static}
+  body{font-size:16px}
+}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+html{scroll-behavior:smooth}
+</style>
+<style>
+figure{margin:1.6rem 0 1.9rem;max-width:100%}
+figure svg{display:block;width:100%;max-width:100%;height:auto;color:var(--ink-2)}
+figcaption{font-family:var(--f-display);font-size:.79rem;line-height:1.45;color:var(--ink-3);margin-top:.6rem;max-width:62ch}
+figcaption b{color:var(--ink-2);font-weight:600}
+.figbox{border:1px solid var(--rule);background:var(--surface);padding:1.1rem 1.2rem .9rem}
+svg text{font-family:"Archivo","Helvetica Neue",Arial,sans-serif}
+.trace{border:1px solid var(--rule);background:var(--surface);margin:1.2rem 0 1.6rem;overflow-x:auto}
+.trace ol{list-style:none;margin:0;padding:.65rem 0;counter-reset:t}
+.trace li{
+  display:grid;grid-template-columns:2rem 8.6rem 1fr;gap:.7rem;
+  padding:.2rem 1rem;font-family:var(--f-display);font-size:.84rem;line-height:1.45;counter-increment:t;
+}
+.trace li::before{content:counter(t);font-family:var(--f-mono);font-size:.7rem;color:var(--ink-3);text-align:right;padding-top:.2em;font-variant-numeric:tabular-nums}
+.trace .who{font-family:var(--f-mono);font-size:.73rem;color:var(--accent);font-weight:600;padding-top:.18em;white-space:nowrap}
+.trace li.stop{background:var(--warn-soft)}
+.trace li.stop .who{color:var(--warn)}
+.trace li.deny{background:var(--crit-soft)}
+.trace li.deny .who{color:var(--crit)}
+.trace .cap{font-family:var(--f-display);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);font-weight:600;padding:.7rem 1rem .1rem;border-bottom:1px solid var(--rule)}
+.codeblk{border:1px solid var(--rule);background:var(--surface-2);padding:.85rem 1rem;overflow-x:auto;margin:1.1rem 0 1.5rem}
+.codeblk pre{margin:0;font-family:var(--f-mono);font-size:.78rem;line-height:1.55;white-space:pre}
+</style>
+
+<a class="skip" href="#main">Skip to content</a>
+<div class="shell">
+
+<nav class="nav" aria-label="Architecture contents">
+  <div class="brandmark">PCI AI</div>
+  <div class="brandname">Autonomous Growth OS</div>
+  <div class="brandsub">Phase 2 — System Architecture</div>
+  <div class="navstatus">Awaiting approval</div>
+  <ul class="navlist">
+    <li><a href="#s0"><span class="n">00</span><span>Assumptions Taken</span></a></li>
+    <li><a href="#s1"><span class="n">01</span><span>System Architecture</span></a></li>
+    <li><a href="#s2"><span class="n">02</span><span>Service Boundaries</span></a></li>
+    <li><a href="#s3"><span class="n">03</span><span>The Execution Gate</span></a></li>
+    <li><a href="#s4"><span class="n">04</span><span>Agent Architecture</span></a></li>
+    <li><a href="#s5"><span class="n">05</span><span>Data Architecture</span></a></li>
+    <li><a href="#s6"><span class="n">06</span><span>Security Architecture</span></a></li>
+    <li><a href="#s7"><span class="n">07</span><span>Integration Architecture</span></a></li>
+    <li><a href="#s8"><span class="n">08</span><span>Sequence Diagrams</span></a></li>
+    <li><a href="#s9"><span class="n">09</span><span>Workflow Diagrams</span></a></li>
+    <li><a href="#s10"><span class="n">10</span><span>Deployment Architecture</span></a></li>
+  </ul>
+  <div class="navdiv"></div>
+  <ul class="navlist">
+    <li><a href="#s11"><span class="n">A</span><span>What Phase 2 Does Not Decide</span></a></li>
+    <li><a href="#s12"><span class="n">B</span><span>Phase 3 Prerequisites</span></a></li>
+  </ul>
+</nav>
+
+<main id="main">
+<div class="inner">
+
+<header class="masthead">
+  <div class="eyebrow">Phase 2 deliverable · Architecture only</div>
+  <h1>System Architecture</h1>
+  <p class="standfirst">How the governed AI workforce specified in Phase 1 is actually built: four services, thirteen modules, one execution gate, and a rule that a model never touches an external system.</p>
+  <dl class="control">
+    <div><dt>Status</dt><dd>Phase 2 — awaiting approval</dd></div>
+    <div><dt>Builds on</dt><dd>Phase 1 SRS, ~300 requirements</dd></div>
+    <div><dt>Deployable services</dt><dd>4</dd></div>
+    <div><dt>Platform modules</dt><dd>13</dd></div>
+    <div><dt>Blocking answers received</dt><dd>0 of 5 — assumptions taken</dd></div>
+    <div><dt>Date</dt><dd>18 August 2026</dd></div>
+  </dl>
+</header>
+
+<section id="s0">
+  <div class="sechead"><span class="secnum">00</span><h2>Assumptions Taken</h2></div>
+  <div class="prose">
+    <p>Phase 1 named five blocking prerequisites. None has been answered. Rather than stop with nothing delivered, each is carried as an explicit assumption with its design impact recorded — so nothing here has to be re-derived when the answers arrive.</p>
+  </div>
+  <div class="scroller"><table>
+    <thead><tr><th>Prereq</th><th>Assumption taken</th><th>What changes if the answer differs</th></tr></thead>
+    <tbody>
+      <tr><td class="rid">P2-01<br>Team language</td><td><strong>A-01</strong> Platform and workers in .NET 9; agent runtime in Python 3.12 / FastAPI</td><td><strong>Nothing structural.</strong> Boundaries, contracts, data model, zones and every figure here are language-neutral. Python-end-to-end is a stack substitution inside fixed boundaries</td></tr>
+      <tr><td class="rid">P2-02<br>The 14 decisions</td><td><strong>A-02</strong> All Phase 1 recommendations taken as approved</td><td>Each is isolated behind a named seam. Only reversing the workflow engine touches code shape, and it is confined to one port</td></tr>
+      <tr><td class="rid">P2-03<br>Website / CMS</td><td><strong>A-03</strong> A CMS with a REST API and canonical control; WordPress REST as reference</td><td>The publisher port is unchanged; only the adapter changes. If the CMS has <em>no</em> write API, the content lane falls back to the human-assisted channel already built for outreach — supported, but the MVP claim weakens</td></tr>
+      <tr><td class="rid">P2-04<br>Named owner</td><td><strong>A-04</strong> A single Owner principal; approvals route to Owner, Manager as delegate</td><td>Configuration only</td></tr>
+      <tr><td class="rid">P2-05<br>Region / residency</td><td><strong>A-05</strong> Single EU/UK region, all personal data in-region</td><td><strong>The one that bites.</strong> A Gulf data boundary makes residency a data property, not a deployment property — org-level routing and provider eligibility by region. Cheaper before there is data than after</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="s1">
+  <div class="sechead"><span class="secnum">01</span><h2>System Architecture</h2></div>
+  <div class="prose">
+    <p>Phase 1 committed to a philosophy: deterministic software owns identity, permissions, schedules, state, budgets, approvals, integrations and audit; AI owns reasoning, research, drafting, classification and bounded recommendation. That philosophy survives contact with an implementation only if one structural decision is made and never softened.</p>
+  </div>
+
+  <div class="note">
+    <span class="lbl">The rule everything else follows from</span>
+    <p><strong>The agent runtime has no path to any external system and never holds a credential.</strong> An agent emits a structured tool request; the platform validates, authorises, policy-checks, approval-checks, rate-limits, deduplicates, executes and audits it. The model proposes; the platform disposes.</p>
+    <p>If this is ever relaxed, every control specified in Phase 1 becomes unenforceable — a model that can call an external API directly bypasses all of them at once.</p>
+  </div>
+
+  <figure class="figbox">
+    <svg viewBox="0 0 960 470" role="img" aria-label="Four services across five trust zones. The agent runtime reaches only model providers; connector calls to external business systems originate solely from the worker process, and no route exists from the agent runtime to external business APIs.">
+      <defs>
+        <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,1 L9,5 L0,9 z" fill="currentColor"/>
+        </marker>
+        <marker id="arA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,1 L9,5 L0,9 z" style="fill:var(--accent)"/>
+        </marker>
+      </defs>
+
+      <!-- data zone band -->
+      <rect x="8" y="340" width="944" height="78" fill="none" stroke="currentColor" stroke-opacity=".28" stroke-dasharray="3 4"/>
+      <text x="16" y="334" font-size="10" fill="currentColor" fill-opacity=".62" letter-spacing="1.2">Z4 · DATA — NOTHING OUTBOUND</text>
+
+      <!-- external zone label -->
+      <text x="944" y="140" font-size="10" text-anchor="end" fill="currentColor" fill-opacity=".62" letter-spacing="1.2">Z5 · EXTERNAL</text>
+
+      <!-- agent runtime zone -->
+      <rect x="425" y="236" width="170" height="74" fill="none" style="stroke:var(--accent)" stroke-opacity=".55" stroke-dasharray="4 4"/>
+      <text x="510" y="326" font-size="10" text-anchor="middle" style="fill:var(--accent)" letter-spacing=".8">MODEL EGRESS ONLY</text>
+
+      <!-- boxes -->
+      <rect x="20"  y="56"  width="130" height="46" fill="none" stroke="currentColor"/>
+      <text x="85"  y="78"  font-size="12" text-anchor="middle" fill="currentColor">Browser</text>
+      <text x="85"  y="93"  font-size="10" text-anchor="middle" fill="currentColor" fill-opacity=".62">Z0</text>
+
+      <rect x="230" y="56"  width="130" height="46" fill="none" stroke="currentColor"/>
+      <text x="295" y="78"  font-size="12" text-anchor="middle" fill="currentColor">web</text>
+      <text x="295" y="93"  font-size="10" text-anchor="middle" fill="currentColor" fill-opacity=".62">Next.js</text>
+
+      <rect x="230" y="148" width="130" height="46" fill="none" stroke="currentColor" stroke-width="2"/>
+      <text x="295" y="170" font-size="12" text-anchor="middle" fill="currentColor">api</text>
+      <text x="295" y="185" font-size="10" text-anchor="middle" fill="currentColor" fill-opacity=".62">platform core · 13 modules</text>
+
+      <rect x="440" y="148" width="140" height="46" fill="none" stroke="currentColor" stroke-width="2"/>
+      <text x="510" y="170" font-size="12" text-anchor="middle" fill="currentColor">worker</text>
+      <text x="510" y="185" font-size="10" text-anchor="middle" fill="currentColor" fill-opacity=".62">workflows + connectors</text>
+
+      <rect x="680" y="148" width="250" height="46" fill="none" stroke="currentColor"/>
+      <text x="805" y="170" font-size="12" text-anchor="middle" fill="currentColor">External business APIs</text>
+      <text x="805" y="185" font-size="10" text-anchor="middle" fill="currentColor" fill-opacity=".62">CMS · analytics · mail · CRM</text>
+
+      <rect x="440" y="250" width="140" height="46" fill="none" style="stroke:var(--accent)" stroke-width="2"/>
+      <text x="510" y="272" font-size="12" text-anchor="middle" fill="currentColor">agent-runtime</text>
+      <text x="510" y="287" font-size="10" text-anchor="middle" fill="currentColor" fill-opacity=".62">agents · gateway · retrieval</text>
+
+      <rect x="680" y="250" width="250" height="46" fill="none" stroke="currentColor"/>
+      <text x="805" y="278" font-size="12" text-anchor="middle" fill="currentColor">Model providers</text>
+
+      <rect x="20"  y="356" width="170" height="46" fill="none" stroke="currentColor"/>
+      <text x="105" y="384" font-size="11" text-anchor="middle" fill="currentColor">PostgreSQL + pgvector</text>
+      <rect x="210" y="356" width="140" height="46" fill="none" stroke="currentColor"/>
+      <text x="280" y="384" font-size="11" text-anchor="middle" fill="currentColor">Redis</text>
+      <rect x="370" y="356" width="140" height="46" fill="none" stroke="currentColor"/>
+      <text x="440" y="384" font-size="11" text-anchor="middle" fill="currentColor">Temporal</text>
+      <rect x="530" y="356" width="160" height="46" fill="none" stroke="currentColor"/>
+      <text x="610" y="384" font-size="11" text-anchor="middle" fill="currentColor">Object store</text>
+      <rect x="710" y="356" width="140" height="46" fill="none" stroke="currentColor"/>
+      <text x="780" y="384" font-size="11" text-anchor="middle" fill="currentColor">Vault</text>
+
+      <!-- arrows -->
+      <line x1="152" y1="79" x2="226" y2="79" stroke="currentColor" marker-end="url(#ar)"/>
+      <text x="189" y="71" font-size="10" text-anchor="middle" fill="currentColor" fill-opacity=".72">HTTPS</text>
+
+      <line x1="295" y1="104" x2="295" y2="144" stroke="currentColor" marker-end="url(#ar)"/>
+      <text x="303" y="128" font-size="10" fill="currentColor" fill-opacity=".72">server-side calls</text>
+
+      <line x1="362" y1="171" x2="436" y2="171" stroke="currentColor" marker-end="url(#ar)"/>
+      <text x="399" y="163" font-size="10" text-anchor="middle" fill="currentColor" fill-opacity=".72">workflow tasks</text>
+
+      <line x1="582" y1="171" x2="676" y2="171" stroke="currentColor" marker-end="url(#ar)"/>
+      <text x="629" y="163" font-size="10" text-anchor="middle" fill="currentColor" fill-opacity=".72">connector calls</text>
+      <text x="629" y="188" font-size="10" text-anchor="middle" fill="currentColor" fill-opacity=".62">allow-listed hosts</text>
+
+      <line x1="510" y1="196" x2="510" y2="246" stroke="currentColor" marker-end="url(#ar)"/>
+      <text x="518" y="222" font-size="10" fill="currentColor" fill-opacity=".72">RunAgent</text>
+
+      <line x1="582" y1="273" x2="676" y2="273" style="stroke:var(--accent)" marker-end="url(#arA)"/>
+      <text x="629" y="292" font-size="10" text-anchor="middle" style="fill:var(--accent)">model calls only</text>
+
+      <!-- forbidden edge -->
+      <line x1="588" y1="252" x2="672" y2="200" stroke="currentColor" stroke-opacity=".45" stroke-dasharray="4 4"/>
+      <line x1="623" y1="217" x2="637" y2="231" stroke="currentColor" stroke-width="2"/>
+      <line x1="637" y1="217" x2="623" y2="231" stroke="currentColor" stroke-width="2"/>
+      <text x="630" y="245" font-size="10" text-anchor="middle" fill="currentColor" fill-opacity=".72">no route</text>
+
+      <line x1="295" y1="196" x2="295" y2="352" stroke="currentColor" marker-end="url(#ar)"/>
+      <text x="303" y="300" font-size="10" fill="currentColor" fill-opacity=".62">reads / writes</text>
+
+      <polyline points="450,196 410,222 410,352" fill="none" stroke="currentColor" marker-end="url(#ar)"/>
+    </svg>
+    <figcaption><b>Figure 1 — Four services, five trust zones.</b> The crossed edge is the point: <code>agent-runtime</code> has no network route to any business system, enforced by network policy rather than by discipline. It processes untrusted text as its normal job — researched pages, uploaded documents, pasted replies — so an injected instruction can at most produce a tool request, which then meets the gate in Figure 2. Connector execution lives in <code>worker</code>, which is also the only process that ever resolves a credential.</figcaption>
+  </figure>
+
+  <div class="scroller"><table>
+    <caption>The four deployables</caption>
+    <thead><tr><th>Container</th><th>Responsibility</th><th>Language (A-01)</th><th>Egress permitted</th></tr></thead>
+    <tbody>
+      <tr><td><strong>web</strong></td><td>Next.js App Router UI; server components render from the API, no direct database access</td><td>TypeScript</td><td><code>api</code> only</td></tr>
+      <tr><td><strong>api</strong></td><td>Platform core: 13 modules, policy engine, approval engine, execution gate, audit log</td><td>.NET 9</td><td>data zone, <code>temporal</code>, <code>agent-runtime</code></td></tr>
+      <tr><td><strong>worker</strong></td><td>Temporal workflow and activity workers; <strong>connector execution</strong></td><td>.NET 9</td><td>data zone, <strong>allow-listed external hosts</strong></td></tr>
+      <tr><td><strong>agent-runtime</strong></td><td>Agent execution loop, model gateway, retrieval, evaluation harness</td><td>Python 3.12</td><td><strong>model providers only</strong></td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="s2">
+  <div class="sechead"><span class="secnum">02</span><h2>Service Boundaries</h2></div>
+  <div class="prose">
+    <p>Five rules make the platform core a modular monolith rather than a large namespace. Break any of them and it becomes a distributed system with none of the benefits and all of the costs.</p>
+    <ol>
+      <li>A module owns its own database schema. <strong>No module reads another module's tables</strong> — ever, including in reports.</li>
+      <li>Synchronous cross-module calls go through a published application-service interface, never a repository.</li>
+      <li>Asynchronous communication is a domain event via the transactional outbox. Consumers are idempotent.</li>
+      <li>A module's public surface is its interface, its events, and the tools it exposes to the gate. Everything else is internal.</li>
+      <li>Any module can be extracted into its own service by replacing rule 2 with a network call and rule 3 with a broker — and nothing else changes.</li>
+    </ol>
+  </div>
+  <div class="scroller"><table>
+    <thead><tr><th class="num">#</th><th>Module</th><th>Owns</th><th>Publishes</th><th>Exposes as tools</th></tr></thead>
+    <tbody>
+      <tr><td class="num">1</td><td><code>identity</code></td><td>Organisations, users, roles, permissions, agent principals, service accounts</td><td>PrincipalCreated, GrantChanged</td><td>—</td></tr>
+      <tr><td class="num">2</td><td><code>config</code></td><td>Settings, targets, brands, objectives + value ranks, enumerations, flags, business calendar, kill switch</td><td>ConfigChanged, KillSwitchToggled</td><td>get_config, get_calendar</td></tr>
+      <tr><td class="num">3</td><td><code>worksurface</code></td><td>Goals, campaigns + briefs, tasks, queues, priority rules</td><td>TaskCreated, TaskCompleted, TaskFailed</td><td>get_campaign_brief, create_task</td></tr>
+      <tr><td class="num">4</td><td><code>policy</code></td><td>Policy engine, 15 compliance checks, attestations, suppression, consent, frequency caps</td><td>PolicyViolationRaised, SuppressionAdded</td><td>check_suppression, evaluate_policy</td></tr>
+      <tr><td class="num">5</td><td><code>approval</code></td><td>Approval items, decisions, expiry timers, four-eyes state, feedback, emergency stop</td><td>ApprovalRequested, ApprovalGranted, ApprovalExpired</td><td>create_approval_request</td></tr>
+      <tr><td class="num">6</td><td><code>content</code></td><td>Content items + versions, article briefs, schedules, channel policies, similarity index</td><td>DraftReady, QARejected, ContentPublished</td><td>get_brief, create_content_draft, check_similarity</td></tr>
+      <tr><td class="num">7</td><td><code>pipeline</code></td><td>Accounts, contacts, leads, interactions, outreach items, partnerships, community actions, link prospects</td><td>LeadQualified, OutreachPrepared</td><td>search_leads, create_lead, create_outreach_item</td></tr>
+      <tr><td class="num">8</td><td><code>search</code></td><td>SEO keywords, clusters, opportunities, answer-engine audits, verification expiry</td><td>SeoOpportunityFound, VerificationExpired</td><td>get_keywords, get_cluster_health</td></tr>
+      <tr><td class="num">9</td><td><code>insight</code></td><td>KPI definitions + thresholds, observations, lineage, reports, experiments</td><td>KpiThresholdBreached, ReportPublished</td><td>get_kpi_data, get_report</td></tr>
+      <tr><td class="num">10</td><td><code>ledger</code></td><td>Budgets, cost lines, model-execution rollups, ROI</td><td>BudgetThresholdReached</td><td>get_budget_state</td></tr>
+      <tr><td class="num">11</td><td><code>knowledge</code></td><td>Documents, versions, chunk metadata + ACLs, workbook imports and diffs</td><td>DocumentVersioned, ImportProposed</td><td>search_company_knowledge</td></tr>
+      <tr><td class="num">12</td><td><code>integration</code></td><td>Connector registry, credential references, health, rate limits, webhooks, external action ledger, human send queue</td><td>IntegrationFailed, HumanActionConfirmed</td><td><em>all write tools, via the gate</em></td></tr>
+      <tr><td class="num">13</td><td><code>audit</code></td><td>Audit event chain, error events, notifications</td><td>AgentFailed, SecurityAlertRaised</td><td>—</td></tr>
+    </tbody>
+  </table></div>
+  <p class="prose"><strong>Deliberately not modules:</strong> “reporting” is a read model over <code>insight</code>; “dashboard” is UI over read models; “LinkedIn” is a connector, not a domain. Naming a channel as a module is how estates end up with thirteen half-implemented copies of the same publishing logic.</p>
+
+  <h3>Named seams</h3>
+  <p class="prose">Where the architecture is designed to be changed later without redesign — which is what makes the unanswered decisions survivable.</p>
+  <div class="scroller"><table>
+    <thead><tr><th>Seam</th><th>Isolates</th></tr></thead>
+    <tbody>
+      <tr><td><code>IWorkflowHost</code></td><td>The workflow engine choice. Swapping Temporal for a job runner touches this port and the worker host, nothing else</td></tr>
+      <tr><td><code>IModelProvider</code></td><td>Provider choice. Providers are configuration keyed on task class</td></tr>
+      <tr><td><code>ICmsPublisher</code></td><td>The unknown CMS (A-03)</td></tr>
+      <tr><td><code>ICrmConnector</code></td><td>The unchosen CRM</td></tr>
+      <tr><td><code>ISendChannel</code></td><td>Unifies API-sent and human-sent channels — see §07</td></tr>
+      <tr><td><code>IKnowledgeIndex</code></td><td>pgvector today, a dedicated store later</td></tr>
+      <tr><td>Module → service</td><td>Extraction of any module; <code>insight</code> is the first candidate</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="s3">
+  <div class="sechead"><span class="secnum">03</span><h2>The Execution Gate</h2></div>
+  <div class="prose">
+    <p>Every external effect in the system — publishing a post, sending an approved email, writing to the CRM, queueing an outreach item for a person — passes through one pipeline. There is no second path, and building one would be the single change that invalidates this architecture.</p>
+  </div>
+
+  <figure class="figbox">
+    <svg viewBox="0 0 720 570" role="img" aria-label="A ten-stage execution gate. Every tool request passes schema validation, tool grant, scope binding, policy, approval, kill switch, rate limit, idempotency reservation, connector execution and audit, with a named failure outcome branching from each stage.">
+      <defs>
+        <marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,1 L9,5 L0,9 z" fill="currentColor"/>
+        </marker>
+      </defs>
+
+      <text x="40" y="20" font-size="10" fill="currentColor" fill-opacity=".62" letter-spacing="1.2">TOOL REQUEST FROM AGENT-RUNTIME</text>
+
+      <rect x="40" y="30"  width="280" height="40" fill="none" stroke="currentColor"/><text x="56" y="55" font-size="12" fill="currentColor">1 · Schema validation</text>
+      <rect x="40" y="80"  width="280" height="40" fill="none" stroke="currentColor"/><text x="56" y="105" font-size="12" fill="currentColor">2 · Tool grant</text>
+      <rect x="40" y="130" width="280" height="40" fill="none" style="stroke:var(--accent)" stroke-width="2"/><text x="56" y="155" font-size="12" fill="currentColor">3 · Scope binding</text>
+      <rect x="40" y="180" width="280" height="40" fill="none" stroke="currentColor"/><text x="56" y="205" font-size="12" fill="currentColor">4 · Policy engine</text>
+      <rect x="40" y="230" width="280" height="40" fill="none" stroke="currentColor"/><text x="56" y="255" font-size="12" fill="currentColor">5 · Approval check</text>
+      <rect x="40" y="280" width="280" height="40" fill="none" stroke="currentColor"/><text x="56" y="305" font-size="12" fill="currentColor">6 · Kill switch</text>
+      <rect x="40" y="330" width="280" height="40" fill="none" stroke="currentColor"/><text x="56" y="355" font-size="12" fill="currentColor">7 · Rate limit &amp; health</text>
+      <rect x="40" y="380" width="280" height="40" fill="none" style="stroke:var(--accent)" stroke-width="2"/><text x="56" y="405" font-size="12" fill="currentColor">8 · Idempotency reservation</text>
+      <rect x="40" y="430" width="280" height="40" fill="none" stroke="currentColor"/><text x="56" y="449" font-size="12" fill="currentColor">9 · Connector execution</text>
+      <text x="56" y="463" font-size="10" style="fill:var(--accent)">credentials resolved here, never before</text>
+      <rect x="40" y="490" width="280" height="40" fill="none" stroke="currentColor"/><text x="56" y="515" font-size="12" fill="currentColor">10 · Audit + event + result</text>
+
+      <line x1="180" y1="70"  x2="180" y2="78"  stroke="currentColor" marker-end="url(#ar2)"/>
+      <line x1="180" y1="120" x2="180" y2="128" stroke="currentColor" marker-end="url(#ar2)"/>
+      <line x1="180" y1="170" x2="180" y2="178" stroke="currentColor" marker-end="url(#ar2)"/>
+      <line x1="180" y1="220" x2="180" y2="228" stroke="currentColor" marker-end="url(#ar2)"/>
+      <line x1="180" y1="270" x2="180" y2="278" stroke="currentColor" marker-end="url(#ar2)"/>
+      <line x1="180" y1="320" x2="180" y2="328" stroke="currentColor" marker-end="url(#ar2)"/>
+      <line x1="180" y1="370" x2="180" y2="378" stroke="currentColor" marker-end="url(#ar2)"/>
+      <line x1="180" y1="420" x2="180" y2="428" stroke="currentColor" marker-end="url(#ar2)"/>
+      <line x1="180" y1="470" x2="180" y2="488" stroke="currentColor" marker-end="url(#ar2)"/>
+
+      <line x1="322" y1="50"  x2="350" y2="50"  stroke="currentColor" stroke-opacity=".6" marker-end="url(#ar2)"/><text x="356" y="54"  font-size="11" fill="currentColor" fill-opacity=".78">regenerate ×2 → escalate</text>
+      <line x1="322" y1="100" x2="350" y2="100" stroke="currentColor" stroke-opacity=".6" marker-end="url(#ar2)"/><text x="356" y="104" font-size="11" fill="currentColor" fill-opacity=".78">deny → audit + security alert</text>
+      <line x1="322" y1="150" x2="350" y2="150" stroke="currentColor" stroke-opacity=".6" marker-end="url(#ar2)"/><text x="356" y="154" font-size="11" fill="currentColor" fill-opacity=".78">out of scope → deny + alert</text>
+      <line x1="322" y1="200" x2="350" y2="200" stroke="currentColor" stroke-opacity=".6" marker-end="url(#ar2)"/><text x="356" y="204" font-size="11" fill="currentColor" fill-opacity=".78">deny → policy violation</text>
+      <line x1="322" y1="250" x2="350" y2="250" stroke="currentColor" stroke-opacity=".6" marker-end="url(#ar2)"/><text x="356" y="254" font-size="11" fill="currentColor" fill-opacity=".78">park until approved</text>
+      <line x1="322" y1="300" x2="350" y2="300" stroke="currentColor" stroke-opacity=".6" marker-end="url(#ar2)"/><text x="356" y="304" font-size="11" fill="currentColor" fill-opacity=".78">stop → cancel + notify</text>
+      <line x1="322" y1="350" x2="350" y2="350" stroke="currentColor" stroke-opacity=".6" marker-end="url(#ar2)"/><text x="356" y="354" font-size="11" fill="currentColor" fill-opacity=".78">queue with backoff</text>
+      <line x1="322" y1="400" x2="350" y2="400" stroke="currentColor" stroke-opacity=".6" marker-end="url(#ar2)"/><text x="356" y="404" font-size="11" fill="currentColor" fill-opacity=".78">duplicate → return prior result</text>
+      <line x1="322" y1="450" x2="350" y2="450" stroke="currentColor" stroke-opacity=".6" marker-end="url(#ar2)"/><text x="356" y="454" font-size="11" fill="currentColor" fill-opacity=".78">timeout → Unknown (Figure 4)</text>
+    </svg>
+    <figcaption><b>Figure 2 — The execution gate.</b> Ten stages, each with a named failure outcome. The two in accent are the unusual ones. <b>Scope binding</b> restricts a request to entities inside the task's scope graph, so “email everyone in the CRM” fails structurally rather than on a permission check — which converts a whole class of prompt injection from an authorisation question into an impossibility. <b>Idempotency reservation</b> happens <em>before</em> the connector runs, which is what makes a publish timeout safe.</figcaption>
+  </figure>
+</section>
+
+<section id="s4">
+  <div class="sechead"><span class="secnum">04</span><h2>Agent Architecture</h2></div>
+  <div class="prose">
+    <p>An agent is not a running process, a conversation, or a prompt. It is a <strong>versioned configuration record</strong> that the runtime instantiates for one task and then discards.</p>
+  </div>
+
+  <div class="codeblk"><pre>AgentVersion
+  ├── identity          agent code (ORCH, LEAD, CWRITE…), version, lifecycle state
+  ├── prompt            PromptVersion reference — registry, never source
+  ├── model policy      task class → model class, reasoning config, fallback chain
+  ├── tool grants       explicit allow-list; deny is the default
+  ├── knowledge scope   which collections, which classifications
+  ├── memory scope      which of six layers, read/write per layer
+  ├── output contract   the JSON Schema the platform validates against
+  ├── policies          approval requirements, escalation, confidence threshold
+  └── ceilings          max steps, tool calls, wall time, tokens, cost</pre></div>
+
+  <p class="prose">Four consequences fall out of this, and each is a Phase 1 requirement becoming a property of the design rather than a discipline:</p>
+  <ul class="prose">
+    <li><strong>Behaviour change is a data change.</strong> Adjusting a model, prompt, tool set or limit is a version promotion, not a deployment.</li>
+    <li><strong>Every output is attributable to a version</strong> — audit becomes a foreign key, not a logging convention.</li>
+    <li><strong>Rollback is a pointer move.</strong> The previous version is still there.</li>
+    <li><strong>An agent cannot grant itself anything.</strong> Grants live in <code>identity</code>; the runtime receives an effective permission set it has no means to mutate.</li>
+  </ul>
+
+  <h3>The execution loop</h3>
+  <p class="prose"><code>RunAgent</code> is a Temporal <em>activity</em>, not a workflow. The distinction is load-bearing: the workflow owns control flow and durability, the agent owns judgement inside one bounded step. An agent that dies mid-run is retried by the workflow with the same input — it does not resume a half-finished conversation, because there is no conversation to resume.</p>
+
+  <div class="trace">
+    <div class="cap">RunAgent · one bounded step</div>
+    <ol>
+      <li><span class="who">worker</span><span>Temporal activity <code>RunAgent(agentVersionId, taskId, input)</code></span></li>
+      <li><span class="who">runtime</span><span>Load the agent version and its effective grants — cached by version key, never by agent name</span></li>
+      <li><span class="who">runtime</span><span>Assemble context: system prompt, campaign brief if the task has one, retrieved knowledge with citations, permitted memory slices, task input</span></li>
+      <li><span class="who">runtime</span><span>Wrap all external text in untrusted-source envelopes carrying kind, URL and retrieval time</span></li>
+      <li><span class="who">gateway</span><span>Model call by task class — never by model name</span></li>
+      <li><span class="who">runtime</span><span>Validate the structured output against the contract</span></li>
+      <li class="stop"><span class="who">runtime</span><span>Invalid → regenerate, maximum twice → escalate as TaskFailed. Invalid output never becomes trusted data</span></li>
+      <li><span class="who">gate</span><span>If the output contains tool requests, emit them to the gate, await results, append, return to step 5</span></li>
+      <li class="stop"><span class="who">runtime</span><span>Ceilings checked every iteration — steps, tool calls, wall time, tokens, cost. On breach: stop, preserve state, log the reason, notify</span></li>
+      <li><span class="who">runtime</span><span>Return structured result with confidence, evidence and recorded cost</span></li>
+    </ol>
+  </div>
+
+  <p class="prose">Ceilings are enforced in <strong>three independent places</strong> — the runtime counts steps and tokens, the gateway enforces cost, and the Temporal activity carries a wall-clock timeout — so no single bug removes them.</p>
+
+  <h3>Memory: six layers, retrieved not accumulated</h3>
+  <div class="scroller"><table>
+    <thead><tr><th>Layer</th><th>Store</th><th>Retrieval</th><th>Written by</th></tr></thead>
+    <tbody>
+      <tr><td>Company</td><td>knowledge documents + chunks</td><td>Semantic, permission-filtered, version-aware</td><td>Knowledge agent, via approved import</td></tr>
+      <tr><td>Campaign</td><td>campaign brief + scoped chunks</td><td>Direct fetch by id, then semantic within scope</td><td>Humans; agents propose</td></tr>
+      <tr><td>Prospect</td><td>pipeline records + interaction history</td><td>Structured query by entity id</td><td>Lead and outreach agents, via tools</td></tr>
+      <tr><td>Content</td><td>content items + embeddings</td><td>Similarity for duplication control; structured for performance</td><td>Content agents</td></tr>
+      <tr><td>Agent</td><td>bounded key-value, scoped to agent + org</td><td>Direct fetch</td><td>The agent itself, bounded</td></tr>
+      <tr><td>Performance</td><td>insight aggregates</td><td>Structured query</td><td>Analytics agent</td></tr>
+    </tbody>
+  </table></div>
+  <p class="prose">The rule that makes this affordable and auditable is <strong>retrieval, never accumulation</strong>. No agent receives unbounded history; a per-version retrieval budget caps chunks and tokens; every retrieved chunk is recorded in the trace with its document version. That is what lets the system answer, six months later, “what did the agent actually know when it wrote this?”</p>
+
+  <h3>The model gateway</h3>
+
+  <figure class="figbox">
+    <svg viewBox="0 0 900 300" role="img" aria-label="The model gateway routes by task class and data classification, estimates cost before calling, and on provider failure filters the fallback chain by data classification, queueing rather than using an unapproved provider.">
+      <defs>
+        <marker id="ar3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,1 L9,5 L0,9 z" fill="currentColor"/>
+        </marker>
+      </defs>
+      <rect x="20" y="40" width="200" height="86" fill="none" stroke="currentColor"/>
+      <text x="36" y="64" font-size="11" fill="currentColor">task class</text>
+      <text x="36" y="82" font-size="11" fill="currentColor">data classification</text>
+      <text x="36" y="100" font-size="11" fill="currentColor">budget state</text>
+      <text x="36" y="118" font-size="11" fill="currentColor">provider health</text>
+
+      <rect x="270" y="56" width="150" height="54" fill="none" stroke="currentColor" stroke-width="2"/>
+      <text x="345" y="79" font-size="12" text-anchor="middle" fill="currentColor">routing</text>
+      <text x="345" y="96" font-size="10" text-anchor="middle" fill="currentColor" fill-opacity=".62">pre-flight cost check</text>
+
+      <rect x="480" y="56" width="150" height="46" fill="none" stroke="currentColor"/>
+      <text x="555" y="84" font-size="12" text-anchor="middle" fill="currentColor">primary provider</text>
+
+      <rect x="440" y="150" width="230" height="54" fill="none" style="stroke:var(--accent)" stroke-width="2"/>
+      <text x="555" y="173" font-size="12" text-anchor="middle" fill="currentColor">fallback eligibility</text>
+      <text x="555" y="190" font-size="10" text-anchor="middle" style="fill:var(--accent)">approved for this classification?</text>
+
+      <rect x="720" y="128" width="160" height="42" fill="none" stroke="currentColor"/>
+      <text x="800" y="154" font-size="12" text-anchor="middle" fill="currentColor">fallback provider</text>
+
+      <rect x="720" y="196" width="160" height="42" fill="none" stroke="currentColor"/>
+      <text x="800" y="215" font-size="12" text-anchor="middle" fill="currentColor">queue + alert</text>
+      <text x="800" y="230" font-size="10" text-anchor="middle" fill="currentColor" fill-opacity=".62">if deadline-critical</text>
+
+      <line x1="222" y1="83" x2="266" y2="83" stroke="currentColor" marker-end="url(#ar3)"/>
+      <line x1="422" y1="79" x2="476" y2="79" stroke="currentColor" marker-end="url(#ar3)"/>
+      <polyline points="555,104 555,146" fill="none" stroke="currentColor" marker-end="url(#ar3)"/>
+      <text x="563" y="128" font-size="10" fill="currentColor" fill-opacity=".72">failure</text>
+      <line x1="672" y1="166" x2="716" y2="152" stroke="currentColor" marker-end="url(#ar3)"/>
+      <text x="694" y="138" font-size="10" text-anchor="middle" fill="currentColor" fill-opacity=".72">yes</text>
+      <line x1="672" y1="188" x2="716" y2="207" stroke="currentColor" marker-end="url(#ar3)"/>
+      <text x="694" y="212" font-size="10" text-anchor="middle" fill="currentColor" fill-opacity=".72">no</text>
+
+      <rect x="20" y="252" width="860" height="34" fill="none" stroke="currentColor" stroke-opacity=".45" stroke-dasharray="3 4"/>
+      <text x="450" y="274" font-size="11" text-anchor="middle" fill="currentColor" fill-opacity=".78">every call recorded: provider · model · agent version · prompt version · tokens · cached tokens · cost · latency · result</text>
+    </svg>
+    <figcaption><b>Figure 3 — The model gateway.</b> Agents request a <em>task class</em>, never a model name, so upgrading a model is configuration. Two things make this more than a router: cost is estimated <b>before</b> the call and refused when a budget is exhausted, rather than discovered afterwards; and the fallback chain is <b>filtered by data classification</b> — a provider not approved for the payload is skipped and the work queues, never quietly substituted.</figcaption>
+  </figure>
+
+  <h3>Structured output is the only contract</h3>
+  <p class="prose">Every agent declares a JSON Schema, validated before anything becomes trusted application data. The lead-qualification contract is worth showing because of what it <em>omits</em>:</p>
+  <div class="codeblk"><pre>{
+  "required": ["lead_ref","qualified","icp_fit","intent","evidence","confidence"],
+  "icp_fit":  { "type":"integer", "minimum":1, "maximum":5 },
+  "intent":   { "type":"integer", "minimum":1, "maximum":5 },
+  "evidence": { "type":"array", "minItems":1,
+                "items": { "required":["claim","source","retrieved_at"] } },
+  "confidence": { "type":"number", "minimum":0, "maximum":1 },
+  "assumptions": [...], "missing_information": [...],
+  "additionalProperties": false
+}</pre></div>
+  <p class="prose">There is no <code>score</code> field. The agent supplies two judgements with evidence; the platform computes <code>ICP × 12 + Intent × 8</code> exactly, and derives the funnel stage the same way. <strong>A model is never asked to do arithmetic the platform can do exactly.</strong> And <code>minItems: 1</code> on evidence is the schema-level expression of the rule that a rating without evidence is not a valid output — so it cannot be persisted, rather than being caught in review.</p>
+
+  <h3>Four-eyes, mechanically</h3>
+  <p class="prose">“An AI can never approve its own work” is implemented as a predicate on the approval decision, not as a workflow convention:</p>
+  <div class="codeblk"><pre>grant_approval(item, principal) requires
+      principal.type == Human
+  AND principal.id  != item.generating_principal_id
+  AND principal.id  != item.reviewing_principal_id
+  AND principal has permission(item.action_type)
+  AND item.state == PendingHumanApproval</pre></div>
+  <p class="prose">Generator, reviewer and approver are three distinct principals and the database enforces it. An agent identity cannot satisfy the predicate at all, so the failure mode does not exist rather than being guarded against.</p>
+</section>
+
+<section id="s5">
+  <div class="sechead"><span class="secnum">05</span><h2>Data Architecture</h2></div>
+  <p class="prose">Architecture, not schema: stores, ownership, aggregates, consistency, lineage, retention and isolation are settled here. Column-level DDL, indexes and migrations are Phase 4.</p>
+
+  <div class="scroller"><table>
+    <caption>Storage topology</caption>
+    <thead><tr><th>Store</th><th>Holds</th><th>Why here</th></tr></thead>
+    <tbody>
+      <tr><td><strong>PostgreSQL</strong></td><td>All business state, outbox, audit chain, vector index, read models</td><td>One transactional boundary makes the outbox, the audit chain and permission-scoped retrieval simple; splitting them makes each a distributed problem</td></tr>
+      <tr><td><strong>pgvector</strong></td><td>Knowledge chunks, content embeddings</td><td>Retrieval must join to organisation, permission, document version and classification. In-database that is a <code>WHERE</code> clause</td></tr>
+      <tr><td><strong>Redis</strong></td><td>Cache, rate-limit buckets, locks, short-lived guards</td><td>Ephemeral by design. <strong>Nothing whose loss changes a business outcome lives only here</strong></td></tr>
+      <tr><td>Object storage</td><td>Documents, exports, report PDFs, evaluation artefacts, raw webhook bodies</td><td>Large, immutable, versioned</td></tr>
+      <tr><td>Vault</td><td>Connector credentials, provider keys</td><td>Referenced, never copied</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Isolation is structural</h3>
+  <div class="codeblk"><pre>CREATE POLICY org_isolation ON &lt;table&gt;
+  USING (org_id = current_setting('app.org_id')::uuid);</pre></div>
+  <p class="prose">Every business row carries <code>org_id</code>, and row-level security is on for every table in every module schema. A forgotten <code>WHERE org_id = …</code> returns nothing rather than returning another organisation's data. The session value comes from the authenticated principal's claims, never from a request body. Knowledge retrieval carries the same predicate plus a permission join — so a vector search cannot surface a chunk the requesting agent is not entitled to. Multi-tenancy therefore arrives early at no extra cost.</p>
+
+  <h3>Aggregates and the invariant each one exists to protect</h3>
+  <div class="scroller"><table>
+    <thead><tr><th>Aggregate</th><th>Invariant</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Task</strong></td><td>Transitions are legal; cannot complete with an unresolved dependency; always carries objective and brand</td></tr>
+      <tr><td><strong>Lead</strong></td><td>Score and funnel stage are derived, never written; <code>Converted</code> requires a PCI order reference; a suppressed contact cannot attach to an active outreach item</td></tr>
+      <tr><td><strong>OutreachItem</strong></td><td>Template is Approved; length within limit; personal line present with cited evidence; at most two follow-ups</td></tr>
+      <tr><td><strong>ContentItem</strong></td><td>Status and published date move together; a platform is always named; a non-canonical channel cannot receive a copy of a rankable page</td></tr>
+      <tr><td><strong>ApprovalItem</strong></td><td>Exactly one terminal decision; approver ≠ generator ≠ reviewer; expiry honoured</td></tr>
+      <tr><td><strong>ExternalAction</strong></td><td>One idempotency key, one effect</td></tr>
+      <tr><td><strong>SuppressionEntry</strong></td><td>Append-only; removal requires an audited administrative act</td></tr>
+      <tr><td><strong>KpiObservation</strong></td><td>Immutable once written; carries its computation reference</td></tr>
+      <tr><td><strong>AuditEvent</strong></td><td>Append-only, hash-chained</td></tr>
+    </tbody>
+  </table></div>
+  <p class="prose">Cross-aggregate consistency is <strong>eventual, via events</strong> — never a multi-aggregate transaction. Where a business process spans aggregates, the saga is a Temporal workflow, which is precisely what durable execution is for.</p>
+
+  <h3>Outbox and idempotent consumption</h3>
+  <div class="codeblk"><pre>BEGIN
+  … aggregate change …
+  INSERT INTO messaging.outbox (org_id, event_type, payload, correlation_id, occurred_at)
+COMMIT
+                    relay → publish → consumer
+consumer: INSERT INTO messaging.processed (consumer, event_id) ON CONFLICT DO NOTHING
+          if inserted → handle</pre></div>
+  <p class="prose">The outbox writes in the same transaction as the state change, so an event can never describe a change that did not happen and a change can never fail to emit its event. The <code>processed</code> table makes every consumer idempotent by construction — which is the precondition for making retries free, and therefore for making external writes safe.</p>
+
+  <h3>The external action ledger</h3>
+
+  <figure class="figbox">
+    <svg viewBox="0 0 920 250" role="img" aria-label="The external action state machine. A timeout moves an action to Unknown; a retry from Unknown runs a reconciliation query first and marks the action succeeded if the write already landed, so no duplicate is created.">
+      <defs>
+        <marker id="ar4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,1 L9,5 L0,9 z" fill="currentColor"/>
+        </marker>
+        <marker id="ar4A" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,1 L9,5 L0,9 z" style="fill:var(--accent)"/>
+        </marker>
+      </defs>
+      <rect x="20"  y="94"  width="120" height="40" fill="none" stroke="currentColor"/><text x="80"  y="119" font-size="12" text-anchor="middle" fill="currentColor">Reserved</text>
+      <rect x="190" y="94"  width="120" height="40" fill="none" stroke="currentColor"/><text x="250" y="119" font-size="12" text-anchor="middle" fill="currentColor">InFlight</text>
+      <rect x="370" y="24"  width="130" height="40" fill="none" stroke="currentColor"/><text x="435" y="49"  font-size="12" text-anchor="middle" fill="currentColor">Succeeded</text>
+      <rect x="370" y="94"  width="130" height="40" fill="none" stroke="currentColor"/><text x="435" y="119" font-size="12" text-anchor="middle" fill="currentColor">Failed</text>
+      <rect x="370" y="164" width="130" height="40" fill="none" style="stroke:var(--accent)" stroke-width="2"/><text x="435" y="189" font-size="12" text-anchor="middle" fill="currentColor">Unknown</text>
+      <rect x="560" y="164" width="150" height="40" fill="none" style="stroke:var(--accent)" stroke-width="2"/><text x="635" y="189" font-size="12" text-anchor="middle" fill="currentColor">reconciliation query</text>
+      <rect x="770" y="124" width="130" height="40" fill="none" stroke="currentColor"/><text x="835" y="143" font-size="11" text-anchor="middle" fill="currentColor">mark Succeeded</text><text x="835" y="157" font-size="10" text-anchor="middle" fill="currentColor" fill-opacity=".62">no second write</text>
+      <rect x="770" y="196" width="130" height="40" fill="none" stroke="currentColor"/><text x="835" y="221" font-size="11" text-anchor="middle" fill="currentColor">send</text>
+
+      <line x1="142" y1="114" x2="186" y2="114" stroke="currentColor" marker-end="url(#ar4)"/>
+      <line x1="312" y1="106" x2="366" y2="60"  stroke="currentColor" marker-end="url(#ar4)"/>
+      <line x1="312" y1="114" x2="366" y2="114" stroke="currentColor" marker-end="url(#ar4)"/>
+      <line x1="312" y1="124" x2="366" y2="176" stroke="currentColor" marker-end="url(#ar4)"/>
+      <text x="330" y="158" font-size="10" fill="currentColor" fill-opacity=".72">timeout</text>
+      <line x1="502" y1="184" x2="556" y2="184" style="stroke:var(--accent)" marker-end="url(#ar4A)"/>
+      <line x1="712" y1="176" x2="766" y2="150" stroke="currentColor" marker-end="url(#ar4)"/>
+      <text x="739" y="140" font-size="10" text-anchor="middle" fill="currentColor" fill-opacity=".72">exists</text>
+      <line x1="712" y1="192" x2="766" y2="212" stroke="currentColor" marker-end="url(#ar4)"/>
+      <text x="739" y="224" font-size="10" text-anchor="middle" fill="currentColor" fill-opacity=".72">absent</text>
+      <text x="635" y="228" font-size="10" text-anchor="middle" style="fill:var(--accent)">a retry from Unknown is never a re-send</text>
+    </svg>
+    <figcaption><b>Figure 4 — Why a publish timeout cannot duplicate a post.</b> The idempotency key is <code>hash(org, action_type, entity_id, content_hash)</code>, reserved before the connector runs. The state that earns its place is <b>Unknown</b>: the call timed out, so the platform does not know whether the write landed. Retrying from there runs the connector's reconciliation query first. Connectors that cannot support one declare it in their manifest, and their Unknown actions require human confirmation rather than a blind retry.</figcaption>
+  </figure>
+
+  <h3>Lineage</h3>
+  <div class="codeblk"><pre>KpiObservation ──> Computation ──> formula_version
+                        │           window (from, to)
+                        └──> input_refs[] → (module, aggregate, id) …</pre></div>
+  <p class="prose">“Every KPI exposes lineage” is a data-model obligation, not a UI feature. Every displayed number drills through to the rows it came from and the formula version used. KPIs are addressed by stable identifier, never by position — the workbook's own worst live defect was a row insert that made the revenue tile display meetings, and a regression test now asserts every tile resolves to its intended KPI. Dashboards read materialised read models refreshed by event handlers, never raw aggregates at request time, which is what makes the p95 target achievable without denormalising the write model.</p>
+
+  <h3>The ten data-health checks become constraints</h3>
+  <p class="prose">The workbook counts logging defects after the fact. The platform prevents nine at write time and detects the tenth continuously.</p>
+  <div class="scroller"><table>
+    <thead><tr><th>Workbook check</th><th>Mechanism</th></tr></thead>
+    <tbody>
+      <tr><td>Text dates · future dates · negative values</td><td>Typed columns and <code>CHECK</code> constraints</td></tr>
+      <tr><td>Accepted without a logged request</td><td>State-machine transition guard</td></tr>
+      <tr><td>Minutes under an unknown name</td><td>Foreign key to <code>Actor</code></td></tr>
+      <tr><td>Published with no date · dated but not published · signed deal with no value</td><td>Aggregate invariants</td></tr>
+      <tr><td>Duplicate leads</td><td>Unique identity resolution plus a pre-create check</td></tr>
+      <tr><td>Published with no platform</td><td><code>NOT NULL</code> foreign key</td></tr>
+      <tr><td>Reconciliation against systems of record</td><td>Continuous, by the Data Health agent — the one that cannot be a constraint, because the truth lives in another system</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Classification, retention, erasure</h3>
+  <div class="scroller"><table>
+    <thead><tr><th>Class</th><th>Examples</th><th>Default retention <span class="pill p-warn">assumed</span></th></tr></thead>
+    <tbody>
+      <tr><td>Public</td><td>Published content, public competitor facts</td><td>Indefinite</td></tr>
+      <tr><td>Internal</td><td>Plans, KPIs, agent traces, evaluation results</td><td>24 months rolling</td></tr>
+      <tr><td>Confidential</td><td>Prospect and contact personal data, interaction history, consent</td><td>24 months from last interaction</td></tr>
+      <tr><td>Restricted</td><td>Credential references, Employee Score, HR notes</td><td>Employment + statutory period</td></tr>
+    </tbody>
+  </table></div>
+  <p class="prose">Erasure is an operation, not a delete: a subject request tombstones the personal data, preserves the audit chain by replacing payloads with hashes, and records the erasure itself as an audit event. Aggregate KPIs computed before erasure stay valid because they never depended on the erased fields. <strong>These retention defaults are mine, not PCI's</strong> — they are the assumption behind the unanswered prerequisite and must be confirmed by legal before production.</p>
+
+  <div class="note warn">
+    <span class="lbl">The one design this phase defers</span>
+    <p>Under the single-region assumption, residency is a deployment property. If PCI later needs a <strong>Gulf data boundary</strong> — plausible given the Saudi and UAE focus and PDPL — residency becomes a <em>data</em> property: an org-level residency attribute, per-organisation storage routing, and provider eligibility filtered by region. That changes storage topology and isolation, not module boundaries, and it is far cheaper to decide before there is data than after. It is the strongest reason to answer P2-05 early.</p>
+  </div>
+</section>
+
+<section id="s6">
+  <div class="sechead"><span class="secnum">06</span><h2>Security Architecture</h2></div>
+
+  <div class="scroller"><table>
+    <caption>Trust zones and the egress matrix</caption>
+    <thead><tr><th>Zone</th><th>Contains</th><th>May reach</th></tr></thead>
+    <tbody>
+      <tr><td>Z0 Public</td><td>Browser</td><td>Z1 only</td></tr>
+      <tr><td>Z1 Edge</td><td>TLS termination, WAF, rate limiting</td><td>Z2 only</td></tr>
+      <tr><td>Z2 Application</td><td><code>api</code>, <code>web</code></td><td>Z4, Z3</td></tr>
+      <tr><td>Z3 Compute</td><td><code>worker</code>, <code>agent-runtime</code></td><td>Z4; worker → allow-listed hosts; <strong>agent-runtime → model providers only</strong></td></tr>
+      <tr><td>Z4 Data</td><td>PostgreSQL, Redis, object storage, Temporal, vault</td><td>Nothing outbound</td></tr>
+      <tr><td>Z5 External</td><td>Third-party APIs, model providers</td><td>Reached only from Z3; inbound only as signed webhooks via Z1</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Seven layers of authorisation</h3>
+  <p class="prose">A request must clear all seven, and every layer is server-side.</p>
+  <div class="scroller"><table>
+    <thead><tr><th class="num">#</th><th>Layer</th><th>What it decides</th></tr></thead>
+    <tbody>
+      <tr><td class="num">1</td><td>Organisation scope</td><td>Row-level security — structural, not diligent</td></tr>
+      <tr><td class="num">2</td><td>Role permission</td><td>RBAC on the operation</td></tr>
+      <tr><td class="num">3</td><td>Field-level authorisation</td><td>Computed and manager-owned fields reject unauthorised writes — replacing the workbook's sheet protection</td></tr>
+      <tr><td class="num">4</td><td>Tool grant</td><td>The agent's allow-list; deny by default</td></tr>
+      <tr><td class="num">5</td><td>Scope binding</td><td>Targets must lie in the task's scope graph</td></tr>
+      <tr><td class="num">6</td><td>Policy</td><td>Deterministic business rules — the Golden Rules and QA checks</td></tr>
+      <tr><td class="num">7</td><td>Approval</td><td>A human decision where required</td></tr>
+    </tbody>
+  </table></div>
+  <p class="prose">Layers 4 and 5 are what make an agent's authority <strong>narrower than its role</strong>: even a correctly-permissioned agent cannot act outside the task it was given.</p>
+
+  <h3>Secrets</h3>
+  <p class="prose">Credentials live in the vault; the database holds references — the same discipline the workbook already enforces in its Accounts Register, where only the vault entry name is recorded. The invariant: <strong>no secret is ever placed in a prompt, returned to a model, or transmitted to the agent runtime.</strong> An agent requests <code>publish_content(content_id)</code>; the connector resolves the credential at the moment of execution and discards it. There is no code path by which a model can observe a token, because the process that holds tokens and the process that talks to models are different processes with different network policies.</p>
+
+  <h3>The kill switch, checked in three places</h3>
+  <p class="prose">Emergency stop must catch <strong>approved-but-unexecuted</strong> items — the case that matters, because an approval granted before a problem was discovered would otherwise still fire. One check would be a single point of failure, so there are three: at the execution gate (step 6), at activity start in the worker, and at approval dispatch — plus a signal to running workflows so they park rather than spin. Release requires the Owner. Granularity: all external writes, one channel, one workflow, or one agent.</p>
+
+  <h3>Prompt injection — four layers, no single point of trust</h3>
+  <div class="scroller"><table>
+    <thead><tr><th>Layer</th><th>Control</th><th>What it stops</th></tr></thead>
+    <tbody>
+      <tr><td>Ingestion</td><td>Type validation, size limits, scanning, isolated parsing, provenance capture</td><td>Malicious documents at the door</td></tr>
+      <tr><td>Framing</td><td>Untrusted-source envelopes; standing rule that enveloped content is data</td><td>Naive instruction-following</td></tr>
+      <tr><td>Capability</td><td>Tool allow-list per agent version; write tools deny-by-default</td><td>An agent persuaded to act cannot reach a tool it was never granted</td></tr>
+      <tr><td>Scope</td><td>Scope binding to the task's entity graph</td><td>“Email everyone in the CRM” — structurally, whatever the model believed</td></tr>
+      <tr><td>Approval</td><td>Every external write to a person or the public is human-approved</td><td>The last line, and the one the workbook already relies on</td></tr>
+    </tbody>
+  </table></div>
+  <p class="prose">Denied invocations are logged with agent, version, tool, matched rule and correlation ID, and repetition raises a security alert. <strong>A rising denial rate is treated as a defect in the agent version</strong>, not as evidence the policy engine is working well.</p>
+
+  <h3>Audit integrity</h3>
+  <p class="prose">The audit log is append-only and hash-chained per organisation — each event carries the hash of its predecessor, with a daily anchor written to object storage, so tampering is detectable rather than merely discouraged. It records agent, versions, prompt version, trigger, input, retrieved knowledge with document versions, model, output, tool calls, approval, result, error, cost and timestamp. What it deliberately does <em>not</em> record is hidden chain-of-thought: the required rationale — evidence, rules applied, KPIs consulted, sources retrieved, assumptions stated — is reconstructable from recorded inputs and structured outputs, and is more useful in a review than a transcript.</p>
+</section>
+
+<section id="s7">
+  <div class="sechead"><span class="secnum">07</span><h2>Integration Architecture</h2></div>
+
+  <h3>Human-assisted connectors are first-class</h3>
+  <p class="prose">This is the architectural answer to Phase 1's central constraint, and it is the piece most likely to be under-designed. <code>ISendChannel</code> has two implementations, interchangeable to every layer above.</p>
+
+  <figure class="figbox">
+    <svg viewBox="0 0 960 320" role="img" aria-label="A shared governed spine of plan, draft, QA, compliance and approval feeds two lanes. The content lane executes through a connector to the CMS; the outreach lane hands a work item to an operator who acts and confirms. Only the final hop differs.">
+      <defs>
+        <marker id="ar5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,1 L9,5 L0,9 z" fill="currentColor"/>
+        </marker>
+      </defs>
+
+      <rect x="14" y="118" width="672" height="66" fill="none" stroke="currentColor" stroke-opacity=".3" stroke-dasharray="3 4"/>
+      <text x="350" y="200" font-size="11" text-anchor="middle" fill="currentColor" fill-opacity=".72">identical: planning · research · drafting · QA · compliance · approval · audit · measurement</text>
+
+      <rect x="24"  y="130" width="118" height="42" fill="none" stroke="currentColor"/><text x="83"  y="156" font-size="12" text-anchor="middle" fill="currentColor">Plan</text>
+      <rect x="158" y="130" width="118" height="42" fill="none" stroke="currentColor"/><text x="217" y="156" font-size="12" text-anchor="middle" fill="currentColor">Draft</text>
+      <rect x="292" y="130" width="118" height="42" fill="none" stroke="currentColor"/><text x="351" y="156" font-size="12" text-anchor="middle" fill="currentColor">QA</text>
+      <rect x="426" y="130" width="118" height="42" fill="none" stroke="currentColor"/><text x="485" y="156" font-size="12" text-anchor="middle" fill="currentColor">Compliance</text>
+      <rect x="560" y="130" width="118" height="42" fill="none" stroke="currentColor" stroke-width="2"/><text x="619" y="156" font-size="12" text-anchor="middle" fill="currentColor">Approval</text>
+
+      <line x1="144" y1="151" x2="154" y2="151" stroke="currentColor" marker-end="url(#ar5)"/>
+      <line x1="278" y1="151" x2="288" y2="151" stroke="currentColor" marker-end="url(#ar5)"/>
+      <line x1="412" y1="151" x2="422" y2="151" stroke="currentColor" marker-end="url(#ar5)"/>
+      <line x1="546" y1="151" x2="556" y2="151" stroke="currentColor" marker-end="url(#ar5)"/>
+
+      <rect x="740" y="34" width="200" height="52" fill="none" stroke="currentColor"/>
+      <text x="840" y="56" font-size="12" text-anchor="middle" fill="currentColor">connector → CMS</text>
+      <text x="840" y="72" font-size="10" text-anchor="middle" fill="currentColor" fill-opacity=".62">platform executes</text>
+      <text x="840" y="24" font-size="10" text-anchor="middle" style="fill:var(--accent)" letter-spacing="1">CONTENT LANE</text>
+
+      <rect x="740" y="214" width="200" height="66" fill="none" style="stroke:var(--accent)" stroke-width="2"/>
+      <text x="840" y="236" font-size="12" text-anchor="middle" fill="currentColor">human work item</text>
+      <text x="840" y="252" font-size="10" text-anchor="middle" fill="currentColor" fill-opacity=".62">operator acts · confirms</text>
+      <text x="840" y="268" font-size="10" text-anchor="middle" fill="currentColor" fill-opacity=".62">time · exact text · sender</text>
+      <text x="840" y="300" font-size="10" text-anchor="middle" style="fill:var(--accent)" letter-spacing="1">OUTREACH LANE</text>
+
+      <polyline points="680,140 710,140 710,60 736,60" fill="none" stroke="currentColor" marker-end="url(#ar5)"/>
+      <polyline points="680,162 710,162 710,247 736,247" fill="none" stroke="currentColor" marker-end="url(#ar5)"/>
+    </svg>
+    <figcaption><b>Figure 5 — One governed spine, two lanes.</b> Everything upstream of the split is the same code: planning, drafting, QA, compliance, approval, sequencing, follow-up timers, suppression, frequency caps, measurement, cost and audit. Only the last hop differs. Three consequences follow: the outreach lane is <b>not a degraded feature</b>; follow-up timers anchor to the <em>confirmed send time</em> rather than record creation — the exact defect the workbook found and fixed in its own changelog; and if a platform later opens a compliant API, swapping the channel implementation changes nothing above it.</figcaption>
+  </figure>
+
+  <div class="scroller"><table>
+    <thead><tr><th></th><th>API channel</th><th>Human-assisted channel</th></tr></thead>
+    <tbody>
+      <tr><td>Queue</td><td>Reserve ExternalAction, call connector</td><td>Reserve ExternalAction, create HumanWorkItem</td></tr>
+      <tr><td>Execute</td><td>Provider API</td><td>A person, on the platform they are already logged into</td></tr>
+      <tr><td>Confirm</td><td>Provider response</td><td>One-click capture of actual time, exact text, sender</td></tr>
+      <tr><td>Idempotency</td><td>Provider reference</td><td>Work-item id + content hash; re-queueing the same item is refused</td></tr>
+      <tr><td>Audit · measurement</td><td colspan="2" style="text-align:center"><em>identical on both paths</em></td></tr>
+    </tbody>
+  </table></div>
+  <p class="prose">A fourth consequence is planning honesty: human-executed steps are budgeted against <strong>human</strong> capacity, so the daily plan cannot promise a hundred sends when one person is available.</p>
+
+  <h3>The connector manifest</h3>
+  <div class="codeblk"><pre>ConnectorManifest
+  key · display name · area · value rank
+  tier                    T1 read+write · T2 read-only · T3 human-assisted · T4 manual · T5 prohibited
+  auth · scopes[]         least privilege, listed explicitly
+  read_operations[]       operation → normalised entity
+  write_operations[]      operation → idempotency strategy → reconciliation query
+  restricted_operations[] what this connector must never expose as a tool
+  rate_limits[]           per credential, per endpoint, per window
+  webhooks                available? signature scheme?
+  health_probe            liveness and auth validity
+  data_classifications[]  what it may carry
+  verified_on · verify_interval        default 6 months</pre></div>
+  <p class="prose">Two fields are unusual and both are load-bearing. <strong><code>restricted_operations</code></strong> names what a connector <em>could</em> do but must not expose — a CRM connector might technically support bulk delete, and declaring it restricted means no tool exists, so no agent can request it and no policy exception can enable it without a manifest change and its approval. <strong><code>verified_on</code></strong> mirrors the workbook's own discipline: every platform fact it records is stamped for six-monthly re-verification. A connector past its date raises a task and degrades write operations to confirmation-required. Acting on an expired platform rule is how a compliant integration silently becomes a terms breach.</p>
+
+  <h3>Health as a state machine</h3>
+  <div class="codeblk"><pre>Connected ──auth error──> AuthenticationExpired ──reauth──> Connected
+    │                              │
+    ├──429 / quota──> RateLimited ─┘
+    ├──error rate > threshold──> Degraded ──recovery probe──> Connected
+    ├──probe fail──> Unavailable
+    └──admin──> Disabled</pre></div>
+  <p class="prose">Agents check health <em>before</em> attempting work, and the orchestrator treats a degraded high-value connector as a planning input rather than a runtime surprise.</p>
+
+  <h3>Retry taxonomy</h3>
+  <p class="prose">Not everything that fails should be retried, and treating them alike is how duplicates and bans happen.</p>
+  <div class="scroller"><table>
+    <thead><tr><th>Class</th><th>Example</th><th>Action</th></tr></thead>
+    <tbody>
+      <tr class="sev-l"><td>Transient</td><td>Timeout, 502, reset</td><td>Backoff with jitter, capped attempts; if a write, reconcile before re-sending</td></tr>
+      <tr class="sev-m"><td>Rate-limited</td><td>429, quota</td><td>Requeue at the window reset; never retry immediately</td></tr>
+      <tr class="sev-h"><td>Auth</td><td>401, expired token</td><td><strong>Do not retry.</strong> Set AuthenticationExpired, block dependents, notify</td></tr>
+      <tr class="sev-h"><td>Permanent</td><td>400, validation, policy rejection</td><td><strong>Do not retry.</strong> Fail with the reason; escalate on recurrence</td></tr>
+      <tr class="sev-x"><td>Unknown</td><td>Timeout after acceptance</td><td><strong>Reconcile first</strong>, then decide (Figure 4)</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>MVP connector set</h3>
+  <div class="scroller"><table>
+    <thead><tr><th>Connector</th><th>Tier</th><th>Why in the MVP</th></tr></thead>
+    <tbody>
+      <tr><td>CMS / website</td><td><span class="pill p-ok">T1</span></td><td>The only place the platform can complete a full publish loop</td></tr>
+      <tr><td>Google Search Console</td><td><span class="pill p-ok">T2</span></td><td>Primary SEO truth; read-only; zero risk</td></tr>
+      <tr><td>Google Analytics 4</td><td><span class="pill p-ok">T2</span></td><td>Outcome measurement, freshness-stamped</td></tr>
+      <tr><td>IndexNow / Bing Webmaster</td><td><span class="pill p-ok">T1</span></td><td>Cheap, high leverage, small surface</td></tr>
+      <tr><td>UTM minting</td><td><span class="pill p-neut">internal</span></td><td>Deterministic and unit-tested — fixes a defect the workbook already hit</td></tr>
+      <tr><td>Human send channel</td><td><span class="pill p-warn">T3</span></td><td>The entire outreach lane</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="s8">
+  <div class="sechead"><span class="secnum">08</span><h2>Sequence Diagrams</h2></div>
+  <p class="prose">Five traces. Each is an acceptance criterion from Phase 1 expressed as a mechanism.</p>
+
+  <h3>Content production, including a QA rejection</h3>
+  <div class="trace">
+    <div class="cap">WF-020 · the full governed loop</div>
+    <ol>
+      <li><span class="who">temporal</span><span>Select brief — P1 priority first, Easy difficulty first</span></li>
+      <li><span class="who">CSTRAT</span><span><code>check_similarity</code> against published PCI content → no near-duplicate</span></li>
+      <li><span class="who">CSTRAT</span><span>Returns pillar, audience, funnel stage, channel, CTA</span></li>
+      <li><span class="who">CWRITE</span><span>Drafts from the brief and its prompt; returns citations and confidence</span></li>
+      <li class="stop"><span class="who">CQA</span><span><strong>REJECTED</strong> — unsupported claim, weak CTA. Structured feedback captured</span></li>
+      <li><span class="who">CWRITE</span><span>Revises → draft v2</span></li>
+      <li><span class="who">CQA</span><span>PASS</span></li>
+      <li><span class="who">COMP</span><span>Claims evidenced; canonical rule satisfied for this channel</span></li>
+      <li><span class="who">gate</span><span>Approval item created with preview, evidence, risk, expected benefit</span></li>
+      <li><span class="who">human</span><span>APPROVED</span></li>
+      <li><span class="who">gate</span><span>Kill switch · rate limit · idempotency reservation</span></li>
+      <li><span class="who">connector</span><span>Publish → URL and provider reference returned</span></li>
+      <li><span class="who">temporal</span><span>Analytics capture scheduled at +1 day, +7 days, +30 days</span></li>
+    </ol>
+  </div>
+  <p class="prose">The rejection at step 5 is drawn deliberately — it is an acceptance criterion, and a loop that has never been exercised is a loop that does not work.</p>
+
+  <h3>Outreach preparation — where the platform stops</h3>
+  <div class="trace">
+    <div class="cap">WF-012 → WF-013 · prepare, approve, hand over</div>
+    <ol>
+      <li><span class="who">LEAD</span><span>Qualify against the four tests; <code>check_suppression</code> → clear</span></li>
+      <li><span class="who">LEAD</span><span>ICP 4, intent 3, three evidence items → platform computes score 72 → band B</span></li>
+      <li><span class="who">OUT</span><span>Compose from approved template M2 → 287 characters, personal line with citation</span></li>
+      <li><span class="who">policy</span><span>Length · banned phrases · frequency cap · consent → PASS</span></li>
+      <li><span class="who">gate</span><span>Approval item created, expires in 48 hours</span></li>
+      <li><span class="who">human</span><span>APPROVED</span></li>
+      <li class="stop"><span class="who">queue</span><span>Human work item — copy-ready text, profile link, character count</span></li>
+      <li class="stop"><span class="who">—</span><span><strong>The platform stops here. No automated send exists at any layer.</strong></span></li>
+      <li><span class="who">operator</span><span>Confirms sent</span></li>
+      <li><span class="who">platform</span><span>Records actual send time, exact text, sender</span></li>
+      <li><span class="who">temporal</span><span>Follow-up timers set at +4 days (M4) and +10 days (M5) — maximum two, ever</span></li>
+    </ol>
+  </div>
+  <p class="prose">Step 10 is the architectural point: the <em>confirmation</em>, not the approval, starts the timers — anchoring them to the event rather than the record.</p>
+
+  <h3>An agent attempting an unauthorised tool</h3>
+  <div class="trace">
+    <div class="cap">Acceptance criterion AC-05</div>
+    <ol>
+      <li><span class="who">CWRITE</span><span>Tool request: <code>send_approved_email(...)</code></span></li>
+      <li><span class="who">gate</span><span>1 · schema valid</span></li>
+      <li class="deny"><span class="who">gate</span><span>2 · <strong>tool grant — CWRITE has no email grant. DENIED, terminal, not retryable</strong></span></li>
+      <li><span class="who">audit</span><span>Agent, version, tool, arguments summary, denying rule, correlation ID</span></li>
+      <li><span class="who">alerts</span><span>Security alert — third denial for this agent version today</span></li>
+      <li><span class="who">—</span><span>Treated as a defect in the version, not as the policy engine succeeding</span></li>
+    </ol>
+  </div>
+
+  <h3>Provider failure under data classification</h3>
+  <div class="trace">
+    <div class="cap">Fallback is filtered, never automatic</div>
+    <ol>
+      <li><span class="who">agent</span><span>Task class <code>reason.deep</code>, classification Confidential</span></li>
+      <li><span class="who">gateway</span><span>Pre-flight cost estimate against budget → within</span></li>
+      <li class="stop"><span class="who">primary</span><span>503</span></li>
+      <li><span class="who">gateway</span><span>Fallback chain → is this provider approved for Confidential?</span></li>
+      <li><span class="who">gateway</span><span><strong>Yes</strong> → call fallback · <strong>No</strong> → skip, queue for primary recovery, alert if deadline-critical</span></li>
+      <li><span class="who">ledger</span><span>Provider, model, tokens, cost, latency recorded against agent version and task</span></li>
+    </ol>
+  </div>
+
+  <h3>Emergency stop catching an approved item</h3>
+  <div class="trace">
+    <div class="cap">Acceptance criterion AC-14 — the half that is usually missed</div>
+    <ol>
+      <li><span class="who">owner</span><span>EMERGENCY STOP — all external writes</span></li>
+      <li><span class="who">config</span><span>Kill switch ON; signal to running workflows → park</span></li>
+      <li class="stop"><span class="who">queue</span><span><strong>Approved-but-unexecuted items held</strong> — the case that matters, because the approval predates the problem</span></li>
+      <li><span class="who">gate</span><span>Step 6 blocks every new request</span></li>
+      <li><span class="who">owner</span><span>Release — Owner only; expiry re-checked before anything resumes</span></li>
+    </ol>
+  </div>
+</section>
+
+<section id="s9">
+  <div class="sechead"><span class="secnum">09</span><h2>Workflow Diagrams</h2></div>
+  <p class="prose">The outreach item carries more workbook rules in its transitions than any other object in the system, so it is worth drawing rather than describing.</p>
+
+  <figure class="figbox">
+    <svg viewBox="0 0 960 360" role="img" aria-label="The outreach item state machine. After two follow-ups the item terminates as No Response, and a declined reply moves permanently to Suppressed, both enforced as transitions rather than as guidance.">
+      <defs>
+        <marker id="ar6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,1 L9,5 L0,9 z" fill="currentColor"/>
+        </marker>
+        <marker id="ar6A" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,1 L9,5 L0,9 z" style="fill:var(--accent)"/>
+        </marker>
+      </defs>
+
+      <rect x="20"  y="30" width="140" height="40" fill="none" stroke="currentColor"/><text x="90"  y="55" font-size="11" text-anchor="middle" fill="currentColor">Qualified</text>
+      <rect x="200" y="30" width="140" height="40" fill="none" stroke="currentColor"/><text x="270" y="55" font-size="11" text-anchor="middle" fill="currentColor">Composed</text>
+      <rect x="380" y="30" width="160" height="40" fill="none" stroke="currentColor"/><text x="460" y="55" font-size="11" text-anchor="middle" fill="currentColor">PendingApproval</text>
+      <rect x="580" y="30" width="160" height="40" fill="none" stroke="currentColor"/><text x="660" y="55" font-size="11" text-anchor="middle" fill="currentColor">QueuedForHuman</text>
+      <rect x="780" y="30" width="140" height="40" fill="none" stroke="currentColor"/><text x="850" y="55" font-size="11" text-anchor="middle" fill="currentColor">Sent</text>
+
+      <line x1="162" y1="50" x2="196" y2="50" stroke="currentColor" marker-end="url(#ar6)"/>
+      <line x1="342" y1="50" x2="376" y2="50" stroke="currentColor" marker-end="url(#ar6)"/>
+      <line x1="542" y1="50" x2="576" y2="50" stroke="currentColor" marker-end="url(#ar6)"/>
+      <text x="559" y="42" font-size="9" text-anchor="middle" fill="currentColor" fill-opacity=".7">approved</text>
+      <line x1="742" y1="50" x2="776" y2="50" stroke="currentColor" marker-end="url(#ar6)"/>
+      <text x="759" y="42" font-size="9" text-anchor="middle" fill="currentColor" fill-opacity=".7">confirm</text>
+
+      <line x1="850" y1="72" x2="850" y2="148" stroke="currentColor" marker-end="url(#ar6)"/>
+      <rect x="780" y="150" width="140" height="40" fill="none" stroke="currentColor"/><text x="850" y="175" font-size="11" text-anchor="middle" fill="currentColor">AwaitingReply</text>
+
+      <rect x="580" y="150" width="160" height="40" fill="none" stroke="currentColor"/><text x="660" y="175" font-size="11" text-anchor="middle" fill="currentColor">FollowUp1</text>
+      <rect x="380" y="150" width="160" height="40" fill="none" stroke="currentColor"/><text x="460" y="175" font-size="11" text-anchor="middle" fill="currentColor">FollowUp2</text>
+      <rect x="200" y="150" width="140" height="40" fill="none" style="stroke:var(--accent)" stroke-width="2"/><text x="270" y="175" font-size="11" text-anchor="middle" fill="currentColor">NoResponse</text>
+
+      <line x1="776" y1="170" x2="744" y2="170" stroke="currentColor" marker-end="url(#ar6)"/>
+      <text x="760" y="162" font-size="9" text-anchor="middle" fill="currentColor" fill-opacity=".7">+4d</text>
+      <line x1="576" y1="170" x2="544" y2="170" stroke="currentColor" marker-end="url(#ar6)"/>
+      <text x="560" y="162" font-size="9" text-anchor="middle" fill="currentColor" fill-opacity=".7">+10d</text>
+      <line x1="376" y1="170" x2="344" y2="170" style="stroke:var(--accent)" marker-end="url(#ar6A)"/>
+      <text x="360" y="196" font-size="9" text-anchor="middle" style="fill:var(--accent)">stop</text>
+      <text x="270" y="212" font-size="10" text-anchor="middle" style="fill:var(--accent)">maximum two follow-ups, ever</text>
+
+      <line x1="850" y1="192" x2="850" y2="258" stroke="currentColor" marker-end="url(#ar6)"/>
+      <rect x="780" y="260" width="140" height="40" fill="none" stroke="currentColor"/><text x="850" y="285" font-size="11" text-anchor="middle" fill="currentColor">Replied</text>
+
+      <rect x="580" y="260" width="160" height="40" fill="none" style="stroke:var(--accent)" stroke-width="2"/><text x="660" y="285" font-size="11" text-anchor="middle" fill="currentColor">Declined</text>
+      <rect x="380" y="260" width="160" height="40" fill="none" style="stroke:var(--accent)" stroke-width="2"/><text x="460" y="285" font-size="11" text-anchor="middle" fill="currentColor">Suppressed</text>
+
+      <line x1="776" y1="280" x2="744" y2="280" stroke="currentColor" marker-end="url(#ar6)"/>
+      <line x1="576" y1="280" x2="544" y2="280" style="stroke:var(--accent)" marker-end="url(#ar6A)"/>
+      <text x="460" y="322" font-size="10" text-anchor="middle" style="fill:var(--accent)">permanent · all channels · all brands</text>
+
+    </svg>
+    <figcaption><b>Figure 6 — The outreach item.</b> Two transitions carry workbook rules directly, and both are enforced by the state machine rather than by guidance: <b>FollowUp2 → NoResponse</b> makes “maximum two follow-ups, ever” unbreakable, and <b>Declined → Suppressed</b> is permanent across every channel and brand, reversible only by an audited administrative act. Not drawn, for legibility: <code>Composed → PolicyBlocked</code> on a length, phrase, cap or consent failure, and <code>PendingApproval → Expired → Composed</code> on a lapsed 48-hour approval.</figcaption>
+  </figure>
+
+  <h3>Content item</h3>
+  <div class="codeblk"><pre>Briefed → Drafting → QA ⇄ Drafting (rejected, with structured feedback)
+                      ↓ passed
+                  Compliance → Drafting (claim unsupported)
+                      ↓
+              PendingApproval → Expired → Drafting        (news-linked: 24h)
+                      ↓ approved
+                  Scheduled ⇄ Held        (emergency lock / release)
+                      ↓
+                  Publishing → Published → Measuring
+                      ↓ permanent error
+                  PublishFailed → Scheduled</pre></div>
+
+  <h3>Approval item</h3>
+  <div class="codeblk"><pre>Generated → Reviewed (a different agent — four eyes)
+          → PendingHumanApproval → Approved | Rejected | Edited | Expired
+                                     ↓
+                                 Executing ⇄ Held      (kill switch / release)
+                                     ↓
+                                 Executed | ExecutionFailed</pre></div>
+  <p class="prose"><code>Approved → Held</code> is the state that makes emergency stop real. Without it, the switch would catch only work not yet approved — which is the wrong half.</p>
+</section>
+
+<section id="s10">
+  <div class="sechead"><span class="secnum">10</span><h2>Deployment Architecture</h2></div>
+
+  <div class="note">
+    <span class="lbl">Environment isolation is asserted, not assumed</span>
+    <p>At startup every service asserts that its bound connector implementations match the environment class. A production connector type in a non-production environment fails the health check and the service refuses to serve. That is what turns “test agents cannot contact real audiences” from a hope into a mechanism.</p>
+  </div>
+
+  <div class="scroller"><table>
+    <caption>Release</caption>
+    <thead><tr><th>Step</th><th>Mechanism</th></tr></thead>
+    <tbody>
+      <tr><td>Migration</td><td>Runs as a job before rollout; forward-compatible only — expand, migrate, contract across two releases</td></tr>
+      <tr><td><code>api</code> / <code>web</code></td><td>Rolling with health gates</td></tr>
+      <tr><td><code>worker</code></td><td><strong>Drain first</strong>: stop polling, let in-flight activities finish, then replace. Temporal replays anything interrupted</td></tr>
+      <tr><td><code>agent-runtime</code></td><td>Rolling; in-flight agent activities are retried by the workflow, not lost</td></tr>
+      <tr><td>Agent versions</td><td>A separate lifecycle from code: Draft → offline evaluation → Staging → approval → Production</td></tr>
+      <tr><td>Rollback</td><td>Code by image; <strong>agent behaviour by version pointer, with no deployment</strong></td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="scroller"><table>
+    <caption>Backup and recovery — RPO ≤ 15 minutes, RTO ≤ 4 hours</caption>
+    <thead><tr><th>Asset</th><th>Mechanism</th><th>Recovery</th></tr></thead>
+    <tbody>
+      <tr><td>PostgreSQL</td><td>Continuous archiving, point-in-time recovery</td><td>Restore to timestamp</td></tr>
+      <tr><td>Object storage</td><td>Versioning and lifecycle rules</td><td>Object-level restore</td></tr>
+      <tr><td>Temporal history</td><td>Backed up with the cluster</td><td>Workflows resume from the last recorded event</td></tr>
+      <tr><td>Config, prompts, agent versions</td><td>Versioned rows, exported nightly</td><td>Point-in-time config restore without a code deploy</td></tr>
+      <tr><td>Secrets</td><td>Vault-native backup</td><td>Re-bind references</td></tr>
+    </tbody>
+  </table></div>
+  <p class="prose">Recovery is exercised quarterly against staging. An untested backup is not a backup.</p>
+
+  <h3>Observability</h3>
+  <p class="prose">One <code>correlation_id</code> per business workflow flows request → workflow → activity → agent execution → model call → tool request → connector call → audit event. “Trace one business workflow across services, agents and model calls” therefore becomes a query rather than an inference — which is the difference between an audit requirement that is satisfiable and one that is aspirational.</p>
+</section>
+
+<section id="s11">
+  <div class="sechead"><span class="secnum">A</span><h2>What Phase 2 Does Not Decide</h2></div>
+  <div class="prose">
+    <p>Stated plainly, so nobody builds against something this phase did not settle:</p>
+    <ul>
+      <li><strong>No physical schema.</strong> Aggregates, invariants, ownership and consistency are fixed; tables, columns, indexes, partitions and migrations are Phase 4.</li>
+      <li><strong>No API contracts.</strong> Module interfaces and event names are fixed; routes, request and response schemas, validation, error shapes and idempotency headers are Phase 4.</li>
+      <li><strong>No screens.</strong> Phase 3 owns information architecture and wireframes; this document names workspaces only where architecture requires them.</li>
+      <li><strong>No agent prompts.</strong> The registry, contracts, ceilings and promotion path are fixed; the prompts themselves are Phase 5.</li>
+      <li><strong>No workflow definitions.</strong> The engine, state persistence and six representative flows are fixed; the full catalogue is Phase 6.</li>
+      <li><strong>No residency design</strong> beyond a single region — deferred deliberately, and cheap only while there is no data.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="s12">
+  <div class="sechead"><span class="secnum">B</span><h2>Phase 3 Prerequisites</h2></div>
+  <p class="prose">Phase 3 is UX: information architecture, navigation, and detailed wireframe specifications for every major screen. It needs less than Phase 2 did, because screens follow from the model — but two answers would change the work materially.</p>
+  <div class="scroller"><table>
+    <thead><tr><th>ID</th><th>Needed</th><th>Why it matters for UX</th><th>Default if not provided</th></tr></thead>
+    <tbody>
+      <tr class="sev-h"><td class="rid">P3-01</td><td>Approval of this architecture, or amendments</td><td>Screens are built on these objects and states</td><td>—</td></tr>
+      <tr class="sev-h"><td class="rid">P3-02</td><td>Who approves, on what device, in what time window</td><td>Decides whether the approval inbox is desktop-first with mobile support, or genuinely mobile-first. The workbook implies a manager reviewing on Monday mornings; approvals with a two-hour SLA imply a phone</td><td>Desktop-first, with full mobile approval, notification, dashboard, daily report and emergency pause</td></tr>
+      <tr class="sev-m"><td class="rid">P3-03</td><td>Whether operators keep working in the spreadsheet during transition</td><td>Determines whether the send queue must be printable or exportable, and how prominent Excel export is</td><td>Dual-running for one quarter; export stays first-class</td></tr>
+      <tr class="sev-m"><td class="rid">P3-04</td><td>Arabic interface requirement, and when</td><td>Right-to-left support is cheap to design in and expensive to retrofit</td><td>English interface; Arabic content pipeline only</td></tr>
+      <tr class="sev-l"><td class="rid">P3-05</td><td>Any existing brand system for internal tools</td><td>Precedence is the user's own system over my choices</td><td>The visual system used in these documents</td></tr>
+    </tbody>
+  </table></div>
+  <p class="prose">The five Phase 2 blockers remain open and still shape later phases — particularly the CMS, which determines whether the content lane can execute at all, and the region, which is the one decision that gets more expensive with every day of stored data.</p>
+</section>
+
+<footer>
+  <p><strong>Phase 2 ends here.</strong> No implementation, schema migrations, API contracts or deployment artefacts have been produced. On approval, Phase 3 delivers information architecture, navigation and wireframe specifications for every major screen — purpose, primary user, data, actions, filters, tables, charts, empty, error and loading states, mobile behaviour and permissions.</p>
+  <p>Full documents in the repository under <code>docs/</code> — system, agent, data, security and integration architecture, plus seven sequence diagrams and three workflow state machines.</p>
+</footer>
+
+</div>
+</main>
+</div>
+
+<script>
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('.navlist a'));
+  var map = {};
+  links.forEach(function(a){ map[a.getAttribute('href').slice(1)] = a; });
+  var sections = Array.prototype.slice.call(document.querySelectorAll('section[id]'));
+  if(!('IntersectionObserver' in window)) return;
+  var visible = {};
+  var obs = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ visible[e.target.id] = e.isIntersecting ? e.intersectionRatio : 0; });
+    var best=null, bestVal=0;
+    Object.keys(visible).forEach(function(id){ if(visible[id] > bestVal){ bestVal = visible[id]; best = id; } });
+    links.forEach(function(a){ a.removeAttribute('aria-current'); });
+    if(best && map[best]) map[best].setAttribute('aria-current','true');
+  }, {rootMargin:'-10% 0px -70% 0px', threshold:[0,0.05,0.25,0.5,1]});
+  sections.forEach(function(s){ obs.observe(s); });
+})();
+</script>
