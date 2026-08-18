@@ -19,13 +19,15 @@ public sealed class RunBudgetLedger : ValueObject
     private RunBudgetLedger(
         long promptTokens,
         long completionTokens,
-        Money costIncurred,
+        decimal costAmount,
+        string costCurrency,
         int toolCallCount,
         int iterationCount)
     {
         PromptTokens = promptTokens;
         CompletionTokens = completionTokens;
-        CostIncurred = costIncurred;
+        CostAmount = costAmount;
+        CostCurrency = costCurrency;
         ToolCallCount = toolCallCount;
         IterationCount = iterationCount;
     }
@@ -36,24 +38,43 @@ public sealed class RunBudgetLedger : ValueObject
 
     public long TotalTokens => PromptTokens + CompletionTokens;
 
-    public Money CostIncurred { get; }
+    /// <summary>
+    /// Cost is held as a scalar amount and currency rather than as a nested <see cref="Money"/>
+    /// so that month-to-date spend across thousands of runs is a plain SQL <c>SUM</c> over one
+    /// column, and budget enforcement never needs to materialise the runs to add them up.
+    /// </summary>
+    public decimal CostAmount { get; }
+
+    public string CostCurrency { get; } = "USD";
+
+    public Money CostIncurred => Money.Of(CostAmount, CostCurrency);
 
     public int ToolCallCount { get; }
 
     public int IterationCount { get; }
 
-    public static RunBudgetLedger Empty(string currency) => new(0, 0, Money.Zero(currency), 0, 0);
+    public static RunBudgetLedger Empty(string currency) => new(0, 0, 0m, Money.Zero(currency).Currency, 0, 0);
 
     public RunBudgetLedger RecordCompletion(long promptTokens, long completionTokens, Money cost)
-        => new(
+    {
+        ArgumentNullException.ThrowIfNull(cost);
+
+        // Adding through Money rather than adding the raw decimals keeps the currency-mismatch
+        // guard in force: a provider misconfigured to bill in a different currency fails loudly
+        // here instead of silently inflating the ledger.
+        Money combined = CostIncurred.Add(cost);
+
+        return new RunBudgetLedger(
             PromptTokens + promptTokens,
             CompletionTokens + completionTokens,
-            CostIncurred.Add(cost),
+            combined.Amount,
+            combined.Currency,
             ToolCallCount,
             IterationCount + 1);
+    }
 
     public RunBudgetLedger RecordToolCall() => new(
-        PromptTokens, CompletionTokens, CostIncurred, ToolCallCount + 1, IterationCount);
+        PromptTokens, CompletionTokens, CostAmount, CostCurrency, ToolCallCount + 1, IterationCount);
 
     /// <summary>
     /// Whether another reasoning iteration may begin.
@@ -113,7 +134,8 @@ public sealed class RunBudgetLedger : ValueObject
     {
         yield return PromptTokens;
         yield return CompletionTokens;
-        yield return CostIncurred;
+        yield return CostAmount;
+        yield return CostCurrency;
         yield return ToolCallCount;
         yield return IterationCount;
     }

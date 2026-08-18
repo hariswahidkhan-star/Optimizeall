@@ -27,7 +27,7 @@
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.0" />
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.2" />
-    <PackageVersion Include="Pgvector" Version="0.3.0" />
+    <PackageVersion Include="Pgvector" Version="0.3.1" />
     <PackageVersion Include="Pgvector.EntityFrameworkCore" Version="0.2.2" />
     <PackageVersion Include="StackExchange.Redis" Version="2.8.24" />
   </ItemGroup>
