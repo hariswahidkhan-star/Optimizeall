@@ -1,0 +1,1586 @@
+<title>PCI AI Growth OS Phase 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=JetBrains+Mono:wght@400;600&display=swap">
+
+<style>
+:root{
+  --paper:#F4F6F5;
+  --surface:#FFFFFF;
+  --surface-2:#EDF1EF;
+  --ink:#16211E;
+  --ink-2:#3D4E49;
+  --ink-3:#697A75;
+  --rule:#D5DDDA;
+  --rule-strong:#B6C3BF;
+  --accent:#0F5F52;
+  --accent-soft:#DCEBE7;
+  --warn:#8A6212;
+  --warn-soft:#F5EBD6;
+  --crit:#9B3A2E;
+  --crit-soft:#F6E2DE;
+  --ok:#2C6E49;
+  --ok-soft:#DFEDE4;
+
+  --f-display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --f-body:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --f-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+
+  --nav-w:16.5rem;
+  --measure:70ch;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#0D1412;
+    --surface:#141D1A;
+    --surface-2:#1B2724;
+    --ink:#E3EAE7;
+    --ink-2:#B4C2BE;
+    --ink-3:#849791;
+    --rule:#2A3733;
+    --rule-strong:#3C4B47;
+    --accent:#5BBBA6;
+    --accent-soft:#12332C;
+    --warn:#D9AC5B;
+    --warn-soft:#33290F;
+    --crit:#E28879;
+    --crit-soft:#37201B;
+    --ok:#6FBF8F;
+    --ok-soft:#14301F;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0D1412;
+  --surface:#141D1A;
+  --surface-2:#1B2724;
+  --ink:#E3EAE7;
+  --ink-2:#B4C2BE;
+  --ink-3:#849791;
+  --rule:#2A3733;
+  --rule-strong:#3C4B47;
+  --accent:#5BBBA6;
+  --accent-soft:#12332C;
+  --warn:#D9AC5B;
+  --warn-soft:#33290F;
+  --crit:#E28879;
+  --crit-soft:#37201B;
+  --ok:#6FBF8F;
+  --ok-soft:#14301F;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--f-body);
+  font-size:16.5px;
+  line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:var(--accent);text-underline-offset:.18em;text-decoration-thickness:.06em}
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+
+.skip{position:absolute;left:-9999px;top:0}
+.skip:focus{left:.75rem;top:.75rem;z-index:99;background:var(--surface);color:var(--ink);padding:.5rem .8rem;border:1px solid var(--rule-strong)}
+
+/* ---------- shell ---------- */
+.shell{display:grid;grid-template-columns:var(--nav-w) minmax(0,1fr);gap:0;align-items:start}
+
+/* ---------- nav ---------- */
+.nav{
+  position:sticky;top:0;height:100vh;overflow-y:auto;
+  border-right:1px solid var(--rule);
+  background:var(--surface);
+  padding:1.9rem 1.15rem 3rem 1.5rem;
+  font-family:var(--f-display);
+}
+.brandmark{font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+.brandname{font-size:1.06rem;font-weight:700;line-height:1.25;margin:.45rem 0 .1rem;letter-spacing:-.01em}
+.brandsub{font-size:.78rem;color:var(--ink-3);line-height:1.4}
+.navstatus{
+  margin:1.15rem 0 1.3rem;padding:.5rem .6rem;
+  background:var(--warn-soft);color:var(--warn);
+  font-size:.68rem;letter-spacing:.09em;text-transform:uppercase;font-weight:600;
+  border-left:2px solid currentColor;
+}
+.navlist{display:flex;flex-direction:column;gap:.06rem;margin:0;padding:0;list-style:none}
+.navlist a{
+  display:grid;grid-template-columns:1.5rem 1fr;gap:.4rem;
+  padding:.3rem .35rem;border-radius:2px;
+  font-size:.82rem;line-height:1.32;color:var(--ink-2);text-decoration:none;
+}
+.navlist a:hover{background:var(--surface-2);color:var(--ink)}
+.navlist a .n{font-family:var(--f-mono);font-size:.68rem;color:var(--ink-3);padding-top:.16em;font-variant-numeric:tabular-nums}
+.navlist a[aria-current="true"]{background:var(--accent-soft);color:var(--ink);font-weight:600}
+.navlist a[aria-current="true"] .n{color:var(--accent)}
+.navdiv{height:1px;background:var(--rule);margin:.85rem 0}
+
+/* ---------- main ---------- */
+main{padding:0 clamp(1.1rem,3.4vw,3.4rem) 7rem;min-width:0}
+.inner{max-width:76rem;margin:0 auto}
+.prose{max-width:var(--measure)}
+
+/* masthead */
+.masthead{padding:3.4rem 0 1.6rem;border-bottom:2px solid var(--ink)}
+.eyebrow{font-family:var(--f-display);font-size:.7rem;letter-spacing:.19em;text-transform:uppercase;color:var(--accent);font-weight:600}
+h1{
+  font-family:var(--f-display);font-weight:700;letter-spacing:-.026em;
+  font-size:clamp(2.1rem,5.2vw,3.4rem);line-height:1.03;margin:.55rem 0 .7rem;text-wrap:balance;
+}
+.standfirst{font-size:1.11rem;line-height:1.55;color:var(--ink-2);max-width:56ch;margin:0}
+
+/* doc control block */
+.control{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(11rem,1fr));
+  gap:0;border:1px solid var(--rule-strong);margin:1.9rem 0 0;background:var(--surface);
+}
+.control div{padding:.72rem .85rem;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.control div:last-child{border-right:none}
+.control dt{font-family:var(--f-display);font-size:.63rem;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);font-weight:600;margin:0 0 .25rem}
+.control dd{margin:0;font-family:var(--f-display);font-size:.9rem;font-weight:500;line-height:1.3}
+
+/* sections */
+section{padding-top:3.6rem;scroll-margin-top:1rem}
+.sechead{display:flex;align-items:baseline;gap:.8rem;border-top:1px solid var(--rule-strong);padding-top:.75rem;margin-bottom:1.15rem}
+.secnum{font-family:var(--f-mono);font-size:.78rem;color:var(--accent);font-weight:600;font-variant-numeric:tabular-nums;padding-top:.35em}
+h2{font-family:var(--f-display);font-weight:700;letter-spacing:-.018em;font-size:clamp(1.42rem,2.7vw,1.92rem);line-height:1.14;margin:0;text-wrap:balance}
+h3{font-family:var(--f-display);font-weight:600;font-size:1.08rem;letter-spacing:-.005em;margin:2.1rem 0 .55rem;text-wrap:balance}
+h4{font-family:var(--f-display);font-weight:600;font-size:.72rem;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);margin:1.7rem 0 .5rem}
+p{margin:0 0 .95rem}
+ul,ol{margin:0 0 1rem;padding-left:1.15rem}
+li{margin-bottom:.32rem}
+strong{font-weight:600}
+em{font-style:italic}
+
+/* callouts */
+.note{
+  border-left:3px solid var(--accent);background:var(--surface);
+  padding:.9rem 1.1rem;margin:1.3rem 0;max-width:var(--measure);
+}
+.note.warn{border-left-color:var(--warn);background:var(--warn-soft)}
+.note.crit{border-left-color:var(--crit);background:var(--crit-soft)}
+.note p:last-child{margin-bottom:0}
+.note .lbl{font-family:var(--f-display);font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--accent);display:block;margin-bottom:.35rem}
+.note.warn .lbl{color:var(--warn)}
+.note.crit .lbl{color:var(--crit)}
+
+/* tables */
+.scroller{overflow-x:auto;margin:1.15rem 0 1.5rem;border:1px solid var(--rule);background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-family:var(--f-display);font-size:.83rem;line-height:1.42}
+caption{text-align:left;font-family:var(--f-display);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);font-weight:600;padding:.7rem .85rem .1rem}
+th,td{padding:.52rem .8rem;text-align:left;vertical-align:top;border-bottom:1px solid var(--rule)}
+thead th{
+  font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:600;
+  background:var(--surface-2);border-bottom:1px solid var(--rule-strong);white-space:nowrap;position:sticky;top:0;
+}
+tbody tr:last-child td{border-bottom:none}
+td.num,th.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+.rid{font-family:var(--f-mono);font-size:.76rem;font-weight:600;color:var(--accent);white-space:nowrap;font-variant-numeric:tabular-nums}
+code{font-family:var(--f-mono);font-size:.86em;background:var(--surface-2);padding:.08em .32em;border-radius:2px}
+
+/* pills */
+.pill{
+  display:inline-block;font-family:var(--f-display);font-size:.65rem;font-weight:600;
+  letter-spacing:.07em;text-transform:uppercase;padding:.14rem .44rem;white-space:nowrap;border-radius:2px;
+}
+.p-ok{background:var(--ok-soft);color:var(--ok)}
+.p-warn{background:var(--warn-soft);color:var(--warn)}
+.p-crit{background:var(--crit-soft);color:var(--crit)}
+.p-neut{background:var(--surface-2);color:var(--ink-2)}
+.p-acc{background:var(--accent-soft);color:var(--accent)}
+
+/* severity stripe rows */
+tr.sev-h td:first-child{box-shadow:inset 3px 0 0 var(--crit)}
+tr.sev-m td:first-child{box-shadow:inset 3px 0 0 var(--warn)}
+tr.sev-l td:first-child{box-shadow:inset 3px 0 0 var(--ok)}
+tr.sev-x td:first-child{box-shadow:inset 3px 0 0 var(--ink)}
+
+/* stat strip */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(8.2rem,1fr));gap:0;border:1px solid var(--rule-strong);margin:1.4rem 0 1.8rem;background:var(--surface)}
+.stat{padding:.9rem .95rem;border-right:1px solid var(--rule)}
+.stat:last-child{border-right:none}
+.stat b{display:block;font-family:var(--f-display);font-weight:700;font-size:1.55rem;letter-spacing:-.02em;line-height:1;font-variant-numeric:tabular-nums}
+.stat span{display:block;font-family:var(--f-display);font-size:.67rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:600;margin-top:.4rem;line-height:1.3}
+
+/* decision cards */
+.dec{border:1px solid var(--rule);background:var(--surface);margin:1rem 0;padding:1rem 1.15rem}
+.dec .id{font-family:var(--f-mono);font-size:.72rem;font-weight:600;color:var(--accent)}
+.dec h3{margin:.25rem 0 .7rem;font-size:1.02rem}
+.dec dl{display:grid;grid-template-columns:7.2rem 1fr;gap:.3rem .9rem;margin:0;font-family:var(--f-display);font-size:.85rem;line-height:1.5}
+.dec dt{font-size:.65rem;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3);font-weight:600;padding-top:.28em}
+.dec dd{margin:0}
+
+/* agent grid */
+.agents{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);margin:1.1rem 0 1.6rem}
+.agent{background:var(--surface);padding:.8rem .9rem}
+.agent .code{font-family:var(--f-mono);font-size:.72rem;font-weight:600;color:var(--accent)}
+.agent .nm{font-family:var(--f-display);font-weight:600;font-size:.94rem;margin:.15rem 0 .3rem;line-height:1.25}
+.agent p{font-size:.82rem;font-family:var(--f-display);color:var(--ink-2);margin:0;line-height:1.45}
+.divhead{font-family:var(--f-display);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:700;margin:1.5rem 0 .5rem}
+
+footer{margin-top:4.5rem;border-top:2px solid var(--ink);padding:1.5rem 0 0;font-family:var(--f-display);font-size:.83rem;color:var(--ink-3);max-width:var(--measure)}
+
+@media (max-width:900px){
+  .shell{grid-template-columns:1fr}
+  .nav{position:static;height:auto;border-right:none;border-bottom:1px solid var(--rule-strong);padding:1.3rem 1.2rem}
+  .navlist{display:grid;grid-template-columns:repeat(auto-fit,minmax(13rem,1fr));gap:.05rem}
+  thead th{position:static}
+  body{font-size:16px}
+}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+html{scroll-behavior:smooth}
+</style>
+
+<a class="skip" href="#main">Skip to content</a>
+<div class="shell">
+
+<nav class="nav" aria-label="Specification contents">
+  <div class="brandmark">PCI AI</div>
+  <div class="brandname">Autonomous Growth OS</div>
+  <div class="brandsub">Phase 1 — Software Requirements Specification</div>
+  <div class="navstatus">Awaiting approval</div>
+  <ul class="navlist">
+    <li><a href="#s1"><span class="n">01</span><span>Workbook Analysis Summary</span></a></li>
+    <li><a href="#s2"><span class="n">02</span><span>Sheet-by-Sheet Map</span></a></li>
+    <li><a href="#s3"><span class="n">03</span><span>Business Workflows</span></a></li>
+    <li><a href="#s4"><span class="n">04</span><span>AI Agent Workforce</span></a></li>
+    <li><a href="#s5"><span class="n">05</span><span>Automation Classification</span></a></li>
+    <li><a href="#s6"><span class="n">06</span><span>Human Approval Matrix</span></a></li>
+    <li><a href="#s7"><span class="n">07</span><span>Platform &amp; Integration Matrix</span></a></li>
+    <li><a href="#s8"><span class="n">08</span><span>KPI Catalogue</span></a></li>
+    <li><a href="#s9"><span class="n">09</span><span>Scheduling Catalogue</span></a></li>
+    <li><a href="#s10"><span class="n">10</span><span>Traceability Matrix</span></a></li>
+    <li><a href="#s11"><span class="n">11</span><span>Full SRS</span></a></li>
+    <li><a href="#s12"><span class="n">12</span><span>MVP Recommendation</span></a></li>
+    <li><a href="#s13"><span class="n">13</span><span>Decisions Needing Approval</span></a></li>
+    <li><a href="#s14"><span class="n">14</span><span>Automation Risk Register</span></a></li>
+    <li><a href="#s15"><span class="n">15</span><span>Workbook Gaps</span></a></li>
+    <li><a href="#s16"><span class="n">16</span><span>Open Questions</span></a></li>
+    <li><a href="#s17"><span class="n">17</span><span>Phase 2 Prerequisites</span></a></li>
+  </ul>
+  <div class="navdiv"></div>
+  <ul class="navlist">
+    <li><a href="#sa"><span class="n">A</span><span>Challenges to the Brief</span></a></li>
+  </ul>
+</nav>
+
+<main id="main">
+<div class="inner">
+
+<header class="masthead">
+  <div class="eyebrow">Phase 1 deliverable · Specification only</div>
+  <h1>PCI AI Autonomous Growth OS</h1>
+  <p class="standfirst">A governed AI workforce for the Project Controls Institute, derived line by line from <code>PCI_AI_Growth_OS.xlsx</code>. No code, schema, or deployment until this document is approved.</p>
+  <dl class="control">
+    <div><dt>Status</dt><dd>Phase 1 — awaiting approval</dd></div>
+    <div><dt>Source of truth</dt><dd>PCI_AI_Growth_OS.xlsx</dd></div>
+    <div><dt>Sheets analysed</dt><dd>42 of 42</dd></div>
+    <div><dt>Requirements</dt><dd>~300 across 18 namespaces</dd></div>
+    <div><dt>Agents specified</dt><dd>24 in 6 divisions</dd></div>
+    <div><dt>Workflows</dt><dd>40</dd></div>
+    <div><dt>Date</dt><dd>18 August 2026</dd></div>
+    <div><dt>Repository</dt><dd>claude/pci-ai-growth-os-spec</dd></div>
+  </dl>
+</header>
+
+<section id="s1">
+  <div class="sechead"><span class="secnum">01</span><h2>Workbook Analysis Summary</h2></div>
+  <div class="prose">
+    <p>The workbook is not a spreadsheet awaiting digitisation. It is a complete operating model for a growth department, already carrying a constitution, a strategy layer, an estate model, a work breakdown, an hour-by-hour execution protocol, a content supply chain, approved copy with enforced limits, a measurement layer, a data-quality layer, and a six-pass audit changelog.</p>
+    <p>The instance analysed is <em>fresh and unrun</em>: every log tab is empty, the Dashboard reads zero throughout, and the roster holds a single placeholder, “Employee 1”. The workbook says so itself on <code>Dashboard!A3</code>.</p>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><b>42</b><span>Worksheets</span></div>
+    <div class="stat"><b>133</b><span>Platforms, ranked 1–133</span></div>
+    <div class="stat"><b>23</b><span>Growth techniques</span></div>
+    <div class="stat"><b>5,683</b><span>Article briefs</span></div>
+    <div class="stat"><b>63</b><span>Master tasks</span></div>
+    <div class="stat"><b>15</b><span>Approved templates</span></div>
+    <div class="stat"><b>11</b><span>Ranked objectives</span></div>
+    <div class="stat"><b>25</b><span>Governance checks</span></div>
+  </div>
+
+  <div class="note crit">
+    <span class="lbl">The finding that shapes the architecture</span>
+    <p>The workbook forbids automating the single highest-value activity it describes. Golden Rule 5 — <em>“No bulk sending, no automation tools, no bots, no scraping”</em> — is repeated in the LinkedIn Playbook (step 3), QA &amp; Compliance check 5, and Growth Playbook technique 15. LinkedIn also publishes no API for connection requests, personal messages or comments.</p>
+    <p>This is not an obstacle to design around. It is the design constraint. The outreach lane is therefore specified as <strong>prepare → verify → approve → human executes → confirm → measure</strong>, and the platform’s value there is the research, qualification, personalisation, sequencing, compliance and measurement — roughly 90% of the labour, and all of the leverage.</p>
+  </div>
+
+  <h3>The organisation the workbook describes</h3>
+  <div class="scroller"><table>
+    <tbody>
+      <tr><th>Organisation</th><td>PCI AI — Project Controls Institute</td></tr>
+      <tr><th>Brands</th><td>PCI AI Institute (umbrella) · PCL-AI · PFL-AI · PML-AI · PCI World · Certuvo (exam prep) · All/shared</td></tr>
+      <tr><th>Domains</th><td>projectcontrolsinstitute.org · pciai.org · pciglobal.ai · pciworld.org · mypci.org</td></tr>
+      <tr><th>Programme start</th><td>17 August 2026 (a Monday); 5 working days; week-start configurable to Sunday for Gulf teams</td></tr>
+      <tr><th>Commercial motion</th><td>Honorary certification outreach to senior practitioners → criteria → application → certification revenue; plus enterprise and association partnerships</td></tr>
+      <tr><th>Markets</th><td>UK · US · Gulf (KSA, UAE, Qatar) · India · Australia</td></tr>
+      <tr><th>Competitors named</th><td>AACE · PMI · RICS · APMG · Project Control Academy · EVMi · <strong>projectcontrolsinstitute.com</strong>, which currently outranks PCI for PCI’s own name</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>The eleven objectives, ranked by the workbook’s own value judgement</h3>
+  <p class="prose">This is the orchestrator’s objective function. It is not inferred — it is stated on <code>Objective Performance!K4:K14</code>, in editable cells, with a rationale beside each rank.</p>
+  <div class="scroller"><table>
+    <thead><tr><th class="num">Rank</th><th>Objective</th><th>Workbook rationale</th></tr></thead>
+    <tbody>
+      <tr><td class="num">1</td><td>Certification Sales — PCL-AI</td><td>Revenue driver, flagship credential</td></tr>
+      <tr><td class="num">2</td><td>Certification Sales — PML-AI</td><td>Revenue driver, premium tier</td></tr>
+      <tr><td class="num">3</td><td>Certification Sales — PFL-AI</td><td>Revenue driver, entry funnel</td></tr>
+      <tr><td class="num">4</td><td>Honorary Certification Outreach</td><td>Strategic pipeline — fellows legitimise, refer, open doors</td></tr>
+      <tr><td class="num">5</td><td>Partnerships &amp; PR</td><td>Multiplier — one deal moves whole cohorts</td></tr>
+      <tr><td class="num">6</td><td>Authority &amp; Entity Building</td><td>Compounding — lifts every other conversion</td></tr>
+      <tr><td class="num">7</td><td>Content &amp; SEO Growth</td><td>Compounding — owned traffic that keeps paying</td></tr>
+      <tr><td class="num">8</td><td>Events &amp; Webinars</td><td>Pipeline builder — concentrated lead capture</td></tr>
+      <tr><td class="num">9</td><td>Certuvo (Exam Prep)</td><td>Adjacent revenue and feeder into certifications</td></tr>
+      <tr><td class="num">10</td><td>Community Presence</td><td>Trust builder — slow burn, defends reputation</td></tr>
+      <tr><td class="num">11</td><td>General Brand Awareness</td><td>Support — spend spare capacity only</td></tr>
+    </tbody>
+  </table></div>
+  <p class="prose">Every logged row in every tab carries two mandatory tags — <strong>Objective</strong> and <strong>For (brand)</strong>. Untagged rows fall into a red review line each Monday. This is a data-model requirement, not a reporting nicety.</p>
+
+  <h3>The ten Golden Rules become the policy engine</h3>
+  <div class="scroller"><table>
+    <thead><tr><th class="num">#</th><th>Rule</th><th>Software consequence</th></tr></thead>
+    <tbody>
+      <tr><td class="num">1</td><td>Never say anyone has been awarded, approved or guaranteed a certification — you invite them to be <em>considered</em></td><td>Banned-phrase gate, claim classifier, four-eyes on all outreach</td></tr>
+      <tr><td class="num">2</td><td>Never invent facts about PCI — members, accreditations, recognition, partnerships</td><td>Claim verification against an approved evidence store</td></tr>
+      <tr><td class="num">3</td><td>Personalise every message with something real from the profile</td><td>Personal line required, with cited evidence; empty blocks the send</td></tr>
+      <tr><td class="num">4</td><td>Messages under 300 characters; connection notes under 200</td><td>Deterministic validation before queue entry</td></tr>
+      <tr><td class="num">5</td><td>No bulk sending, automation tools, bots or scraping</td><td>Prohibits every automated LinkedIn action and all scraping connectors</td></tr>
+      <tr><td class="num">6</td><td>Respect limits; stop at target; stop for the day on a platform warning</td><td>Rate limiter and circuit breaker per platform per identity</td></tr>
+      <tr><td class="num">7</td><td>If someone declines, thank them and never contact again</td><td>Permanent suppression, enforced at queue entry, all channels and brands</td></tr>
+      <tr><td class="num">8</td><td>Answer the question first, promote PCI second</td><td>“Useful without the link” QA gate on community drafts</td></tr>
+      <tr><td class="num">9</td><td>Never store passwords here — only the vault reference; 2FA everywhere</td><td>Credential references only; no secret ever reaches a model</td></tr>
+      <tr><td class="num">10</td><td>Log everything the same day, with evidence</td><td>Evidence URL mandatory on completion</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>The daily rhythm — derived, not invented</h3>
+  <p class="prose">From <code>Summary</code> rows 29–38 and <code>LinkedIn Playbook</code> steps 1–10. Times are in the organisation’s time zone, never server UTC.</p>
+  <div class="scroller"><table>
+    <thead><tr><th class="num">Time</th><th>Activity</th><th class="num">Target / person / day</th><th>Logged to</th></tr></thead>
+    <tbody>
+      <tr><td class="num">09:00</td><td>Research qualified leads in Sales Navigator</td><td class="num">30</td><td>LinkedIn Outreach</td></tr>
+      <tr><td class="num">09:30</td><td>Write one true personal line per lead</td><td class="num">30</td><td>LinkedIn Outreach col L</td></tr>
+      <tr><td class="num">10:00</td><td>Send connection requests (M1, &lt;200 chars)</td><td class="num">20</td><td>LinkedIn Outreach col M</td></tr>
+      <tr><td class="num">11:00</td><td>Message new acceptances (M2, &lt;300 chars, within 24h)</td><td class="num">15</td><td>LinkedIn Outreach P–R</td></tr>
+      <tr><td class="num">11:30</td><td>Reply to every response the same day; escalate anything uncertain</td><td class="num">—</td><td>LinkedIn Outreach S–T</td></tr>
+      <tr><td class="num">12:00</td><td>Follow-ups: day 4 (M4), day 10 (M5), then stop</td><td class="num">10</td><td>LinkedIn Outreach U–V</td></tr>
+      <tr><td class="num">14:00</td><td>Genuine comments on target-audience posts</td><td class="num">15</td><td>DAILY ENTRY</td></tr>
+      <tr><td class="num">15:00</td><td>Publish content; answer on Quora, Reddit, groups</td><td class="num">2 + 3</td><td>Content Calendar / Community &amp; PR</td></tr>
+      <tr><td class="num">16:00</td><td>Partnership and PR approaches</td><td class="num">5</td><td>Partnership Pipeline</td></tr>
+      <tr><td class="num">17:00</td><td>Log the day</td><td class="num">all</td><td>DAILY ENTRY</td></tr>
+      <tr><td class="num">Fri</td><td>Weekly Review — wins, misses, next week’s focus</td><td class="num">1</td><td>Weekly Review</td></tr>
+      <tr><td class="num">Mon</td><td>Manager review: Weekly Pulse → Objective Performance → Team Scorecard col Q → Data Health</td><td class="num">1</td><td>—</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Failure modes the workbook has already proved</h3>
+  <p class="prose">Mined from <code>UPGRADE NOTES</code>, which records 47 findings across six audit passes. These are observed failures in the manual system, and the strongest evidence for specific controls.</p>
+  <div class="scroller"><table>
+    <thead><tr><th class="num">Finding</th><th>Failure</th><th>Requirement it justifies</th></tr></thead>
+    <tbody>
+      <tr><td class="num">#2</td><td>UTM builder used <code>SEARCH('?')</code> as a wildcard — every campaign link malformed, GA4 blind</td><td><span class="rid">FR-095</span> deterministic link minting, unit-tested</td></tr>
+      <tr><td class="num">#3</td><td>Team targets compared against one person’s target</td><td><span class="rid">FR-007</span> capacity-aware expectation</td></tr>
+      <tr><td class="num">#4</td><td>No duplicate-lead defence — two people could contact the same person, including one who declined</td><td><span class="rid">FR-025</span> <span class="rid">CMP-006</span></td></tr>
+      <tr><td class="num">#8</td><td>Follow-ups fired from date logged + 4, not date messaged — due before the message went out</td><td><span class="rid">WF-021</span> timers anchored to the event</td></tr>
+      <tr><td class="num">#22</td><td>All 54 validation rules had error alerts off — Excel showed the list and silently accepted anything</td><td><span class="rid">DAT-006</span> server-side validation is the only validation</td></tr>
+      <tr><td class="num">#45</td><td>A row insert shifted Dashboard tiles — the revenue tile silently displayed meetings</td><td><span class="rid">FR-092</span> KPIs by stable identifier, with regression test</td></tr>
+      <tr><td class="num">#46</td><td>“Content published” meant different things on two sheets</td><td><span class="rid">FR-093</span> one definition per KPI</td></tr>
+      <tr><td class="num">#18</td><td>Outreach log holds ~1,200 rows — about eight working days at full-team volume</td><td><span class="rid">DAT-001</span> the platform replaces the spreadsheet</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="s2">
+  <div class="sechead"><span class="secnum">02</span><h2>Sheet-by-Sheet Requirements Map</h2></div>
+  <div class="prose">
+    <p>All 42 sheets, with the destination decision each one drives. The full column set demanded by the brief — purpose, business process, tasks, frequency, responsible role, inputs, outputs, KPIs, dependencies, platforms, automatability, AI suitability, API need, approval need, risk, agent, workflow, schedule — is held per sheet in <code>docs/01-workbook-analysis.md §1.6</code>. This table carries the decision-relevant columns.</p>
+  </div>
+  <div class="scroller"><table>
+    <caption>Group A — Read-first and governance</caption>
+    <thead><tr><th>Sheet</th><th>What it is</th><th>Becomes</th><th>Automatable</th><th>Risk</th><th>Agent</th></tr></thead>
+    <tbody>
+      <tr><td>START HERE</td><td>Rulebook: settings, targets, Golden Rules, roster, sharing rules, domains</td><td>Policy + configuration</td><td><span class="pill p-ok">Config</span></td><td><span class="pill p-ok">Low</span></td><td>Policy engine</td></tr>
+      <tr><td>MAP</td><td>Navigation and ownership index</td><td>UI information architecture</td><td><span class="pill p-ok">Yes</span></td><td><span class="pill p-ok">Low</span></td><td>—</td></tr>
+      <tr><td>TEAM GUIDE</td><td>Onboarding; where-to-log for every kind of work</td><td>Knowledge + onboarding workflow</td><td><span class="pill p-ok">Yes</span></td><td><span class="pill p-ok">Low</span></td><td>KNOW</td></tr>
+      <tr><td>GROWTH PLAYBOOK</td><td>23 techniques with steps, cadence, KPI, anti-patterns</td><td>Workflow definitions + policy</td><td><span class="pill p-warn">Partial</span></td><td><span class="pill p-warn">Medium</span></td><td>Multiple</td></tr>
+      <tr><td>PLATFORM GUIDE</td><td>Weekly play per platform, all 133 rows</td><td>Entity + per-channel workflow</td><td><span class="pill p-warn">Partial</span></td><td><span class="pill p-warn">Medium</span></td><td>Channel agents</td></tr>
+      <tr><td>PR &amp; Target Directory</td><td>~100 verified routes plus a verified skip list with reasons</td><td>PRRoute entity + workflow</td><td><span class="pill p-warn">Partial</span></td><td><span class="pill p-warn">Medium</span></td><td>PR, PART</td></tr>
+      <tr><td>Glossary</td><td>~70 terms grouped by area</td><td>Knowledge + UI help</td><td><span class="pill p-ok">Yes</span></td><td><span class="pill p-ok">Low</span></td><td>KNOW</td></tr>
+      <tr><td>UPGRADE NOTES</td><td>47 audit findings with severity and residual actions</td><td>Migration acceptance criteria</td><td><span class="pill p-ok">Yes</span></td><td><span class="pill p-ok">Low</span></td><td>KNOW</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="scroller"><table>
+    <caption>Group B — Daily work, the sheets people type on</caption>
+    <thead><tr><th>Sheet</th><th class="num">Rows</th><th>What it holds</th><th>Becomes</th><th>Automatable</th><th>Risk</th><th>Agent</th></tr></thead>
+    <tbody>
+      <tr><td>DAILY ENTRY</td><td class="num">1,203</td><td>One row per activity: date, person, platform, type, count, minutes, evidence, objective, brand</td><td>ActivityRecord</td><td><span class="pill p-ok">Yes</span></td><td><span class="pill p-ok">Low</span></td><td>OPS</td></tr>
+      <tr><td>LinkedIn Outreach</td><td class="num">1,204</td><td>42 columns: research → connect → message → reply → meeting → application → revenue</td><td>Account, Contact, Lead, Interaction</td><td><span class="pill p-crit">Prep only</span></td><td><span class="pill p-crit">High</span></td><td>LEAD, OUT</td></tr>
+      <tr><td>Partnership Pipeline</td><td class="num">404</td><td>One row per organisation, with ICP/intent scoring and signed value</td><td>Partnership</td><td><span class="pill p-warn">Partial</span></td><td><span class="pill p-warn">Medium</span></td><td>PART</td></tr>
+      <tr><td>Content Calendar</td><td class="num">404</td><td>Idea → published URL → impressions, engagements, clicks, leads</td><td>ContentItem + metrics</td><td><span class="pill p-ok">Yes</span></td><td><span class="pill p-warn">Medium</span></td><td>CSTRAT→PUB</td></tr>
+      <tr><td>Content Scheduler</td><td class="num">125</td><td>Platform × cadence × window, computing coverage; plus native-scheduling limits</td><td>ContentSchedule + KPI</td><td><span class="pill p-ok">Yes</span></td><td><span class="pill p-ok">Low</span></td><td>OPS, PUB</td></tr>
+      <tr><td>Community &amp; PR</td><td class="num">404</td><td>Forum answers, community threads, press, podcasts, journalist requests</td><td>CommunityAction, PRPlacement</td><td><span class="pill p-crit">Draft only</span></td><td><span class="pill p-crit">High</span></td><td>COMM, PR</td></tr>
+      <tr><td>Job Postings</td><td class="num">204</td><td>One row per platform per open role, with applicant counts</td><td>JobPosting</td><td><span class="pill p-warn">Partial</span></td><td><span class="pill p-ok">Low</span></td><td>OPS</td></tr>
+      <tr><td>Link Building</td><td class="num">404</td><td>Off-page system of record: prospect → outreach → link live</td><td>LinkProspect</td><td><span class="pill p-warn">Partial</span></td><td><span class="pill p-warn">Medium</span></td><td>LINK</td></tr>
+      <tr><td>Experiments</td><td class="num">55</td><td>Hypothesis, variants, samples, rates, significance guard, decision</td><td>Experiment</td><td><span class="pill p-ok">Yes</span></td><td><span class="pill p-warn">Medium</span></td><td>EXP</td></tr>
+      <tr><td>UTM Builder</td><td class="num">105</td><td>Tracked-link generation; a bare URL is invisible in analytics</td><td>Platform service</td><td><span class="pill p-ok">Fully</span></td><td><span class="pill p-ok">Low</span></td><td>—</td></tr>
+      <tr><td>SEO Clusters</td><td class="num">103</td><td>7 pillars, supporting articles, Search Console numbers</td><td>SEOCluster</td><td><span class="pill p-ok">Yes</span></td><td><span class="pill p-ok">Low</span></td><td>SEO</td></tr>
+      <tr><td>Keyword Plan</td><td class="num">93</td><td>76 keywords graded from 33 live SERP samples; 10 P1 attack terms with reasons</td><td>SEOKeyword</td><td><span class="pill p-warn">Partial</span></td><td><span class="pill p-warn">Medium</span></td><td>SEO</td></tr>
+      <tr><td>Article Bank</td><td class="num">5,683</td><td>Briefs with pillar, cluster, format, audience, keywords, word count and a full AI writing prompt</td><td>ArticleBrief + prompts</td><td><span class="pill p-ok">Yes</span></td><td><span class="pill p-crit">High</span></td><td>CWRITE</td></tr>
+      <tr><td>Daily Log</td><td class="num">403</td><td>Optional per-day digest, fully derived</td><td>A query, not a table</td><td><span class="pill p-ok">Yes</span></td><td><span class="pill p-ok">Low</span></td><td>—</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="scroller"><table>
+    <caption>Groups C, D, E — Results, management setup, reference</caption>
+    <thead><tr><th>Sheet</th><th>What it computes or holds</th><th>Becomes</th></tr></thead>
+    <tbody>
+      <tr><td>Dashboard</td><td>9 sections: tasks, platform presence, LinkedIn funnel, activity vs target, content, by-area, funnel, revenue &amp; cost, and 10 data-health checks that must all read zero</td><td>Executive dashboard + write-time validation service</td></tr>
+      <tr><td>Summary</td><td>Six headline numbers, volume delivered, risks needing a decision, the daily rhythm</td><td>Daily brief + exportable report</td></tr>
+      <tr><td>Weekly Pulse</td><td>14 KPIs this week vs last vs the four completed weeks before</td><td>KPI engine + weekly review</td></tr>
+      <tr><td>Objective Performance</td><td>Results by campaign and brand; person × objective minutes; value rank vs share of minutes</td><td>Orchestrator objective function</td></tr>
+      <tr><td>Team Scorecard</td><td>Per-person outreach numbers with a one-sentence verdict</td><td>Human scorecard + parallel agent scorecard</td></tr>
+      <tr><td>Employee Score</td><td>Weighted /100 with an activity gate; quality weighted far above volume</td><td>Restricted HR dataset</td></tr>
+      <tr><td>Weekly Review</td><td>Friday notes with the week’s numbers pre-filled</td><td>Weekly review workflow</td></tr>
+      <tr><td>Platform Progress</td><td>Activity, recency and attention flags per platform against value rank</td><td>Estate health view</td></tr>
+      <tr><td>Who Did What</td><td>Platform × person coverage grid</td><td>Coverage matrix, human and agent</td></tr>
+      <tr><td>Accounts Register</td><td>Every account with vault reference, 2FA and owner — never passwords</td><td>Credential references + integration registry</td></tr>
+      <tr><td>Master Tasks</td><td>63 workstreams with definition of done, frequency and weekly target</td><td>Workflow catalogue + recurring schedules</td></tr>
+      <tr><td>Platform Setup</td><td>133 platforms with ordered setup steps, value rank, country strength, brand</td><td>Integration registry + onboarding workflow</td></tr>
+      <tr><td>Publishing Plan</td><td>10 ranked platforms with canonical support and the rule for each</td><td>Deterministic per-channel publishing policy</td></tr>
+      <tr><td>Channel Costs</td><td>Monthly cost per channel; cost per meeting; revenue per unit cost</td><td>Cost engine, extended to AI spend</td></tr>
+      <tr><td>QA &amp; Compliance</td><td>15 checks with frequency, owner, result and sign-off</td><td>Policy engine + attestation register</td></tr>
+      <tr><td>Message Bank</td><td>15 approved templates with live character counts, limits and approval record</td><td>Versioned template registry</td></tr>
+      <tr><td>LinkedIn Playbook</td><td>Setup A–C then daily steps 1–10 with limits and two safety rows</td><td>Canonical outreach workflow</td></tr>
+      <tr><td>How-To Guides</td><td>19 workstream training rows with what good looks like and time per week</td><td>Agent prompt source + capacity model</td></tr>
+      <tr><td>Benchmarks</td><td>2026 figures with named sources and an explicit vendor-bias caveat</td><td>KPI thresholds with provenance</td></tr>
+      <tr><td>Lists</td><td>Every dropdown source, per-platform dedup rules, 6-monthly verification stamp</td><td>Canonical enumerations + verification expiry</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="s3">
+  <div class="sechead"><span class="secnum">03</span><h2>Identified Business Workflows</h2></div>
+  <p class="prose">Forty workflows, each derived from named workbook content, each carrying a trigger, participating agents, an autonomy level and an approval requirement.</p>
+
+  <div class="scroller"><table>
+    <caption>Continuous and event-driven</caption>
+    <thead><tr><th>ID</th><th>Workflow</th><th>Trigger</th><th>Agents</th><th>Autonomy</th><th>Approval</th></tr></thead>
+    <tbody>
+      <tr><td class="rid">WF-001</td><td>Daily Growth Planning</td><td>07:45 org time, working days</td><td>OPS → ANA → DQ → MKT → ORCH</td><td><span class="pill p-warn">L2</span></td><td>Plan visible; items carry their own</td></tr>
+      <tr><td class="rid">WF-002</td><td>Data Health &amp; Reconciliation</td><td>07:00 daily + after bulk writes</td><td>DQ</td><td><span class="pill p-ok">L4</span></td><td>Blocks report publication if non-zero</td></tr>
+      <tr><td class="rid">WF-003</td><td>Executive Daily Brief</td><td>08:00 org time</td><td>EXEC</td><td><span class="pill p-acc">L1</span></td><td>No</td></tr>
+      <tr><td class="rid">WF-004</td><td>End-of-Day Report</td><td>18:00 org time</td><td>EXEC</td><td><span class="pill p-acc">L1</span></td><td>No</td></tr>
+      <tr><td class="rid">WF-005</td><td>Weekly Growth Review</td><td>Week-start 07:30</td><td>ANA → EXP → ORCH → EXEC</td><td><span class="pill p-warn">L2</span></td><td>Strategy changes require approval</td></tr>
+      <tr><td class="rid">WF-006</td><td>Friday Team Review pack</td><td>Friday 15:00</td><td>EXEC</td><td><span class="pill p-acc">L1</span></td><td>Humans write their own notes</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="scroller"><table>
+    <caption>Lane 1 — Outreach: highest business value, highest platform risk</caption>
+    <thead><tr><th>ID</th><th>Workflow</th><th>What happens</th><th>Autonomy</th><th>Approval</th></tr></thead>
+    <tbody>
+      <tr><td class="rid">WF-010</td><td>Lead Discovery &amp; Qualification</td><td>Segment → candidates → four qualification tests → dedup and suppression → ICP/intent → score → band</td><td><span class="pill p-acc">L1</span></td><td>To progress to outreach</td></tr>
+      <tr><td class="rid">WF-011</td><td>Personalisation Line</td><td>Retrieve evidence → one specific true line with citation and confidence</td><td><span class="pill p-acc">L1</span></td><td>Within outreach approval</td></tr>
+      <tr><td class="rid">WF-012</td><td>Outreach Preparation</td><td>Approved template → merge → hard length check → claim check → four-eyes → approval item</td><td><span class="pill p-warn">L2</span></td><td><strong>Always</strong></td></tr>
+      <tr><td class="rid">WF-013</td><td>Outreach Execution</td><td><strong>Human-assisted only.</strong> Copy-ready text, profile link, one-click sent/not-sent confirmation writing back the timestamp</td><td><span class="pill p-neut">L0 agent</span></td><td>Already approved</td></tr>
+      <tr><td class="rid">WF-014</td><td>Reply Triage</td><td>Classify outcome → propose M6/M7/M8/M15 → escalate anything uncertain</td><td><span class="pill p-warn">L2</span></td><td>Always; fees and legitimacy escalate</td></tr>
+      <tr><td class="rid">WF-015</td><td>Follow-up Sequence</td><td>Timers at send + 4 and + 10 days; maximum two, ever, then stop</td><td><span class="pill p-warn">L2</span></td><td>Each message</td></tr>
+      <tr><td class="rid">WF-016</td><td>Suppression &amp; Decline</td><td>M15 → permanent suppression across all channels and brands</td><td><span class="pill p-ok">L4</span></td><td>Never optional</td></tr>
+      <tr><td class="rid">WF-017</td><td>Duplicate Defence</td><td>Match on profile URL, email, name+company before any create or queue</td><td><span class="pill p-ok">L4</span></td><td>No</td></tr>
+      <tr><td class="rid">WF-018</td><td>Handoff to Closer</td><td>Meeting → closer → application → certification → purchase → revenue → PCI order reference</td><td><span class="pill p-warn">L2</span></td><td>Yes — commercial record</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="scroller"><table>
+    <caption>Lane 2 — Content and SEO: highest compounding value, safest automation</caption>
+    <thead><tr><th>ID</th><th>Workflow</th><th>What happens</th><th>Autonomy</th></tr></thead>
+    <tbody>
+      <tr><td class="rid">WF-020</td><td>Content Production</td><td>Brief (P1 and Easy first) → similarity check → researched draft with citations → brand QA → claim verification → compliance → approval → publish → measure</td><td><span class="pill p-warn">L2</span></td></tr>
+      <tr><td class="rid">WF-021</td><td>Syndication Waterfall</td><td>Own site first → verify indexation → per-platform canonical rule; never a copy to LinkedIn Articles, Substack or Vocal</td><td><span class="pill p-warn">L2/L3</span></td></tr>
+      <tr><td class="rid">WF-022</td><td>Schedule Coverage Control</td><td>Planned vs published per window; below 100% raises a task before Friday</td><td><span class="pill p-ok">L4</span></td></tr>
+      <tr><td class="rid">WF-023</td><td>SEO Cluster Refresh</td><td>Monthly GSC pull per cluster row; orphan detection; internal-link proposals</td><td><span class="pill p-warn">L2</span></td></tr>
+      <tr><td class="rid">WF-024</td><td>Keyword Re-verification</td><td>Re-sample P1 SERPs monthly, re-grade quarterly, watch the brand-defence term</td><td><span class="pill p-warn">L2</span></td></tr>
+      <tr><td class="rid">WF-025</td><td>Answer-Engine &amp; Entity Audit</td><td>Monthly 20-prompt audit; crawler allow-list; entity-fact parity across profiles</td><td><span class="pill p-acc">L1/L2</span></td></tr>
+      <tr><td class="rid">WF-026</td><td>Link Building</td><td>Weekly: 10 prospects, 5 outreach, follow-ups cleared, tracked to live</td><td><span class="pill p-warn">L2</span></td></tr>
+      <tr><td class="rid">WF-027</td><td>Original Research Study</td><td>Survey → analysis → report → Zenodo DOI → press pitches</td><td><span class="pill p-warn">L2</span></td></tr>
+      <tr><td class="rid">WF-028</td><td>Programmatic Geo × Role Pages</td><td>Keyword-backed only, batches of ten, 30-day indexation gate before the next</td><td><span class="pill p-warn">L2</span></td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="scroller"><table>
+    <caption>Lanes 3 and 4 — Relationships, direct channels, governance</caption>
+    <thead><tr><th>ID</th><th>Workflow</th><th>Agents</th><th>Autonomy</th><th>Approval</th></tr></thead>
+    <tbody>
+      <tr><td class="rid">WF-030</td><td>Partnership Discovery &amp; Scoring</td><td>PART</td><td><span class="pill p-acc">L1/L2</span></td><td>To contact</td></tr>
+      <tr><td class="rid">WF-031</td><td>Partnership Stage Management</td><td>PART</td><td><span class="pill p-warn">L2</span></td><td>Commercial terms</td></tr>
+      <tr><td class="rid">WF-032</td><td>PR Route Working</td><td>PR</td><td><span class="pill p-warn">L2</span></td><td>Yes</td></tr>
+      <tr><td class="rid">WF-033</td><td>Journalist Request Response</td><td>PR + COMP</td><td><span class="pill p-warn">L2</span></td><td>Two-hour fast lane</td></tr>
+      <tr><td class="rid">WF-034</td><td>Community Answer Preparation</td><td>COMM + CQA</td><td><span class="pill p-acc">L1</span></td><td>Yes; human posts</td></tr>
+      <tr><td class="rid">WF-035</td><td>Webinar → Content Engine</td><td>EVT + CSTRAT + PUB</td><td><span class="pill p-warn">L2</span></td><td>Yes</td></tr>
+      <tr><td class="rid">WF-036</td><td>Authority Registry Submissions</td><td>AEO + PR</td><td><span class="pill p-warn">L2</span></td><td>Institutional claims</td></tr>
+      <tr><td class="rid">WF-037</td><td>Directory &amp; Review Estate</td><td>AEO</td><td><span class="pill p-warn">L2</span></td><td>Never incentivised</td></tr>
+      <tr><td class="rid">WF-040</td><td>Email Nurture &amp; Newsletter</td><td>DIR + CQA + COMP</td><td><span class="pill p-warn">L2</span></td><td>Per campaign</td></tr>
+      <tr><td class="rid">WF-041</td><td>WhatsApp / Telegram / SMS</td><td>DIR + COMP</td><td><span class="pill p-warn">L2</span></td><td>Yes</td></tr>
+      <tr><td class="rid">WF-042</td><td>Analytics Collection</td><td>ANA</td><td><span class="pill p-ok">L4</span></td><td>No</td></tr>
+      <tr><td class="rid">WF-043</td><td>KPI Threshold Reaction</td><td>ANA → ORCH</td><td><span class="pill p-warn">L2</span></td><td>Any strategy change</td></tr>
+      <tr><td class="rid">WF-044</td><td>Experiment Lifecycle</td><td>EXP</td><td><span class="pill p-warn">L2</span></td><td>To change the playbook</td></tr>
+      <tr><td class="rid">WF-045</td><td>Cost &amp; Budget Control</td><td>COST</td><td><span class="pill p-ok">L4</span></td><td>To raise a budget</td></tr>
+      <tr><td class="rid">WF-046</td><td>Compliance Attestation Cycle</td><td>COMP</td><td><span class="pill p-acc">L1</span></td><td>A named human signs</td></tr>
+      <tr><td class="rid">WF-047</td><td>Platform Account Onboarding</td><td>OPS</td><td><span class="pill p-warn">L2</span></td><td>Credentials stay human-held</td></tr>
+      <tr><td class="rid">WF-048</td><td>Workbook Import &amp; Diff</td><td>KNOW</td><td><span class="pill p-warn">L2</span></td><td><strong>Always</strong></td></tr>
+      <tr><td class="rid">WF-049</td><td>Job Posting Distribution</td><td>OPS</td><td><span class="pill p-warn">L2</span></td><td>Yes</td></tr>
+      <tr><td class="rid">WF-050</td><td>Emergency Publishing Lock</td><td>COMP / human</td><td><span class="pill p-ok">L4</span></td><td>Any admin may trigger</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="s4">
+  <div class="sechead"><span class="secnum">04</span><h2>Identified AI Agent Workforce</h2></div>
+  <p class="prose">Twenty-four agents in six divisions — not one giant agent, and not one per worksheet. Each gets a full formal definition in Phase 5; Phase 1 fixes the roster, boundaries and permissions, which is what needs settling now.</p>
+
+  <div class="divhead">Division 0 — Command</div>
+  <div class="agents">
+    <div class="agent"><div class="code">ORCH</div><div class="nm">Chief Growth Orchestrator</div><p>Reads goals, KPIs and value ranks; sets today’s priorities; allocates against capacity; resolves dependencies; escalates. Cannot execute, approve, or change policy.</p></div>
+    <div class="agent"><div class="code">OPS</div><div class="nm">Scheduler &amp; Operations</div><p>Owns the business calendar, recurring jobs, missed-job recovery, retries, dependencies, priority queues, concurrency and integration-health gating.</p></div>
+  </div>
+
+  <div class="divhead">Division 1 — Intelligence</div>
+  <div class="agents">
+    <div class="agent"><div class="code">MKT</div><div class="nm">Market &amp; Competitor Intelligence</div><p>Competitor profiles, industry and AI-in-project-controls developments, Gulf market signals, opportunity discovery. Every finding dated and cited.</p></div>
+    <div class="agent"><div class="code">LEAD</div><div class="nm">Lead Intelligence</div><p>Discovers and qualifies against the ICP, enriches, scores, deduplicates. Read-only against people data; no scraping connector, ever.</p></div>
+    <div class="agent"><div class="code">SEO</div><div class="nm">Search Optimisation</div><p>Keyword re-verification, cluster health, internal linking, technical SEO, ranking analysis, typed opportunity scoring.</p></div>
+    <div class="agent"><div class="code">AEO</div><div class="nm">Answer-Engine &amp; Entity Authority</div><p>Monthly citation audit, entity-graph parity, crawler allow-list, schema, registry submissions.</p></div>
+    <div class="agent"><div class="code">ANA</div><div class="nm">Analytics &amp; Attribution</div><p>Collects GA4, Search Console, Clarity and platform metrics; computes KPIs with lineage; never fabricates attribution.</p></div>
+  </div>
+
+  <div class="divhead">Division 2 — Content</div>
+  <div class="agents">
+    <div class="agent"><div class="code">CSTRAT</div><div class="nm">Content Strategy</div><p>Chooses topic, pillar, cluster, campaign, audience, funnel stage, format, channel and CTA from the plan and performance memory.</p></div>
+    <div class="agent"><div class="code">CWRITE</div><div class="nm">Content Writer</div><p>Drafts from the Article Bank brief and its prompt, with citations, British English, and the brief’s word band.</p></div>
+    <div class="agent"><div class="code">CQA</div><div class="nm">Brand &amp; Editorial QA</div><p>Voice, terminology, duplication, grammar, CTA quality, audience fit, structure. Also the second pair of eyes for four-eyes review.</p></div>
+    <div class="agent"><div class="code">PUB</div><div class="nm">Publishing &amp; Syndication</div><p>Executes approved publication through official APIs only; enforces canonical rules and own-site-first ordering; idempotent.</p></div>
+  </div>
+
+  <div class="divhead">Division 3 — Relationships</div>
+  <div class="agents">
+    <div class="agent"><div class="code">OUT</div><div class="nm">Outreach Composer</div><p>Composes only from approved templates; enforces character limits; requires a cited personal line.</p></div>
+    <div class="agent"><div class="code">PART</div><div class="nm">Partnership</div><p>Discovers, scores, stage-manages, prepares proposals, tracks next actions.</p></div>
+    <div class="agent"><div class="code">PR</div><div class="nm">PR &amp; Media</div><p>Journalist requests, contributed articles, podcast pitches, press materials, expo and speaker applications.</p></div>
+    <div class="agent"><div class="code">COMM</div><div class="nm">Community</div><p>Drafts genuinely useful answers; enforces “useful without the link”; never posts.</p></div>
+    <div class="agent"><div class="code">EVT</div><div class="nm">Events &amp; Webinars</div><p>Topic selection, speaker invitations, listings, promotion plan, post-event content plan.</p></div>
+    <div class="agent"><div class="code">LINK</div><div class="nm">Link Building</div><p>Competitor backlink gap, unlinked-mention reclaim, resource-page and broken-link prospecting.</p></div>
+    <div class="agent"><div class="code">DIR</div><div class="nm">Direct Channels</div><p>Email, WhatsApp, Telegram and SMS campaign preparation with consent and frequency enforcement.</p></div>
+  </div>
+
+  <div class="divhead">Division 4 — Governance</div>
+  <div class="agents">
+    <div class="agent"><div class="code">COMP</div><div class="nm">Compliance &amp; Safety</div><p>Pre-execution check of every external action against Golden Rules, QA checks, platform policy, suppression, consent, frequency caps and claim rules.</p></div>
+    <div class="agent"><div class="code">DQ</div><div class="nm">Data Health</div><p>The ten Dashboard checks as continuous validation, plus reconciliation against systems of record.</p></div>
+    <div class="agent"><div class="code">COST</div><div class="nm">Cost &amp; Budget</div><p>Tracks model, API and channel spend; enforces caps; recommends downgrades that do not degrade quality.</p></div>
+  </div>
+
+  <div class="divhead">Division 5 — Memory &amp; reporting</div>
+  <div class="agents">
+    <div class="agent"><div class="code">KNOW</div><div class="nm">Knowledge</div><p>Ingests and versions the workbook, brand documents and policies; maintains six memory layers; serves retrieval with citations and permissions.</p></div>
+    <div class="agent"><div class="code">EXP</div><div class="nm">Experimentation</div><p>Registers hypotheses, baselines and guardrail metrics; applies the workbook’s own significance guard; never over-claims.</p></div>
+    <div class="agent"><div class="code">EXEC</div><div class="nm">Executive Reporting &amp; Executive AI</div><p>Daily brief, end-of-day report, weekly review, and the natural-language interface answering only from system records, with citations.</p></div>
+  </div>
+
+  <h3>Agent designs explicitly rejected</h3>
+  <div class="scroller"><table>
+    <thead><tr><th>Rejected</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr class="sev-x"><td>A “LinkedIn Agent” performing connects, DMs or comments</td><td>Golden Rule 5, QA check 5, Playbook step 3 and technique 15 all forbid it; LinkedIn’s terms forbid it; no API exists. Replaced by prepare → approve → human sends.</td></tr>
+      <tr class="sev-x"><td>An auto-poster that publishes because a clock struck</td><td>The Content Scheduler is a commitment tracker, not a trigger. Publishing is the tail of QA, compliance and approval.</td></tr>
+      <tr class="sev-x"><td>A single “Growth Agent” holding all tools</td><td>Violates least privilege and makes four-eyes review impossible.</td></tr>
+      <tr class="sev-x"><td>Agents holding platform credentials</td><td>Golden Rule 9 and the Accounts Register design: vault reference only. Agents call <code>publish_content(content_id)</code>; the execution layer resolves credentials.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="s5">
+  <div class="sechead"><span class="secnum">05</span><h2>Automation Classification</h2></div>
+  <p class="prose">Every workbook activity classified. <strong>Prohibited</strong> means the platform must not build it, and the conflict is reported rather than worked around.</p>
+  <div class="scroller"><table>
+    <thead><tr><th>Activity</th><th>Classification</th><th>Rationale</th></tr></thead>
+    <tbody>
+      <tr class="sev-l"><td>Lead research and qualification</td><td><span class="pill p-acc">AI-assisted L1</span></td><td>Judgement task, permitted sources only</td></tr>
+      <tr class="sev-l"><td>Lead scoring, funnel stage, message length, duplicate detection, suppression</td><td><span class="pill p-ok">Deterministic</span></td><td>Arithmetic and rules — never a model decision</td></tr>
+      <tr class="sev-m"><td>Personalisation line, connection-note drafting, reply classification</td><td><span class="pill p-warn">AI-assisted L2</span></td><td>Cited evidence required; low confidence escalates</td></tr>
+      <tr class="sev-h"><td>Connection request, first message, follow-up <em>sending</em></td><td><span class="pill p-crit">Prohibited</span></td><td>Golden Rule 5; LinkedIn terms; no API</td></tr>
+      <tr class="sev-m"><td>Content ideation, brief selection, drafting</td><td><span class="pill p-warn">AI-assisted L1→L2</span></td><td>Brief prompts already ban invented statistics</td></tr>
+      <tr class="sev-m"><td>Brand and claim QA</td><td><span class="pill p-warn">Hybrid</span></td><td>Banned phrases deterministic; nuance by model</td></tr>
+      <tr class="sev-l"><td>Website publication, Medium syndication</td><td><span class="pill p-ok">Automatable L2/L3</span></td><td>Official APIs; idempotent; canonical enforced</td></tr>
+      <tr class="sev-m"><td>LinkedIn Company Page posting</td><td><span class="pill p-warn">Automatable L2</span></td><td>Only with approved partner scopes</td></tr>
+      <tr class="sev-h"><td>Reddit, Quora, DEV, Stack Exchange posting</td><td><span class="pill p-crit">Prohibited</span></td><td>Explicit anti-promotion terms; bans are permanent</td></tr>
+      <tr class="sev-l"><td>Email, WhatsApp and SMS sending</td><td><span class="pill p-ok">Automatable L2/L3</span></td><td>Consent, authentication and frequency caps enforced</td></tr>
+      <tr class="sev-m"><td>Press release distribution</td><td><span class="pill p-warn">Semi-automatable L2</span></td><td>Wire submission constraints; own newsroom first</td></tr>
+      <tr class="sev-m"><td>Review solicitation</td><td><span class="pill p-warn">Human L2 prep</span></td><td>Never incentivised, never gated</td></tr>
+      <tr class="sev-l"><td>Analytics collection, UTM minting, KPI computation, data-health checks</td><td><span class="pill p-ok">Fully automatable L4</span></td><td>Deterministic, read-only, unit-tested</td></tr>
+      <tr class="sev-l"><td>Reporting narrative</td><td><span class="pill p-acc">AI-assisted L1</span></td><td>Narrative only, over verified numbers</td></tr>
+      <tr class="sev-h"><td>Strategy change; policy or permission change</td><td><span class="pill p-crit">Never autonomous</span></td><td>Recommendation only; agents cannot alter their own governance</td></tr>
+      <tr class="sev-h"><td>Scraping; paid links; PBNs; engagement pods; AI-comment tools; identical cross-thread answers</td><td><span class="pill p-crit">Prohibited</span></td><td>Playbook technique 15 documents each as penalising or account-ending</td></tr>
+      <tr class="sev-h"><td>AI-generated thin content at scale</td><td><span class="pill p-crit">Prohibited as a mode of operation</span></td><td>Directly demoted by current core updates — constrains how the 5,683-brief bank may be used</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="s6">
+  <div class="sechead"><span class="secnum">06</span><h2>Human Approval Matrix</h2></div>
+  <p class="prose">Configurable per <span class="rid">APR-010</span>. Defaults below are derived from the workbook’s own control set. One rule is absolute: <strong>an agent identity can never satisfy an approval requirement</strong>, including as the second pair of eyes on its own output.</p>
+  <div class="scroller"><table>
+    <thead><tr><th>ID</th><th>Action</th><th>Default</th><th>Approver</th><th>4-eyes</th><th>Expiry</th></tr></thead>
+    <tbody>
+      <tr><td class="rid">A01</td><td>Any outbound message to a named individual</td><td>Approve every item</td><td>Manager</td><td>Yes</td><td>48h then regenerate</td></tr>
+      <tr><td class="rid">A02</td><td>Any statement about fees</td><td>Always, in writing</td><td>Manager</td><td>Yes</td><td>24h</td></tr>
+      <tr><td class="rid">A03</td><td>Any claim about PCI</td><td>Approval + evidence citation</td><td>Manager</td><td>Yes</td><td>—</td></tr>
+      <tr><td class="rid">A04</td><td>External publication, any platform</td><td>Approve every item</td><td>Content owner</td><td>Yes</td><td>72h; 24h if news-linked</td></tr>
+      <tr><td class="rid">A05</td><td>Publication to a non-canonical platform</td><td>Approval + proof it is original</td><td>Content owner</td><td>Yes</td><td>72h</td></tr>
+      <tr><td class="rid">A06</td><td>Community answer posting</td><td>Approval; human posts</td><td>Content owner</td><td>Yes</td><td>72h</td></tr>
+      <tr><td class="rid">A07</td><td>Partnership or PR communication</td><td>Approval</td><td>Manager</td><td>Yes</td><td>7 days</td></tr>
+      <tr><td class="rid">A08</td><td>Journalist-request response</td><td>Fast lane</td><td>Manager or delegate</td><td>COMP only</td><td><strong>2 hours</strong></td></tr>
+      <tr><td class="rid">A09</td><td>Campaign launch</td><td>Approve the brief</td><td>Manager</td><td>Yes</td><td>—</td></tr>
+      <tr><td class="rid">A10</td><td>Strategy change — ranks, ICP rules, cadence, playbook</td><td>Always</td><td>Owner</td><td>Yes</td><td>—</td></tr>
+      <tr><td class="rid">A11</td><td>Budget increase</td><td>Approval</td><td>Admin</td><td>Yes</td><td>—</td></tr>
+      <tr><td class="rid">A12</td><td>Message template change or addition</td><td>Enters as Draft</td><td>Manager</td><td>Yes</td><td>—</td></tr>
+      <tr><td class="rid">A13</td><td>Agent prompt, model, tool or policy change</td><td>Evaluation → staging → approval</td><td>Admin</td><td>Yes</td><td>—</td></tr>
+      <tr><td class="rid">A14</td><td>Deletion of records</td><td>Approval + audit</td><td>Admin</td><td>Yes</td><td>—</td></tr>
+      <tr><td class="rid">A15</td><td>Workbook re-import applying config changes</td><td>Diff review + approval</td><td>Owner</td><td>Yes</td><td>—</td></tr>
+      <tr><td class="rid">A16</td><td>Integration connect/disconnect, credential rotation</td><td>Approval</td><td>Admin</td><td>—</td><td>—</td></tr>
+      <tr><td class="rid">A17</td><td>Autonomy level increase</td><td>Approval + evaluation evidence</td><td>Owner</td><td>Yes</td><td>—</td></tr>
+      <tr><td class="rid">A18</td><td>Contacting a band-A prospect</td><td>Manager personally</td><td>Manager</td><td>Yes</td><td>48h</td></tr>
+      <tr><td class="rid">A19</td><td>Anything an agent flags as low confidence</td><td>Automatic escalation</td><td>Manager</td><td>—</td><td>—</td></tr>
+      <tr><td class="rid">A20</td><td>Emergency stop release</td><td>Approval</td><td>Owner</td><td>—</td><td>—</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="s7">
+  <div class="sechead"><span class="secnum">07</span><h2>Platform &amp; Integration Matrix</h2></div>
+  <p class="prose">The estate is 133 platforms across 13 areas, each value-ranked. The only question that matters for automation is whether an official API exists for the action the workbook wants, and whether the platform’s policy permits it.</p>
+
+  <div class="note warn">
+    <span class="lbl">The uncomfortable shape of this estate</span>
+    <p>LinkedIn holds value ranks 1, 2, 3 and 4, and is almost entirely human-assisted or prohibited. The most automatable high-value integration is the <strong>website and CMS</strong> — which is why it anchors the MVP, and why its platform and API access is a blocking Phase 2 prerequisite.</p>
+  </div>
+
+  <div class="scroller"><table>
+    <caption>Connector tiers</caption>
+    <thead><tr><th>Tier</th><th>Meaning</th><th>Build order</th></tr></thead>
+    <tbody>
+      <tr><td><span class="pill p-ok">T1</span></td><td>Official API supports the write the workbook wants</td><td>MVP candidates</td></tr>
+      <tr><td><span class="pill p-ok">T2</span></td><td>Official read-only API, for measurement</td><td>MVP — cheap, high value, zero risk</td></tr>
+      <tr><td><span class="pill p-warn">T3</span></td><td>Human-assisted: platform prepares, human executes, human confirms</td><td>MVP for the outreach lane</td></tr>
+      <tr><td><span class="pill p-neut">T4</span></td><td>Manual, registry or submission-form only; tracked as tasks with evidence</td><td>Backlog</td></tr>
+      <tr><td><span class="pill p-crit">T5</span></td><td>Automation forbidden by policy or terms</td><td><strong>Never build</strong></td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="scroller"><table>
+    <caption>The top-value integrations</caption>
+    <thead><tr><th class="num">Rank</th><th>Platform</th><th>What the workbook wants</th><th>Tier</th><th>Note</th></tr></thead>
+    <tbody>
+      <tr><td class="num">1</td><td>LinkedIn Company Page</td><td>3 posts/week; reply within 60 minutes</td><td><span class="pill p-ok">T1*</span></td><td>Partner-gated; verify scopes before build</td></tr>
+      <tr><td class="num">2</td><td>LinkedIn Personal Profile</td><td>All outreach and 15 comments/day</td><td><span class="pill p-crit">T3/T5</span></td><td>No API; prohibited by rule and by terms</td></tr>
+      <tr><td class="num">3</td><td>LinkedIn Sales Navigator</td><td>30 qualified leads/day</td><td><span class="pill p-warn">T3</span></td><td>Human runs the search; platform qualifies and scores</td></tr>
+      <tr><td class="num">4</td><td>LinkedIn Articles</td><td>One article/month per leader</td><td><span class="pill p-warn">T3</span></td><td>No canonical support — original or rewritten only</td></tr>
+      <tr><td class="num">5</td><td>YouTube</td><td>1 long-form + 3 Shorts weekly</td><td><span class="pill p-ok">T1</span></td><td>Quota-managed; Shorts scheduled individually</td></tr>
+      <tr><td class="num">6</td><td>Website / Blog</td><td>Originals first, with schema and internal links</td><td><span class="pill p-ok">T1</span></td><td><strong>The anchor integration</strong></td></tr>
+      <tr><td class="num">7</td><td>Zoom Webinars</td><td>Monthly webinar; registrants to nurture</td><td><span class="pill p-ok">T1</span></td><td>Registrant PII — consent and retention apply</td></tr>
+      <tr><td class="num">9</td><td>Email (ESP)</td><td>Welcome sequence, fortnightly newsletter</td><td><span class="pill p-ok">T1</span></td><td>Vendor not chosen — gap G-010</td></tr>
+      <tr><td class="num">10</td><td>Bing Webmaster + IndexNow</td><td>Verify domain; submit URLs</td><td><span class="pill p-ok">T1</span></td><td>High leverage for the ChatGPT retrieval pipeline</td></tr>
+      <tr><td class="num">17</td><td>Google Search Console</td><td>Weekly queries, positions, links</td><td><span class="pill p-ok">T2</span></td><td>Primary SEO truth source — MVP</td></tr>
+      <tr><td class="num">18</td><td>Google Analytics</td><td>Acquisition, conversions, campaigns</td><td><span class="pill p-ok">T2</span></td><td>Freshness disclosure required — MVP</td></tr>
+      <tr><td class="num">14–16</td><td>Credential Engine, Knowledge Panel, Education schema</td><td>Institutional authority</td><td><span class="pill p-neut">T4</span></td><td>High business value, low technical surface</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="scroller"><table>
+    <caption>Native scheduling capability — workbook-verified, determines whether scheduling is a platform action or a human one</caption>
+    <thead><tr><th>Platform</th><th>Native scheduler</th><th>Window / limits</th><th>Cannot schedule</th></tr></thead>
+    <tbody>
+      <tr><td>LinkedIn (page + personal)</td><td>Yes, in composer</td><td>10 min – 3 months</td><td>Polls, carousels, multi-image, page reshares</td></tr>
+      <tr><td>Facebook Page</td><td>Business Suite Planner</td><td>75 days; 25/day Meta cap</td><td>Live video</td></tr>
+      <tr><td>Instagram</td><td>In-app + Business Suite</td><td>25/day, 75 days</td><td>Stories from the app; Live</td></tr>
+      <tr><td>X (Twitter)</td><td>Desktop, free</td><td>Up to 18 months</td><td>Threads, mobile, polls</td></tr>
+      <tr><td>Threads</td><td>Yes</td><td>75 days</td><td>Replies</td></tr>
+      <tr><td>TikTok</td><td>Studio, desktop only</td><td>15 min – 10 days; not editable</td><td>Mobile app; personal accounts</td></tr>
+      <tr><td>YouTube</td><td>Studio + Premieres</td><td>~1 year</td><td>Batch-scheduling Shorts</td></tr>
+      <tr><td>Pinterest</td><td>Business scheduler</td><td>30 days; 10 queued</td><td>Bulk</td></tr>
+      <tr><td>Bluesky</td><td><span class="pill p-crit">None</span></td><td>—</td><td>Everything natively</td></tr>
+      <tr><td>Telegram Channel</td><td>Yes</td><td>365 days; 100 queued</td><td>Recurring posts</td></tr>
+      <tr><td>WhatsApp Channel</td><td><span class="pill p-crit">None</span></td><td>—</td><td>Everything — manual only</td></tr>
+      <tr><td>Google Business Profile</td><td>Yes, newly rolled out</td><td>No published caps</td><td>Mobile; recurring</td></tr>
+      <tr><td>Reddit</td><td>Mod tools only</td><td>Recurring</td><td>Ordinary-user scheduling</td></tr>
+      <tr><td>Medium</td><td>Yes</td><td>~5 min after set time</td><td>Draft-only publications</td></tr>
+      <tr><td>ESP</td><td>Yes, all modern</td><td>Unlimited</td><td>—</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Systems of record</h3>
+  <p class="prose">The workbook is explicit that it is not the ledger. That must not regress.</p>
+  <div class="scroller"><table>
+    <thead><tr><th>Domain</th><th>System of record</th><th>The Growth OS holds</th></tr></thead>
+    <tbody>
+      <tr><td>Orders, applications, revenue</td><td><strong>PCI platform</strong></td><td>A reconciled snapshot plus the order reference; no Converted status without it</td></tr>
+      <tr><td>Customer and lead records</td><td><strong>CRM</strong> once selected</td><td>Working pipeline until then, built sync-ready</td></tr>
+      <tr><td>Published website content</td><td><strong>CMS</strong></td><td>Content records, versions, performance</td></tr>
+      <tr><td>Web analytics</td><td><strong>GA4 / GSC / Clarity</strong></td><td>Normalised snapshots with freshness stamps</td></tr>
+      <tr><td>Credentials</td><td><strong>Password vault</strong></td><td>References only — never secrets</td></tr>
+      <tr><td>Agent history, approvals, audit</td><td><strong>The Growth OS</strong></td><td>The authoritative record</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="s8">
+  <div class="sechead"><span class="secnum">08</span><h2>KPI Catalogue</h2></div>
+  <p class="prose">Every KPI exists in the workbook. Each carries definition, formula, source, frequency, target and thresholds. One rule prevents the workbook’s own worst live defect: <strong>a KPI is referenced by stable identifier, never by sheet position</strong>.</p>
+
+  <div class="scroller"><table>
+    <caption>A — Outreach funnel</caption>
+    <thead><tr><th>ID</th><th>KPI</th><th>Formula</th><th>Target</th><th>Critical</th></tr></thead>
+    <tbody>
+      <tr><td class="rid">K-001</td><td>Leads researched</td><td>count(Lead)</td><td>30/person/day</td><td>&lt;50%</td></tr>
+      <tr><td class="rid">K-002</td><td>Connection requests sent</td><td>count(connection_sent)</td><td>20/person/day</td><td>&lt;50%</td></tr>
+      <tr><td class="rid">K-004</td><td><strong>Acceptance rate</strong></td><td>accepted ÷ sent</td><td>30–45%</td><td><strong>&lt;20% — stop and fix targeting</strong></td></tr>
+      <tr><td class="rid">K-005</td><td>First messages sent</td><td>count(message_sent)</td><td>15/person/day</td><td>&lt;50%</td></tr>
+      <tr><td class="rid">K-007</td><td><strong>Reply rate</strong></td><td>positive replies ÷ messages</td><td>15%+ strong; ~10% average</td><td>&lt;5%</td></tr>
+      <tr><td class="rid">K-008</td><td>Meetings booked</td><td>count by meeting date</td><td>—</td><td>—</td></tr>
+      <tr><td class="rid">K-011</td><td><strong>Messages over 300 characters</strong></td><td>count(len &gt; 300)</td><td><strong>0</strong></td><td>Any breach</td></tr>
+      <tr><td class="rid">K-012</td><td>Follow-ups due today or earlier</td><td>count(due ≤ today, no outcome)</td><td>0</td><td>&gt;0</td></tr>
+      <tr><td class="rid">K-013</td><td>Meetings per accepted connection</td><td>meetings ÷ accepted</td><td>~2% floor</td><td>—</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="scroller"><table>
+    <caption>B — Content and SEO</caption>
+    <thead><tr><th>ID</th><th>KPI</th><th>Formula</th><th>Target</th></tr></thead>
+    <tbody>
+      <tr><td class="rid">K-021</td><td><strong>Content published</strong></td><td>status ∈ {Published, Repurposed} — one definition only</td><td>10/week</td></tr>
+      <tr><td class="rid">K-024</td><td>Engagement rate</td><td>engagements ÷ impressions</td><td>≥2%; LinkedIn 2–4% average</td></tr>
+      <tr><td class="rid">K-027</td><td><strong>Schedule coverage</strong></td><td>published ÷ planned per window</td><td>100% — below is slipping</td></tr>
+      <tr><td class="rid">K-029</td><td>Cluster impressions, clicks, position</td><td>Search Console per cluster row</td><td>Easy keywords top-10 in 90 days</td></tr>
+      <tr><td class="rid">K-030</td><td>Backlinks gone live</td><td>count(date_live ≠ null)</td><td>Weekly from 5 outreach</td></tr>
+      <tr><td class="rid">K-032</td><td>AI brand-mention rate</td><td>mentions ÷ 20 audit prompts</td><td>Rising</td></tr>
+      <tr><td class="rid">K-033</td><td>Orphan pages</td><td>crawl</td><td><strong>0</strong></td></tr>
+      <tr><td class="rid">K-034</td><td>Indexation rate, programmatic batches</td><td>indexed ÷ shipped</td><td>100% before the next batch</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="scroller"><table>
+    <caption>E–F — Execution, estate, commercial and cost</caption>
+    <thead><tr><th>ID</th><th>KPI</th><th>Target</th></tr></thead>
+    <tbody>
+      <tr><td class="rid">K-060</td><td>Task completion rate (63 baseline)</td><td>100%</td></tr>
+      <tr><td class="rid">K-061</td><td>Blocked tasks</td><td><strong>0</strong></td></tr>
+      <tr><td class="rid">K-062</td><td>Platform coverage</td><td>100% within 6 weeks</td></tr>
+      <tr><td class="rid">K-063</td><td><strong>Live accounts without 2FA</strong></td><td><strong>0 — security</strong></td></tr>
+      <tr><td class="rid">K-066</td><td>Attainment vs target × capacity</td><td>≥100%</td></tr>
+      <tr><td class="rid">K-068</td><td><strong>Share of minutes vs value rank</strong></td><td>High-value objectives get high share</td></tr>
+      <tr><td class="rid">K-072</td><td>Converted rows missing a PCI order reference</td><td><strong>0 — unverified revenue</strong></td></tr>
+      <tr><td class="rid">K-074</td><td>Cost per meeting</td><td>Falling</td></tr>
+      <tr><td class="rid">K-075</td><td>Revenue per unit of monthly cost</td><td>&gt;1.0</td></tr>
+      <tr><td class="rid">K-077</td><td><strong>AI operating cost</strong> — new, not in workbook</td><td>Within budget</td></tr>
+      <tr><td class="rid">K-078</td><td><strong>Cost per published item / per prepared outreach item</strong> — new</td><td>Falling</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="scroller"><table>
+    <caption>G — Data health: every check must read zero, and becomes a write-time constraint</caption>
+    <thead><tr><th>ID</th><th>Check</th><th>Becomes</th></tr></thead>
+    <tbody>
+      <tr><td class="rid">K-090</td><td>Rows with an unreadable text date</td><td>Typed column + validation</td></tr>
+      <tr><td class="rid">K-091</td><td>Future-dated rows</td><td>Constraint</td></tr>
+      <tr><td class="rid">K-092</td><td>Accepted without a logged connection request</td><td>State-machine invariant</td></tr>
+      <tr><td class="rid">K-093</td><td>Minutes logged under an unknown name</td><td>Foreign key to Actor</td></tr>
+      <tr><td class="rid">K-094</td><td>Published with no published date</td><td>Invariant</td></tr>
+      <tr><td class="rid">K-095</td><td>Dated but not marked published</td><td>Invariant</td></tr>
+      <tr><td class="rid">K-096</td><td>Signed deals with no deal value</td><td>Invariant</td></tr>
+      <tr><td class="rid">K-097</td><td>Duplicate leads</td><td>Identity resolution</td></tr>
+      <tr><td class="rid">K-098</td><td>Published content with no platform</td><td>Not-null foreign key</td></tr>
+      <tr><td class="rid">K-099</td><td>Negative values</td><td>Check constraint</td></tr>
+    </tbody>
+  </table></div>
+
+  <p class="prose">A new agent scorecard mirrors the Employee Score philosophy — quality above volume: tasks completed, human rejection rate, edit distance on approved output, retry and tool-failure rate, cost and latency, evaluation score per version, and compliance denials, which target zero.</p>
+</section>
+
+<section id="s9">
+  <div class="sechead"><span class="secnum">09</span><h2>Scheduling Catalogue</h2></div>
+  <p class="prose">All times in the organisation’s time zone, with the configured week-start. Every job records both its <em>intended</em> and its <em>actual</em> execution time — which is what makes a missed schedule debuggable six months later.</p>
+
+  <div class="scroller"><table>
+    <caption>Daily, working days only</caption>
+    <thead><tr><th class="num">Time</th><th>Job</th><th>Workflow</th><th>Autonomy</th></tr></thead>
+    <tbody>
+      <tr><td class="num">07:00</td><td>Data health sweep — must pass before planning</td><td class="rid">WF-002</td><td><span class="pill p-ok">L4</span></td></tr>
+      <tr><td class="num">07:15</td><td>Analytics collection, freshness stamped</td><td class="rid">WF-042</td><td><span class="pill p-ok">L4</span></td></tr>
+      <tr><td class="num">07:30</td><td>Market intelligence scan</td><td>MKT</td><td><span class="pill p-acc">L1</span></td></tr>
+      <tr><td class="num">07:45</td><td><strong>Daily growth planning</strong></td><td class="rid">WF-001</td><td><span class="pill p-warn">L2</span></td></tr>
+      <tr><td class="num">08:00</td><td><strong>Daily brief published</strong></td><td class="rid">WF-003</td><td><span class="pill p-acc">L1</span></td></tr>
+      <tr><td class="num">09:00</td><td>Lead discovery and qualification batch</td><td class="rid">WF-010</td><td><span class="pill p-acc">L1</span></td></tr>
+      <tr><td class="num">09:30</td><td>Personalisation lines, each with cited evidence</td><td class="rid">WF-011</td><td><span class="pill p-acc">L1</span></td></tr>
+      <tr><td class="num">10:00</td><td>Outreach preparation — connection notes</td><td class="rid">WF-012</td><td><span class="pill p-warn">L2</span></td></tr>
+      <tr><td class="num">11:00</td><td>Outreach preparation — first messages</td><td class="rid">WF-012</td><td><span class="pill p-warn">L2</span></td></tr>
+      <tr><td class="num">11:30</td><td>Reply triage, same-day rule</td><td class="rid">WF-014</td><td><span class="pill p-warn">L2</span></td></tr>
+      <tr><td class="num">12:00</td><td>Follow-up timers fire — day 4, day 10, then stop</td><td class="rid">WF-015</td><td><span class="pill p-warn">L2</span></td></tr>
+      <tr><td class="num">13:00</td><td>Content production batch</td><td class="rid">WF-020</td><td><span class="pill p-warn">L2</span></td></tr>
+      <tr><td class="num">14:00</td><td>Engagement preparation for humans</td><td>LI prep</td><td><span class="pill p-acc">L1</span></td></tr>
+      <tr><td class="num">15:00</td><td>Publishing window — approved items only</td><td class="rid">WF-020/021</td><td><span class="pill p-warn">L2/L3</span></td></tr>
+      <tr><td class="num">16:00</td><td>Partnership and PR research batch</td><td class="rid">WF-030/032</td><td><span class="pill p-acc">L1/L2</span></td></tr>
+      <tr><td class="num">17:00</td><td>Activity reconciliation</td><td class="rid">WF-002</td><td><span class="pill p-ok">L4</span></td></tr>
+      <tr><td class="num">18:00</td><td><strong>End-of-day report</strong></td><td class="rid">WF-004</td><td><span class="pill p-acc">L1</span></td></tr>
+      <tr><td class="num">2×</td><td>Journalist-request monitoring, 2-hour response SLA</td><td class="rid">WF-033</td><td><span class="pill p-warn">L2</span></td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="scroller"><table>
+    <caption>Weekly through annual</caption>
+    <thead><tr><th>Cadence</th><th>Jobs</th></tr></thead>
+    <tbody>
+      <tr><td>Monday</td><td>Weekly Growth Review; rebalance effort where a high-value objective is under-served</td></tr>
+      <tr><td>Weekly</td><td>Search Console pull to clusters; GA4 acquisition; 10 link prospects and 5 outreach; schedule coverage check; nine weekly QA checks</td></tr>
+      <tr><td>Friday</td><td>Weekly Review pack prepared for human notes</td></tr>
+      <tr><td>Fortnightly</td><td>LinkedIn Newsletter; email newsletter</td></tr>
+      <tr><td>Monthly</td><td>20-prompt answer-engine audit; entity parity; unlinked-mention reclaim; one pillar page; five pages restructured; one contributed article and one podcast pitch; channel costs; five monthly QA checks; P1 SERP re-check</td></tr>
+      <tr><td>Quarterly</td><td>Competitor backlink gap; orphan crawl; citation verification; keyword re-grading; one free tool; one primer with DOI; one geo-page batch, indexation-gated</td></tr>
+      <tr><td><strong>Every 6 months</strong></td><td><strong>Re-verify every platform rule, benchmark and PR route</strong> — the workbook stamps all of them “re-verify 6-monthly”, so this is a first-class obligation with expiry warnings</td></tr>
+      <tr><td>Annually</td><td>“State of Project Controls &amp; AI” survey → report → DOI → press</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="scroller"><table>
+    <caption>Event-triggered</caption>
+    <thead><tr><th>Event</th><th>Reaction</th></tr></thead>
+    <tbody>
+      <tr><td>Connection accepted (human-confirmed)</td><td>Queue the first message within 24 hours</td></tr>
+      <tr><td>KPI threshold breached</td><td>Diagnostic workflow plus orchestrator re-plan</td></tr>
+      <tr><td>Integration failed or authentication expired</td><td>Block dependent jobs, notify, queue work</td></tr>
+      <tr><td>Budget threshold reached</td><td>Pause low-priority AI executions, notify admin</td></tr>
+      <tr><td><strong>Platform warning received</strong></td><td><strong>Stop that channel for the day; escalate the same day</strong></td></tr>
+      <tr><td>Lead declined</td><td>Permanent suppression across all channels and brands</td></tr>
+      <tr><td>Agent failed repeatedly</td><td>Disable workflow, preserve state, alert</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="s10">
+  <div class="sechead"><span class="secnum">10</span><h2>Requirements Traceability Matrix</h2></div>
+  <p class="prose">Every production feature must trace to a workbook requirement, a security requirement, a platform requirement, a technical requirement, or an approved future requirement. This is the control that stops the development team losing PCI AI’s original operating logic. The complete matrix runs <strong>Workbook Sheet → Requirement ID → Workflow → Agent → Entity → API → UI → Test</strong>; a representative slice follows.</p>
+  <div class="scroller"><table>
+    <thead><tr><th>Sheet</th><th>Requirements</th><th>Workflow</th><th>Agent</th><th>Entity</th><th>Test</th></tr></thead>
+    <tbody>
+      <tr><td>START HERE §4</td><td><span class="rid">CMP-002</span> <span class="rid">FR-031</span> <span class="rid">FR-033</span> <span class="rid">FR-036</span></td><td>All outbound</td><td>COMP</td><td>Policy, PolicyViolation</td><td>TEST-SEC-010…019, one per rule</td></tr>
+      <tr><td>START HERE §3</td><td><span class="rid">FR-006</span> <span class="rid">FR-007</span></td><td>WF-001</td><td>ORCH</td><td>Target, Capacity</td><td>TEST-KPI-007</td></tr>
+      <tr><td>LinkedIn Outreach A–L</td><td><span class="rid">FR-020</span>…<span class="rid">FR-025</span></td><td>WF-010, WF-017</td><td>LEAD</td><td>Account, Contact, Lead</td><td>TEST-LEAD-001 dedup; 002 evidence</td></tr>
+      <tr><td>LinkedIn Outreach M–T</td><td><span class="rid">FR-030</span>…<span class="rid">FR-036</span></td><td>WF-012, WF-013</td><td>OUT, COMP, CQA</td><td>OutreachItem, Approval</td><td>TEST-OUT-001 length; 002 award language</td></tr>
+      <tr><td>LinkedIn Outreach Y–AC</td><td><span class="rid">FR-022</span> <span class="rid">FR-024</span></td><td>WF-010</td><td>LEAD</td><td>Lead.score, Lead.stage</td><td>TEST-LEAD-010 arithmetic; 011 derivation</td></tr>
+      <tr><td>Article Bank</td><td><span class="rid">FR-041</span>…<span class="rid">FR-044</span></td><td>WF-020</td><td>CWRITE, CQA</td><td>ArticleBrief, Prompt</td><td>TEST-CNT-010 similarity; 011 unsupported claim</td></tr>
+      <tr><td>Publishing Plan</td><td><span class="rid">FR-046</span> <span class="rid">CMP-010</span></td><td>WF-020, WF-021</td><td>PUB</td><td>ChannelPolicy</td><td>TEST-PUB-005 canonical gate blocks</td></tr>
+      <tr><td>Content Scheduler</td><td><span class="rid">FR-048</span> <span class="rid">FR-049</span></td><td>WF-022</td><td>OPS</td><td>ContentSchedule</td><td>TEST-SCH-010 coverage</td></tr>
+      <tr><td>Dashboard §9</td><td><span class="rid">KPI-030</span> <span class="rid">DAT-006</span> <span class="rid">DAT-007</span></td><td>WF-002</td><td>DQ</td><td>ValidationResult</td><td>TEST-DAT-090…099</td></tr>
+      <tr><td>Objective Performance</td><td><span class="rid">FR-003</span> <span class="rid">FR-011</span></td><td>WF-001, WF-005</td><td>ORCH</td><td>Objective</td><td>TEST-ORC-001 respects value rank</td></tr>
+      <tr><td>Message Bank</td><td><span class="rid">FR-030</span> <span class="rid">AI-011</span></td><td>WF-012</td><td>OUT</td><td>MessageTemplate, PromptVersion</td><td>TEST-OUT-005 only Approved usable</td></tr>
+      <tr><td>QA &amp; Compliance</td><td><span class="rid">CMP-003</span></td><td>WF-046</td><td>COMP</td><td>ComplianceCheck, Attestation</td><td>TEST-CMP-003 unsigned reports failing</td></tr>
+      <tr><td>UTM Builder</td><td><span class="rid">FR-095</span> <span class="rid">CMP-012</span></td><td>WF-UTM-MINT</td><td>—</td><td>TrackedLink</td><td>TEST-INT-030 malformed-link regression</td></tr>
+      <tr><td>Accounts Register</td><td><span class="rid">SEC-011</span> <span class="rid">SEC-013</span></td><td>WF-047</td><td>OPS</td><td>CredentialReference</td><td>TEST-SEC-013 no secret in prompt</td></tr>
+      <tr><td>Benchmarks</td><td>KPI thresholds</td><td>WF-043</td><td>ANA</td><td>KPIThreshold</td><td>TEST-KPI-030 provenance shown</td></tr>
+      <tr><td>Lists</td><td><span class="rid">DAT-004</span> <span class="rid">DAT-005</span></td><td>—</td><td>—</td><td>Enumeration, DedupRule</td><td>TEST-DAT-004 unusable value unselectable</td></tr>
+      <tr><td>UPGRADE NOTES</td><td><span class="rid">MIG-006</span></td><td>WF-048</td><td>KNOW</td><td>OnboardingTask</td><td>TEST-MIG-006 residual actions present</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="s11">
+  <div class="sechead"><span class="secnum">11</span><h2>Software Requirements Specification</h2></div>
+  <p class="prose">Sections 1–36. Every requirement is testable. Where the workbook does not determine an answer, the requirement says so and the item appears in the gaps register rather than being invented.</p>
+
+  <h3>1 · Executive summary</h3>
+  <div class="prose">
+    <p>PCI AI runs a growth department through a 42-sheet workbook that is, in substance, a complete operating model. It works, but it does not scale: it holds about eight working days of outreach rows at full-team volume, it cannot enforce its own rules, it cannot execute anything, and it depends on people remembering to log work the same day.</p>
+    <p>This specification defines a platform in which 24 specialised agents perform the research, drafting, analysis and coordination the workbook describes, while deterministic software owns identity, scheduling, permissions, state, budgets, approvals, integrations, compliance and audit.</p>
+    <p>Version 1 succeeds when the owner opens the platform in the morning and finds the workforce has already reviewed yesterday’s performance, produced today’s plan against the value-ranked objectives, run permitted research, drafted the day’s content and outreach, prepared everything needing a decision in one inbox, executed the authorised low-risk work, measured results, and recorded every step in an audit trail that answers <em>why did the system do this?</em></p>
+  </div>
+
+  <h3>2 · Business context</h3>
+  <div class="prose">
+    <p>PCI AI issues three credentials plus an honorary certification, across five domains and two adjacent properties. Its buyers are project controls managers, planners, cost engineers, estimators, PMO leads and their employers, concentrated in the UK, US, Gulf, India and Australia.</p>
+    <p>Its position is contested at the most basic level — a competitor training provider currently owns PCI’s own name in Google, and the established bodies own the head terms. The workbook’s answer is compounding authority plus a direct outreach motion.</p>
+    <p>The commercial risk the workbook is most alert to is reputational: overstating a credential to a senior professional. Its first Golden Rule, several QA checks, the compliance component of the Employee Score, and the exact wording of every approved template all exist to prevent it. <strong>Any system generating outreach or public content for PCI inherits that as its primary design constraint.</strong></p>
+  </div>
+
+  <h3>3–4 · Workbook analysis and traceability</h3>
+  <p class="prose">Summarised in sections 01, 02 and 10 of this document; held in full in the repository.</p>
+
+  <h3>5 · Business objectives</h3>
+  <div class="scroller"><table>
+    <thead><tr><th>ID</th><th>Objective</th><th>Measure</th></tr></thead>
+    <tbody>
+      <tr><td class="rid">BO-01</td><td>Preserve every control the workbook encodes, zero regression</td><td>All 10 Golden Rules and 15 QA checks enforced and tested</td></tr>
+      <tr><td class="rid">BO-02</td><td>Remove same-day manual logging as a dependency</td><td>≥90% of activity records created automatically</td></tr>
+      <tr><td class="rid">BO-03</td><td>Produce a decision-ready plan before the day starts</td><td>Brief published by 08:00 on ≥95% of working days</td></tr>
+      <tr><td class="rid">BO-04</td><td>Increase content throughput without triggering thin-content demotion</td><td>Published/week up, with quality-gate pass rate and indexation rate tracked</td></tr>
+      <tr><td class="rid">BO-05</td><td>Make effort allocation match the value ranks</td><td>Share of minutes converges toward rank order</td></tr>
+      <tr><td class="rid">BO-06</td><td>Make every reported number defensible</td><td>100% of KPIs expose lineage; health checks read zero</td></tr>
+      <tr><td class="rid">BO-07</td><td>Keep AI cost proportional to output</td><td>Cost per published item and per prepared outreach item trend down</td></tr>
+      <tr><td class="rid">BO-08</td><td>Answer “why did the system do this?” six months later</td><td>100% of external actions have a complete audit chain</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>6–7 · Scope and out of scope</h3>
+  <p class="prose"><strong>In scope:</strong> organisation and RBAC; agent registry, versioning and control centre; business calendar and scheduler; durable workflows with approval waits; approval inbox; model gateway with fallback and cost accounting; knowledge base and RAG; policy and compliance engine; official-API integration layer; content, lead and outreach-preparation engines; partnership, PR, community, link-building, events and direct-channel modules; SEO and answer-engine workspace; analytics, KPI and attribution; experiments; goals and campaigns; executive command centre and Executive AI; reporting; notifications; audit and error centres; workbook importer; cost control; observability; multi-tenancy foundations.</p>
+  <div class="scroller"><table>
+    <thead><tr><th>ID</th><th>Excluded</th><th>Reason</th></tr></thead>
+    <tbody>
+      <tr class="sev-x"><td class="rid">OOS-01</td><td>Any automation of LinkedIn connections, DMs, comments or profile scraping</td><td>Golden Rule 5; terms; no API — <strong>permanently</strong></td></tr>
+      <tr class="sev-x"><td class="rid">OOS-02</td><td>Any scraping connector, any platform</td><td>Golden Rule 5; technique 15</td></tr>
+      <tr class="sev-x"><td class="rid">OOS-03</td><td>Automated posting to Reddit, Quora, DEV, Stack Exchange</td><td>Anti-promotion terms</td></tr>
+      <tr class="sev-x"><td class="rid">OOS-04</td><td>Paid links, PBNs, reciprocal swaps, engagement pods, AI-comment tools</td><td>Technique 15 and 23</td></tr>
+      <tr class="sev-x"><td class="rid">OOS-05</td><td>Incentivised, gated or internally written reviews</td><td>QA check 9</td></tr>
+      <tr><td class="rid">OOS-06</td><td>Paid media buying and bid management</td><td>Deliberate MVP exclusion — spend controls first</td></tr>
+      <tr><td class="rid">OOS-07</td><td>Replacing the PCI platform as the revenue ledger</td><td>Dashboard reconciliation rule</td></tr>
+      <tr><td class="rid">OOS-08</td><td>Replacing the password vault</td><td>Golden Rule 9</td></tr>
+      <tr><td class="rid">OOS-09</td><td>Automated accreditation or regulatory activity</td><td>A leadership programme, not a marketing task</td></tr>
+      <tr><td class="rid">OOS-10</td><td>Automated HR decisions from the Employee Score</td><td>Human process</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>8–9 · Stakeholders and roles</h3>
+  <div class="scroller"><table>
+    <thead><tr><th>Role</th><th>Capabilities</th></tr></thead>
+    <tbody>
+      <tr><td>Owner</td><td>Everything, including strategy changes, autonomy increases and emergency-stop release</td></tr>
+      <tr><td>Admin</td><td>Agents, prompts, models, integrations, budgets, flags, RBAC; cannot approve their own high-risk actions</td></tr>
+      <tr><td>Manager</td><td>Approvals, planning, coaching, compliance attestation, roster and targets</td></tr>
+      <tr><td>Operator</td><td>Execute assigned tasks, submit drafts, confirm human sends, write review notes</td></tr>
+      <tr><td>Closer</td><td>Read handed-over leads; write commercial outcomes</td></tr>
+      <tr><td>Analyst</td><td>Read-only analytics, KPIs, lineage, reports, export</td></tr>
+      <tr><td>Compliance</td><td>Read everything, sign attestations, trigger emergency stop; cannot publish</td></tr>
+      <tr><td><strong>Agent</strong></td><td>Only the tools its version grants. <strong>Can never approve, never hold credentials, never change policy.</strong></td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>10 · Functional requirements</h3>
+  <div class="scroller"><table>
+    <caption>10.1 Organisation, identity, configuration</caption>
+    <thead><tr><th>ID</th><th>Requirement</th></tr></thead>
+    <tbody>
+      <tr><td class="rid">FR-001</td><td>Represent PCI AI as an Organization with time zone, working days, week-start day, programme start and holidays.</td></tr>
+      <tr><td class="rid">FR-002</td><td>Store the seven brands and five domains; require a brand tag on every work item.</td></tr>
+      <tr><td class="rid">FR-003</td><td>Store the eleven objectives with editable value ranks; require an objective tag on every work item.</td></tr>
+      <tr><td class="rid">FR-004</td><td>Reject any work item lacking either tag; surface an untagged queue for Monday review.</td></tr>
+      <tr><td class="rid">FR-005</td><td>Maintain human and agent actors; every activity record references a known actor.</td></tr>
+      <tr><td class="rid">FR-006</td><td>Store per-person and per-agent daily targets; compute weekly as target × working days.</td></tr>
+      <tr><td class="rid">FR-007</td><td>Compute expected-to-date as target × days elapsed × active capacity, counting humans and agents.</td></tr>
+      <tr><td class="rid">FR-008</td><td>All business behaviour — times, cadences, thresholds, limits, schedules, models, ICP rules, budgets, retries, workflow enablement — is versioned configuration, changeable without deployment.</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="scroller"><table>
+    <caption>10.2 Goals, campaigns, tasks</caption>
+    <thead><tr><th>ID</th><th>Requirement</th></tr></thead>
+    <tbody>
+      <tr><td class="rid">FR-010</td><td>Support Goals with KPI, target, deadline, owner, responsible agents, workflows, progress and status; support Objective → Key Result → Initiative → Task.</td></tr>
+      <tr><td class="rid">FR-011</td><td>Prioritise work against goals and value ranks, recording why each task was prioritised.</td></tr>
+      <tr><td class="rid">FR-012</td><td>Support Campaigns with a brief: objective, audience, geography, offering, message, positioning, channels, KPIs, dates, budget, constraints, approvals, knowledge, CTA.</td></tr>
+      <tr><td class="rid">FR-013</td><td>Agents retrieve the campaign brief before producing campaign work; the retrieval is recorded.</td></tr>
+      <tr><td class="rid">FR-014</td><td>Every unit of work is a Task carrying 22 defined fields including confidence, cost, retry count and audit references.</td></tr>
+      <tr><td class="rid">FR-015</td><td>Task states are exactly: Planned, Queued, Running, WaitingForDependency, WaitingForApproval, Completed, Failed, Cancelled, Skipped.</td></tr>
+      <tr><td class="rid">FR-016</td><td>No agent performs work outside the task system; model execution without an owning task is rejected at the gateway.</td></tr>
+      <tr><td class="rid">FR-017</td><td>Priority is Critical/High/Normal/Low from configurable rules; AI may recommend, deterministic rules decide.</td></tr>
+      <tr><td class="rid">FR-018</td><td>Import the 63 Master Tasks; require an owner and due date before activation.</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="scroller"><table>
+    <caption>10.3 Lead engine</caption>
+    <thead><tr><th>ID</th><th>Requirement</th></tr></thead>
+    <tbody>
+      <tr><td class="rid">FR-020</td><td>Model Account and Contact separately with ICP attributes, pain-point hypothesis, source, evidence, score, intent, engagement, history, owner and next action.</td></tr>
+      <tr><td class="rid">FR-021</td><td>Apply the workbook’s four qualification tests; failing any marks the lead unqualified. The bar is never lowered to hit a volume target.</td></tr>
+      <tr><td class="rid">FR-022</td><td>Compute lead score deterministically as ICP × 12 + Intent × 8, banded A ≥80, B ≥60, C ≥40, D below.</td></tr>
+      <tr><td class="rid">FR-023</td><td>Every AI-supplied rating carries evidence and confidence; ratings without evidence are rejected.</td></tr>
+      <tr><td class="rid">FR-024</td><td>Funnel stage is derived from outcome fields — never typed, never inferred by a model.</td></tr>
+      <tr><td class="rid">FR-025</td><td>Check duplicates on profile URL, email and name+company before create or queue; surface the earlier record and its outcome.</td></tr>
+      <tr><td class="rid">FR-026</td><td>Maintain suppression lists — do-not-contact, unsubscribed, declined, bounced, existing customers, active opportunities, blocked domains — enforced at queue entry.</td></tr>
+      <tr><td class="rid">FR-027</td><td>A declined lead is permanently suppressed; any queue attempt is denied and logged as a policy violation.</td></tr>
+      <tr><td class="rid">FR-028</td><td>Record handoff, meeting, application, certification, purchase, revenue and PCI order reference; prevent Converted without the reference.</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="scroller"><table>
+    <caption>10.4 Outreach engine</caption>
+    <thead><tr><th>ID</th><th>Requirement</th></tr></thead>
+    <tbody>
+      <tr><td class="rid">FR-030</td><td>Compose only from templates whose status is Approved; free-form outreach is impossible.</td></tr>
+      <tr><td class="rid">FR-031</td><td>Enforce hard character limits before queue entry — 200 for notes, 300 for messages.</td></tr>
+      <tr><td class="rid">FR-032</td><td>Reject any item whose personalisation line is empty or unsupported by cited profile evidence.</td></tr>
+      <tr><td class="rid">FR-033</td><td>Block award, selection or guarantee language via a banned-phrase set plus a claim classifier; log the matched rule.</td></tr>
+      <tr><td class="rid">FR-034</td><td>Anchor follow-up timers to the message-sent event at +4 and +10 days; maximum two, then No Response and stop.</td></tr>
+      <tr><td class="rid">FR-035</td><td>Provide a human send queue with copy-ready text, profile link, character count, and a confirmation recording actual send time, exact text and sender.</td></tr>
+      <tr><td class="rid">FR-036</td><td>Never perform an automated LinkedIn send, connect, comment or profile visit. Any tool attempting it is denied and raises a security event.</td></tr>
+      <tr><td class="rid">FR-037</td><td>Configurable frequency caps per channel, identity and day; pause a channel on a recorded platform warning.</td></tr>
+      <tr><td class="rid">FR-038</td><td>Classify replies and propose an approved response; fees, legitimacy or unanswerable questions escalate rather than auto-propose.</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="scroller"><table>
+    <caption>10.5 Content engine</caption>
+    <thead><tr><th>ID</th><th>Requirement</th></tr></thead>
+    <tbody>
+      <tr><td class="rid">FR-040</td><td>ContentItem carries 22 fields from topic and pillar through QA and approval status to published URL and performance metrics.</td></tr>
+      <tr><td class="rid">FR-041</td><td>Import the 5,683 briefs preserving each prompt’s prohibition on invented statistics.</td></tr>
+      <tr><td class="rid">FR-042</td><td>Order selection by priority and difficulty — P1 first, Easy first — respecting the shared pillar and cluster structure.</td></tr>
+      <tr><td class="rid">FR-043</td><td>Run a semantic-similarity check against published PCI content; reject or re-brief near-duplicates.</td></tr>
+      <tr><td class="rid">FR-044</td><td>Classify every claim into six types; check evidence-requiring claims against approved sources; unsupported material claims block approval.</td></tr>
+      <tr><td class="rid">FR-045</td><td>Brand QA assesses voice, terminology, duplication, grammar, CTA, audience fit and structure including FAQ block, meta description and named author.</td></tr>
+      <tr><td class="rid">FR-046</td><td>Enforce Publishing Plan rules: own-site first, indexation verified, canonical set where supported, and refusal to publish a copy of a rankable page where canonicals are unsupported.</td></tr>
+      <tr><td class="rid">FR-047</td><td>Each repurposed surface is a distinct linked item; enforce a maximum number of derivatives per original.</td></tr>
+      <tr><td class="rid">FR-048</td><td>Track schedule commitments, compute coverage, raise remediation before the review day.</td></tr>
+      <tr><td class="rid">FR-049</td><td>Respect the native-scheduling table; where a platform cannot schedule a format, route to a human task.</td></tr>
+      <tr><td class="rid">FR-050</td><td>Hold source language, target language, translation status and localisation status separately — translation is not localisation.</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="scroller"><table>
+    <caption>10.6 SEO, answer-engine and link building</caption>
+    <thead><tr><th>ID</th><th>Requirement</th></tr></thead>
+    <tbody>
+      <tr><td class="rid">FR-060</td><td>SEOKeyword carries intent, funnel, volume band labelled an editorial estimate, difficulty, who ranks today, asset, priority, owner, status, URL, pillar and brief ID.</td></tr>
+      <tr><td class="rid">FR-061</td><td>SEOOpportunity is typed as technical, content, optimisation, authority or local, with evidence, score, action, status and resulting performance.</td></tr>
+      <tr><td class="rid">FR-062</td><td>Pull impressions, clicks and position per cluster row on cadence, stored with a freshness timestamp.</td></tr>
+      <tr><td class="rid">FR-063</td><td>Detect orphan pages; propose internal links as approvable recommendations.</td></tr>
+      <tr><td class="rid">FR-064</td><td>Run a monthly answer-engine audit over a configurable prompt set; never present audit output as a guaranteed citation.</td></tr>
+      <tr><td class="rid">FR-065</td><td>Verify crawler allow-list, index-submission health and entity-fact parity across site, Wikidata, Crunchbase, LinkedIn and Business Profile.</td></tr>
+      <tr><td class="rid">FR-066</td><td>Track link prospects to live, with link type; refuse to model paid, reciprocal or PBN acquisition.</td></tr>
+      <tr><td class="rid">FR-067</td><td>Geo × role pages require a backing keyword row, ship in tens, and block the next batch until a 30-day indexation gate passes.</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="scroller"><table>
+    <caption>10.7–10.8 Relationships and direct channels</caption>
+    <thead><tr><th>ID</th><th>Requirement</th></tr></thead>
+    <tbody>
+      <tr><td class="rid">FR-070</td><td>Partnership carries organisation, type, contact, fit rationale, ratings, score, band, stage, value, what-they-get, next step, deal value and signed date.</td></tr>
+      <tr><td class="rid">FR-071</td><td>Configurable partnership stages defaulting to the twelve-stage pipeline.</td></tr>
+      <tr><td class="rid">FR-072</td><td>PR routes are first-class records including the verified skip list; skip-listed routes need an explicit justified override.</td></tr>
+      <tr><td class="rid">FR-073</td><td>Every route, benchmark and platform rule carries a verified-on date and interval, flagged stale on expiry.</td></tr>
+      <tr><td class="rid">FR-074</td><td>Journalist requests get a fast lane: two-hour target, shortened approval expiry, 80–120 words, on-expertise only.</td></tr>
+      <tr><td class="rid">FR-075</td><td>Community answers are drafted only, pass a “useful without the link” gate, enforce per-community link ratios, and are posted by a human.</td></tr>
+      <tr><td class="rid">FR-076</td><td>Model events with UTM registration links, promotion schedule, recording, derivative content plan and speaker invitations.</td></tr>
+      <tr><td class="rid">FR-080</td><td>Email, WhatsApp, Telegram and SMS require recorded lawful basis and consent; blocked without one.</td></tr>
+      <tr><td class="rid">FR-081</td><td>Honour unsubscribes the same day, propagating to global suppression.</td></tr>
+      <tr><td class="rid">FR-082</td><td>Cap broadcast frequency deterministically, defaulting to one per week per channel.</td></tr>
+      <tr><td class="rid">FR-083</td><td>Verify SPF, DKIM and DMARC before the first campaign send; block if missing.</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="scroller"><table>
+    <caption>10.9 Analytics, KPIs, experiments, reporting</caption>
+    <thead><tr><th>ID</th><th>Requirement</th></tr></thead>
+    <tbody>
+      <tr><td class="rid">FR-090</td><td>KPI engine supports definition, formula, source, frequency, target, warning and critical thresholds, owner and history.</td></tr>
+      <tr><td class="rid">FR-091</td><td>Every KPI exposes lineage — source, raw observation, transformation, formula, displayed value — with drill-through.</td></tr>
+      <tr><td class="rid">FR-092</td><td>KPIs are referenced by stable identifier; a regression test asserts every tile resolves to its intended KPI.</td></tr>
+      <tr><td class="rid">FR-093</td><td>A KPI has exactly one definition system-wide.</td></tr>
+      <tr><td class="rid">FR-094</td><td>Distinguish correlation from attribution in all outputs; never assert causality the data cannot support.</td></tr>
+      <tr><td class="rid">FR-095</td><td>Mint every campaign link deterministically; flag untagged or off-estate links.</td></tr>
+      <tr><td class="rid">FR-096</td><td>Experiment carries hypothesis, baseline, action, audience, duration, success metric, guardrail metric, samples, rates, guard, conclusion and next action.</td></tr>
+      <tr><td class="rid">FR-097</td><td>Implement the workbook’s own significance guard and state plainly that it is a heuristic, not a statistical test.</td></tr>
+      <tr><td class="rid">FR-098</td><td>Rolling an experiment into the playbook requires human approval.</td></tr>
+      <tr><td class="rid">FR-099</td><td>Generate the Daily Brief and the End-of-Day Report with their full defined contents.</td></tr>
+      <tr><td class="rid">FR-100</td><td>Generate the Weekly Growth Review comparing target, actual and previous period, with strategic changes as recommendations only.</td></tr>
+      <tr><td class="rid">FR-101</td><td>Export reports to PDF, Excel and CSV; exports never become the operational store.</td></tr>
+      <tr><td class="rid">FR-102</td><td>Executive AI answers only from system records, cites them, discloses freshness, and refuses metrics it cannot source.</td></tr>
+      <tr><td class="rid">FR-103</td><td>Executive override commands become explicit, visible, time-bounded configuration changes shown for confirmation — never conversation memory alone.</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="scroller"><table>
+    <caption>10.10 Administration and control</caption>
+    <thead><tr><th>ID</th><th>Requirement</th></tr></thead>
+    <tbody>
+      <tr><td class="rid">FR-110</td><td>Create, edit, disable, pause, clone and roll back agents; change schedule, autonomy, model, tools, prompt; view history; test; run manually.</td></tr>
+      <tr><td class="rid">FR-111</td><td>Pause all agents, one agent, one workflow; cancel, reschedule, reprioritise, replace output, approve, reject, run manually, disable an integration, emergency stop.</td></tr>
+      <tr><td class="rid">FR-112</td><td>Emergency stop prevents all pending external writes <em>including approved items not yet executed</em>, and requires an owner to release.</td></tr>
+      <tr><td class="rid">FR-113</td><td>Error Center shows failed workflows, tasks, tool and integration errors, validation failures, auth failures, retries and dead letters, with safe retry.</td></tr>
+      <tr><td class="rid">FR-114</td><td>Repeatedly failing tasks move to dead-letter with reason, inputs, attempts and last error — never retry indefinitely.</td></tr>
+      <tr><td class="rid">FR-115</td><td>Filtering and search on all major views, plus global search across nine entity types.</td></tr>
+      <tr><td class="rid">FR-116</td><td>Authorised export of tasks, leads, content, agent logs, KPIs and reports.</td></tr>
+      <tr><td class="rid">FR-117</td><td>Auditable feature flags for controlled rollout.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>11–12 · Non-functional and agent requirements</h3>
+  <div class="scroller"><table>
+    <thead><tr><th>ID</th><th>Requirement</th></tr></thead>
+    <tbody>
+      <tr><td class="rid">NFR-001</td><td>Interactive reads p95 under 1.5 s at 100k tasks and 50k content records.</td></tr>
+      <tr><td class="rid">NFR-002</td><td>Approval actions commit p95 under 500 ms.</td></tr>
+      <tr><td class="rid">NFR-003</td><td>Scheduler dispatches a due job within 60 s under normal load.</td></tr>
+      <tr><td class="rid">NFR-005</td><td>≥100 concurrent workflows and ≥50 concurrent agent executions on the MVP deployment.</td></tr>
+      <tr><td class="rid">NFR-007</td><td>A single AI provider outage does not stop the platform; queued work resumes.</td></tr>
+      <tr><td class="rid">NFR-009</td><td>No critical functionality ships as a TODO or a mock; any mock is labelled and listed in release notes.</td></tr>
+      <tr><td class="rid">AI-001</td><td>Every agent has a formal definition across 23 named attributes including forbidden actions and escalation rules.</td></tr>
+      <tr><td class="rid">AI-003</td><td>Every consumed output is a schema-validated structured object; the system never depends on parsing free-form language.</td></tr>
+      <tr><td class="rid">AI-004</td><td>Validation failure triggers bounded regeneration then escalation; invalid output never becomes trusted data.</td></tr>
+      <tr><td class="rid">AI-005</td><td>Agents act only through registered tools — no shell, browser, arbitrary network or direct database access.</td></tr>
+      <tr><td class="rid">AI-006</td><td>Every tool declares purpose, schemas, permission, side effects, risk class, audit behaviour, timeout and retry.</td></tr>
+      <tr><td class="rid">AI-007</td><td>Read and write tools are partitioned, with stronger authorisation on writes.</td></tr>
+      <tr><td class="rid">AI-008</td><td>The model never performs a side effect: propose → policy check → authorisation → approval → execution service → result.</td></tr>
+      <tr><td class="rid">AI-010</td><td>Agent configuration is versioned through Draft, Test, Staging, Production, Retired, with rollback.</td></tr>
+      <tr><td class="rid">AI-011</td><td>Prompts live in a registry with versioning, variables, testing, approval, rollback and comparison — never in source.</td></tr>
+      <tr><td class="rid">AI-013</td><td>A materially changed prompt or model does not enter production without offline evaluation.</td></tr>
+      <tr><td class="rid">AI-020</td><td>Hard limits on steps, tool calls, time, tokens, cost, retries; on breach, stop, preserve state, log, notify.</td></tr>
+      <tr><td class="rid">AI-021</td><td>Six memory layers retrieved by relevance, never by injecting unbounded history.</td></tr>
+      <tr><td class="rid">AI-030</td><td>Judgement outputs include decision, confidence, evidence, assumptions and missing information.</td></tr>
+      <tr><td class="rid">AI-031</td><td>Research records store source, URL, retrieval date, publication date, evidence, relevance and confidence.</td></tr>
+      <tr><td class="rid">AI-032</td><td>Model confidence is never presented as calibrated probability unless calibration is implemented and measured.</td></tr>
+      <tr><td class="rid">AI-040</td><td>Sub-threshold confidence escalates automatically to human review.</td></tr>
+      <tr><td class="rid">AI-050</td><td>Evaluation datasets exist for content, lead qualification and research agents against named criteria.</td></tr>
+      <tr><td class="rid">AI-060</td><td>Gateway supports multiple providers, task-class routing and configurable fallback chains.</td></tr>
+      <tr><td class="rid">AI-062</td><td>Sensitive data reaches a fallback provider only if that provider is approved for its classification.</td></tr>
+      <tr><td class="rid">AI-063</td><td>Business workflows are owned by the platform, not by a vendor agent framework.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>13–15 · Workflow, scheduler, autonomy and approval</h3>
+  <div class="scroller"><table>
+    <thead><tr><th>Level</th><th>Name</th><th>Definition</th></tr></thead>
+    <tbody>
+      <tr><td class="rid">L0</td><td>Observe</td><td>May read and analyse; may not create or modify</td></tr>
+      <tr><td class="rid">L1</td><td>Draft</td><td>May research and create drafts and internal records; no external effect</td></tr>
+      <tr><td class="rid">L2</td><td>Recommend</td><td>May propose; every action requires human approval before execution</td></tr>
+      <tr><td class="rid">L3</td><td>Execute Approved Workflows</td><td>May execute pre-authorised actions within stated bounds</td></tr>
+      <tr><td class="rid">L4</td><td>Autonomous Within Policy</td><td>May execute low-risk operations automatically inside defined limits</td></tr>
+    </tbody>
+  </table></div>
+  <div class="scroller"><table>
+    <thead><tr><th>ID</th><th>Requirement</th></tr></thead>
+    <tbody>
+      <tr><td class="rid">WF-001</td><td>Typed nodes: trigger, agent, API action, condition, loop, approval, delay, transformation, database action, notification, sub-workflow, failure path.</td></tr>
+      <tr><td class="rid">WF-003</td><td>Persist current node, completed and pending nodes, context, outputs, errors, approvals and resume time.</td></tr>
+      <tr><td class="rid">WF-004</td><td>Survive process restart and resume safely; no workflow depends on an open model conversation.</td></tr>
+      <tr><td class="rid">WF-020</td><td>Twenty named domain events form the communication contract between agents.</td></tr>
+      <tr><td class="rid">WF-021</td><td>Timers anchor to the domain event that starts them, never to record creation.</td></tr>
+      <tr><td class="rid">WF-022</td><td>Consumers are idempotent; duplicate delivery never produces a duplicate external action.</td></tr>
+      <tr><td class="rid">WF-023</td><td>Agents communicate through structured tasks and events; free-form agent chat is not a control path.</td></tr>
+      <tr><td class="rid">WF-030</td><td>All external writes use idempotency keys and execution locks.</td></tr>
+      <tr><td class="rid">WF-031</td><td>A publish that times out after succeeding is detected on retry and never duplicated.</td></tr>
+      <tr><td class="rid">SCH-003</td><td>Schedules are expressed in the organisation’s time zone; never server UTC without explicit conversion.</td></tr>
+      <tr><td class="rid">SCH-004</td><td>Business Calendar models time zone, working days, weekends, holidays, campaign dates, deadlines, events, launches and blackout periods.</td></tr>
+      <tr><td class="rid">SCH-010</td><td>Every execution records both intended and actual time.</td></tr>
+      <tr><td class="rid">SCH-012</td><td>Scheduling a content workflow triggers the workflow, not a publish — the clock never causes an external write.</td></tr>
+      <tr><td class="rid">SCH-020</td><td>Track verification expiry for platform rules, benchmarks and routes; raise tasks when stale.</td></tr>
+      <tr><td class="rid">SCH-021</td><td>Separable queues by class so one expensive task cannot block the system.</td></tr>
+      <tr><td class="rid">APR-011</td><td>Strategy, ICP, ranks, cadence, policy and playbook changes always require human approval.</td></tr>
+      <tr><td class="rid">APR-012</td><td>Four approval modes without deployment: Manual, Trusted Workflow, Campaign Pre-Approval, Emergency Lock.</td></tr>
+      <tr><td class="rid">APR-013</td><td>Raising autonomy requires documented evaluation evidence plus owner approval.</td></tr>
+      <tr><td class="rid">APR-014</td><td>Approvals support no expiry, expire-at-time and expire-after-duration, then cancel or regenerate.</td></tr>
+      <tr><td class="rid">APR-015</td><td>An approval item shows agent, action, reason, preview, target, risk, expected benefit, supporting research, and Approve / Reject / Edit / Request revision.</td></tr>
+      <tr><td class="rid">APR-016</td><td>Edits capture structured feedback for evaluation and learning.</td></tr>
+      <tr><td class="rid">APR-017</td><td>High-risk workflows enforce separation of duties across generator, reviewer, human approver and execution service.</td></tr>
+      <tr><td class="rid">APR-018</td><td>No AI identity satisfies any approval requirement.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>16–19 · Knowledge, integration, analytics, reporting</h3>
+  <div class="scroller"><table>
+    <thead><tr><th>ID</th><th>Requirement</th></tr></thead>
+    <tbody>
+      <tr><td class="rid">KB-002</td><td>Ingestion produces chunks with metadata, embeddings, source tracking, version and permissions.</td></tr>
+      <tr><td class="rid">KB-003</td><td>Retrieval returns citations; agents can state where each fact came from.</td></tr>
+      <tr><td class="rid">KB-004</td><td>Retrieval respects permissions and organisation boundaries — never another organisation’s knowledge.</td></tr>
+      <tr><td class="rid">KB-005</td><td>On document change, preserve versions, re-index, mark superseded, keep prior executions traceable to the version used.</td></tr>
+      <tr><td class="rid">KB-006</td><td>Support exact, full-text, semantic and web search; orchestration selects the mode rather than defaulting to vectors.</td></tr>
+      <tr><td class="rid">KB-010</td><td>A structured Brand System holds voice, terminology, positioning, audiences, differentiators, proof points, approved claims, CTA library and pillars — retrieved, not embedded in a giant prompt.</td></tr>
+      <tr><td class="rid">KB-020</td><td>Uploads are untrusted: type validation, size limits, scanning, parsing isolation, injection mitigation, permission checks.</td></tr>
+      <tr><td class="rid">KB-021</td><td>Instructions inside ingested documents or fetched pages are never executed as agent instructions.</td></tr>
+      <tr><td class="rid">INT-001</td><td>Official APIs first, always.</td></tr>
+      <tr><td class="rid">INT-003</td><td>No connector implements scraping, bulk automation or any action the platform prohibits.</td></tr>
+      <tr><td class="rid">INT-004</td><td>Where automation is unavailable, provide a human-assisted workflow with prepared content, confirmation and evidence capture.</td></tr>
+      <tr><td class="rid">INT-011</td><td>Integrations report six health states; agents check health before attempting work.</td></tr>
+      <tr><td class="rid">INT-012</td><td>Rate limits are managed centrally; agents never call an external API directly.</td></tr>
+      <tr><td class="rid">INT-014</td><td>Webhooks verify signatures, record raw, deduplicate, normalise, process asynchronously, retry safely, acknowledge quickly.</td></tr>
+      <tr><td class="rid">INT-015</td><td>Providers sit behind interfaces so they can be replaced without touching business logic.</td></tr>
+      <tr><td class="rid">INT-020</td><td>CRM sync defines initial and incremental sync, conflict resolution, external IDs and duplicate prevention; never blindly overwrites from AI assumptions.</td></tr>
+      <tr><td class="rid">INT-021</td><td>Reconcile revenue against PCI order references; mark unreferenced conversions unverified.</td></tr>
+      <tr><td class="rid">KPI-022</td><td>Every external source exposes freshness.</td></tr>
+      <tr><td class="rid">KPI-030</td><td>Data-health checks are enforced at write time; residual non-zero blocks executive report publication until acknowledged.</td></tr>
+      <tr><td class="rid">RPT-005</td><td>Every report states sources and freshness, and contains no number without lineage.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>20–23 · Security, audit, compliance, data</h3>
+  <div class="scroller"><table>
+    <thead><tr><th>ID</th><th>Requirement</th></tr></thead>
+    <tbody>
+      <tr><td class="rid">SEC-003</td><td>Organisation isolation enforced at the data layer, not only in application code.</td></tr>
+      <tr><td class="rid">SEC-011</td><td>Secrets live in a vault; the database holds credential references only.</td></tr>
+      <tr><td class="rid">SEC-013</td><td><strong>No secret ever appears in a prompt or reaches a model.</strong> Agents request abstract tool actions; the execution layer resolves credentials.</td></tr>
+      <tr><td class="rid">SEC-021</td><td>Field-level write authorisation protects computed and manager-owned fields.</td></tr>
+      <tr><td class="rid">SEC-030</td><td>Least-privilege tools: a content agent has no financial, credential or CRM-write access.</td></tr>
+      <tr><td class="rid">SEC-031</td><td>No external write tool executes unless the agent holds explicit permission and all policy and approval requirements are satisfied.</td></tr>
+      <tr><td class="rid">SEC-032</td><td>Denied invocations are logged with agent, version, tool, rule and correlation ID, alerting on repetition.</td></tr>
+      <tr><td class="rid">SEC-033</td><td>Prompt-injection defences separate instructions from data and refuse instruction-shaped external content.</td></tr>
+      <tr><td class="rid">SEC-034</td><td>Code execution is sandboxed with resource, network, time and filesystem limits, per task.</td></tr>
+      <tr><td class="rid">SEC-035</td><td>Agents cannot modify their own permissions, policies, budgets, approval rules or security configuration.</td></tr>
+      <tr><td class="rid">SEC-040</td><td>Data classification governs model access, tool access and provider routing.</td></tr>
+      <tr><td class="rid">SEC-050</td><td>Test-environment agents are incapable of publishing to or contacting real audiences.</td></tr>
+      <tr><td class="rid">AUD-001</td><td>Every meaningful AI action records agent, versions, prompt version, trigger, input, retrieved knowledge, model, output, tool calls, approval, result, error, cost and timestamp.</td></tr>
+      <tr><td class="rid">AUD-003</td><td>Audit events are immutable or strongly tamper-resistant, append-only, integrity-verified.</td></tr>
+      <tr><td class="rid">AUD-005</td><td>A correlation ID links one business workflow across services, agents, tools and model calls.</td></tr>
+      <tr><td class="rid">AUD-007</td><td>A “why” explanation shows evidence, rules, KPIs, sources and assumptions — <strong>without exposing hidden chain-of-thought</strong>.</td></tr>
+      <tr><td class="rid">CMP-001</td><td>Where the workbook conflicts with a platform’s permitted automation, surface the conflict; do not implement a workaround.</td></tr>
+      <tr><td class="rid">CMP-003</td><td>The fifteen QA checks exist as controls with owner, frequency, evidence, result and sign-off; unsigned reports as failing.</td></tr>
+      <tr><td class="rid">CMP-004</td><td>Never generate or permit content claiming an individual has been awarded, selected, approved or guaranteed a certification.</td></tr>
+      <tr><td class="rid">CMP-007</td><td>Consent and lawful basis recorded at capture; processing without it is blocked.</td></tr>
+      <tr><td class="rid">CMP-014</td><td>Employee Score is restricted HR data, never used for an automated employment decision, retaining its activity gate.</td></tr>
+      <tr><td class="rid">CMP-015</td><td>Agent work is attributed to the agent, not to a human, in every scorecard and audit record.</td></tr>
+      <tr><td class="rid">DAT-001</td><td>The platform, not the spreadsheet, is the operational store.</td></tr>
+      <tr><td class="rid">DAT-004</td><td>Enumerations have a single canonical source; a value invisible to reporting is not selectable.</td></tr>
+      <tr><td class="rid">DAT-006</td><td>Validation is server-side and authoritative.</td></tr>
+      <tr><td class="rid">DAT-007</td><td>Text dates, future dates and negative quantities are impossible to persist.</td></tr>
+      <tr><td class="rid">DAT-011</td><td>Ordinary users cannot hard-delete; corrections are edits with version history.</td></tr>
+      <tr><td class="rid">DAT-020</td><td>Systems of record are defined and respected; no competing copies without synchronisation rules.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>24–30 · Reliability, observability, cost, UX, migration</h3>
+  <div class="scroller"><table>
+    <thead><tr><th>ID</th><th>Requirement</th></tr></thead>
+    <tbody>
+      <tr><td class="rid">NFR-022</td><td>RPO ≤ 15 minutes; RTO ≤ 4 hours.</td></tr>
+      <tr><td class="rid">NFR-024</td><td>Runbooks for twelve named incident types, from provider outage to incorrect mass-generated content.</td></tr>
+      <tr><td class="rid">OBS-003</td><td>AI observability: model calls, latency, tokens, cost, tool calls, retrieval sources, validation failures, evaluation signals.</td></tr>
+      <tr><td class="rid">OBS-005</td><td>Alert on agent failure rate, approval backlog age, integration degradation, KPI breach, budget threshold, non-zero data health, dead-letter growth.</td></tr>
+      <tr><td class="rid">COST-001</td><td>Daily and monthly AI budgets plus per-agent, per-workflow budgets and model restrictions.</td></tr>
+      <tr><td class="rid">COST-003</td><td>At threshold, pause low-priority executions and notify; critical workflows configurably exempt.</td></tr>
+      <tr><td class="rid">COST-004</td><td>Premium reasoning models are not used for trivial tasks; the gateway enforces class rules.</td></tr>
+      <tr><td class="rid">COST-006</td><td>Cost optimisation recommendations must not silently degrade workflow quality.</td></tr>
+      <tr><td class="rid">COST-007</td><td>Compute approximate ROI where data supports it, and decline where it does not.</td></tr>
+      <tr><td class="rid">UX-001</td><td>The application presents as an AI Workforce Command Center — clarity, hierarchy, operational awareness, fast approvals, auditability.</td></tr>
+      <tr><td class="rid">UX-005</td><td>Mobile fully supports approvals, notifications, dashboard, agent status, daily report and emergency pause.</td></tr>
+      <tr><td class="rid">UX-006</td><td>Accessibility: keyboard navigation, semantic components, contrast, screen-reader support, focus states, accessible forms.</td></tr>
+      <tr><td class="rid">UX-007</td><td>Every screen defines empty, loading and error states.</td></tr>
+      <tr><td class="rid">MIG-002</td><td>The importer previews, diffs against the prior version, and applies only approved configuration changes.</td></tr>
+      <tr><td class="rid">MIG-003</td><td>The importer never automatically rewrites production configuration from an uploaded spreadsheet.</td></tr>
+      <tr><td class="rid">MIG-006</td><td>Every residual manual action in the changelog becomes an onboarding task in the platform.</td></tr>
+      <tr><td class="rid">MIG-008</td><td>Export back to Excel remains available during transition.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>35 · Acceptance criteria</h3>
+  <div class="scroller"><table>
+    <thead><tr><th>ID</th><th>The system is accepted when…</th></tr></thead>
+    <tbody>
+      <tr><td class="rid">AC-01</td><td>The daily brief is produced automatically before 08:00 on ten consecutive working days without human initiation.</td></tr>
+      <tr><td class="rid">AC-02</td><td>A content item flows Strategy → Research → Draft → QA rejection → revision → QA pass → Compliance → Approval → Publish → Analytics, with a complete audit chain.</td></tr>
+      <tr><td class="rid">AC-03</td><td>A publishing timeout after a successful write creates no duplicate post.</td></tr>
+      <tr><td class="rid">AC-04</td><td>An existing lead is detected and no duplicate is created.</td></tr>
+      <tr><td class="rid">AC-05</td><td>An agent attempting an unauthorised tool is denied, logged, and raises a security alert.</td></tr>
+      <tr><td class="rid">AC-06</td><td>A provider outage causes permitted fallback, and queued work resumes on recovery.</td></tr>
+      <tr><td class="rid">AC-07</td><td>Budget exhaustion pauses low-priority executions and notifies the administrator.</td></tr>
+      <tr><td class="rid">AC-08</td><td>A cross-organisation read attempt is blocked at the data layer.</td></tr>
+      <tr><td class="rid">AC-09</td><td>An outreach item over 300 characters, without a personal line, or containing award language cannot enter the approval queue.</td></tr>
+      <tr><td class="rid">AC-10</td><td>A declined contact cannot be queued for any channel or brand.</td></tr>
+      <tr><td class="rid">AC-11</td><td>A copy of a rankable page cannot be published where canonicals are unsupported.</td></tr>
+      <tr><td class="rid">AC-12</td><td>Every KPI resolves to its intended definition under a row-insert regression test, and health checks read zero.</td></tr>
+      <tr><td class="rid">AC-13</td><td>The Executive AI answers eight benchmark questions with citations and refuses one unanswerable question.</td></tr>
+      <tr><td class="rid">AC-14</td><td>Emergency stop halts all pending external writes, including approved-but-unexecuted items.</td></tr>
+      <tr><td class="rid">AC-15</td><td>Every production feature traces to a workbook, security, platform, technical or approved future requirement.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="s12">
+  <div class="sechead"><span class="secnum">12</span><h2>MVP Recommendation</h2></div>
+  <div class="prose">
+    <p>The MVP must prove the architecture on the two lanes with the best ratio of business value to platform risk — and must not begin with the lane the workbook forbids automating.</p>
+    <p>The value ranks put certification sales first, but the mechanism for certification sales is LinkedIn outreach, which is human-executed by policy. So the MVP delivers <strong>the full governed loop on content and SEO, where the platform may act, and the full preparation loop on outreach, where it must not</strong> — proving planning, agents, approvals, execution, measurement, cost and audit once in each shape.</p>
+  </div>
+
+  <div class="scroller"><table>
+    <thead><tr><th class="num">#</th><th>Capability</th><th>Why it is in the MVP</th></tr></thead>
+    <tbody>
+      <tr><td class="num">1</td><td>Organisation, business calendar, users, RBAC, identity provider</td><td>Nothing else is safe without it</td></tr>
+      <tr><td class="num">2</td><td>Workbook importer with diff and approval; knowledge base seeded from the workbook</td><td>The workbook is the source of truth; this is how it stays so</td></tr>
+      <tr><td class="num">3</td><td>Agent registry, versioning, prompt registry, Agent Control Center</td><td>Governance from day one, not retrofitted</td></tr>
+      <tr><td class="num">4</td><td>Scheduler, business calendar, durable workflow engine</td><td>The “wakes up by itself” requirement</td></tr>
+      <tr><td class="num">5</td><td>Model gateway: two providers, task-class routing, fallback, cost accounting</td><td>Cost and vendor risk are day-one risks</td></tr>
+      <tr><td class="num">6</td><td>Policy and compliance engine — the Golden Rules and enforceable QA checks</td><td>Every other feature depends on it</td></tr>
+      <tr><td class="num">7</td><td>Approval inbox: full item view, edit, reject, revise, structured feedback, expiry</td><td>The human-in-the-loop spine</td></tr>
+      <tr><td class="num">8</td><td><strong>Content lane</strong> end to end, publishing to the website</td><td>The one lane the platform can legitimately execute</td></tr>
+      <tr><td class="num">9</td><td><strong>Outreach lane</strong>, preparation only, ending in a human send queue</td><td>The highest-value lane, in the only safe shape</td></tr>
+      <tr><td class="num">10</td><td>Analytics: GA4, Search Console, UTM minting, KPI lineage, data-health validation</td><td>Numbers must be defensible before they are quoted</td></tr>
+      <tr><td class="num">11</td><td>Executive command centre and operations timeline</td><td>The “open it in the morning” experience</td></tr>
+      <tr><td class="num">12</td><td>Daily brief, end-of-day report, weekly review</td><td>The management rhythm the workbook already runs</td></tr>
+      <tr><td class="num">13</td><td>Complete audit trail, error centre, emergency stop</td><td>Non-negotiable</td></tr>
+    </tbody>
+  </table></div>
+
+  <p class="prose"><strong>Deferred, specified but not built:</strong> partnerships, PR routes, community preparation, link building, events, email and ESP, WhatsApp and SMS, job postings, paid media, CRM sync, Arabic localisation, social write connectors, answer-engine audit automation, experiments UI, multi-tenant self-service.</p>
+
+  <div class="note">
+    <span class="lbl">MVP success test</span>
+    <p>For ten consecutive working days with no manual initiation: the daily brief lands before 08:00; the plan reflects value ranks and yesterday’s KPIs; at least one content item completes the full chain including a QA rejection and revision; the outreach queue holds compliant, personalised, in-limit items and nothing non-compliant reaches it; every dashboard KPI drills through to raw observations; data-health checks read zero; AI cost per output is recorded and within budget; and every external action has a complete audit chain.</p>
+  </div>
+</section>
+
+<section id="s13">
+  <div class="sechead"><span class="secnum">13</span><h2>Architecture Decisions Requiring Approval</h2></div>
+  <p class="prose">Fourteen decisions. None should be implemented before approval.</p>
+
+  <div class="dec"><span class="id">D-01</span><h3>Overall backend shape</h3><dl>
+    <dt>Option A</dt><dd>Single modular monolith in one language</dd>
+    <dt>Option B</dt><dd>Modular monolith for platform and domain, plus a separate agent-runtime service</dd>
+    <dt>Option C</dt><dd>Microservices per bounded context</dd>
+    <dt>Recommend</dt><dd><strong>Option B</strong></dd>
+    <dt>Reasoning</dt><dd>The deterministic half — identity, RBAC, scheduling, approvals, policy, integrations, audit, KPIs — is ordinary transactional software that benefits from one database and one deployment. The AI half has a different dependency profile, failure mode and scaling curve. Splitting exactly once, along that seam, buys isolation without distributed-systems tax.</dd>
+    <dt>Trade-offs</dt><dd>Two deployables and one internal contract to version. C is rejected: at one organisation with one administrator, microservices multiply operational burden without a scaling need.</dd>
+  </dl></div>
+
+  <div class="dec"><span class="id">D-02</span><h3>Language split</h3><dl>
+    <dt>Option A</dt><dd>.NET 9 platform plus Python/FastAPI agent runtime</dd>
+    <dt>Option B</dt><dd>Python/FastAPI end to end</dd>
+    <dt>Recommend</dt><dd><strong>Option A, conditional on team skills</strong></dd>
+    <dt>Reasoning</dt><dd>.NET gives strong typing, migrations and a mature security stack where correctness matters most; Python is where the AI ecosystem actually lives.</dd>
+    <dt>Trade-offs</dt><dd>Two ecosystems and two CI pipelines. <strong>If your team is Python-only, Option B is the better decision</strong> — a single-language team shipping reliably beats an optimal split nobody can maintain. This is a people question, and I need the answer before Phase 2.</dd>
+  </dl></div>
+
+  <div class="dec"><span class="id">D-03</span><h3>Workflow orchestration</h3><dl>
+    <dt>Option A</dt><dd>Temporal</dd>
+    <dt>Option B</dt><dd>Hangfire, Quartz or Celery plus a custom state machine</dd>
+    <dt>Option C</dt><dd>Build a workflow engine</dd>
+    <dt>Recommend</dt><dd><strong>Option A</strong></dd>
+    <dt>Reasoning</dt><dd>These workflows wait on humans for hours or days and must survive restarts without duplicating external actions. That is durable execution. Timers, approval waits, mid-flight versioning, retries and visibility all come free; building them on a job queue means reinventing all of it.</dd>
+    <dt>Trade-offs</dt><dd>Real operational weight for one organisation. Option B is materially cheaper and defensible for an MVP — the cost is that persisted state and safe resume become code you own. <strong>Option C is rejected outright.</strong></dd>
+  </dl></div>
+
+  <div class="dec"><span class="id">D-04</span><h3>Queueing and messaging</h3><dl>
+    <dt>Option A</dt><dd>PostgreSQL transactional outbox plus Temporal task queues; Redis for cache and rate limiting only</dd>
+    <dt>Option B</dt><dd>A message broker as the event backbone</dd>
+    <dt>Recommend</dt><dd><strong>Option A</strong></dd>
+    <dt>Reasoning</dt><dd>Domain events must publish atomically with the state change that caused them, or idempotent consumers become guesswork. An outbox gives that for free. At hundreds to low thousands of tasks a day, a broker adds a moving part without adding throughput anyone needs.</dd>
+    <dt>Trade-offs</dt><dd>Polling latency measured in seconds — irrelevant here. Revisit at multi-tenant scale.</dd>
+  </dl></div>
+
+  <div class="dec"><span class="id">D-05</span><h3>Vector search</h3><dl>
+    <dt>Option A</dt><dd>pgvector in the primary database</dd>
+    <dt>Option B</dt><dd>A dedicated vector database</dd>
+    <dt>Recommend</dt><dd><strong>Option A</strong></dd>
+    <dt>Reasoning</dt><dd>Permission-scoped and version-aware retrieval means joining chunks to documents, organisations, roles and versions. In pgvector that is a WHERE clause; in a separate store it is a distributed consistency problem. At ≤5M chunks it is comfortably sufficient.</dd>
+    <dt>Trade-offs</dt><dd>Index build time and memory pressure at large scale; mitigate with a read replica.</dd>
+  </dl></div>
+
+  <div class="dec"><span class="id">D-06</span><h3>Authentication provider</h3><dl>
+    <dt>Option A</dt><dd>Microsoft Entra ID (OIDC)</dd>
+    <dt>Option B</dt><dd>A hosted identity vendor</dd>
+    <dt>Recommend</dt><dd><strong>Option A</strong></dd>
+    <dt>Reasoning</dt><dd>The workbook already lives in SharePoint or OneDrive, so the organisation is on Microsoft identity. Reusing it gives MFA, conditional access and joiner/leaver control immediately — and joiner/leaver control is an explicit workbook concern.</dd>
+    <dt>Trade-offs</dt><dd>Ties the MVP to Microsoft identity; a SaaS phase later needs a broker. Never build identity.</dd>
+  </dl></div>
+
+  <div class="dec"><span class="id">D-07</span><h3>Deployment target</h3><dl>
+    <dt>Option A</dt><dd>Docker Compose on a managed VM, then a container service</dd>
+    <dt>Option B</dt><dd>Kubernetes from day one</dd>
+    <dt>Recommend</dt><dd><strong>Option A</strong></dd>
+    <dt>Reasoning</dt><dd>One organisation, one administrator, predictable load. Making local and production the same shape reduces the number of things that can break in only one environment.</dd>
+    <dt>Trade-offs</dt><dd>A later migration if the SaaS phase arrives — cheap while services stay stateless and configuration externalised, both already required.</dd>
+  </dl></div>
+
+  <div class="dec"><span class="id">D-09</span><h3>Model providers</h3><dl>
+    <dt>Option A</dt><dd>A primary and a secondary provider plus embeddings, all behind the gateway</dd>
+    <dt>Option B</dt><dd>A single provider</dd>
+    <dt>Recommend</dt><dd><strong>Option A</strong></dd>
+    <dt>Reasoning</dt><dd>Two approved providers is the minimum that makes fallback real. Agent configuration should reference model <em>classes</em>, not names, so upgrades are configuration changes.</dd>
+    <dt>Trade-offs</dt><dd>Two vendor relationships, two rate-limit regimes, and data-classification routing rules to maintain.</dd>
+  </dl></div>
+
+  <div class="dec"><span class="id">D-10</span><h3>Agent orchestration framework</h3><dl>
+    <dt>Option A</dt><dd>Direct provider SDKs plus platform-owned orchestration</dd>
+    <dt>Option B</dt><dd>An agent framework</dd>
+    <dt>Recommend</dt><dd><strong>Option A</strong></dd>
+    <dt>Reasoning</dt><dd>Business workflows must be owned by PCI AI, not trapped in a framework. The durable engine already owns control flow; a second orchestration layer with its own opinions about state, retries and memory would compete with it.</dd>
+    <dt>Trade-offs</dt><dd>More code for tool loops and output validation — which is exactly where the audit and policy hooks must live anyway.</dd>
+  </dl></div>
+
+  <div class="dec"><span class="id">D-11</span><h3>Social scheduling approach</h3><dl>
+    <dt>Option A</dt><dd>Native platform schedulers plus the workbook’s recommended free stack</dd>
+    <dt>Option B</dt><dd>Build direct API publishing for every social platform</dd>
+    <dt>Recommend</dt><dd><strong>Option A for v1</strong>; direct API only for the website, later the LinkedIn Company Page and YouTube</dd>
+    <dt>Reasoning</dt><dd>Most platforms schedule natively with real limits. Building ten write connectors would consume the entire MVP budget automating the least valuable part of the chain. The valuable part is deciding what to publish and proving it is safe.</dd>
+    <dt>Trade-offs</dt><dd>Coverage tracking depends partly on human confirmation until direct connectors exist.</dd>
+  </dl></div>
+
+  <div class="dec"><span class="id">D-12</span><h3>Multi-tenancy strategy</h3><dl>
+    <dt>Option A</dt><dd>Single database, organisation key on every row, row-level security</dd>
+    <dt>Option B</dt><dd>Database per tenant</dd>
+    <dt>Recommend</dt><dd><strong>Option A</strong></dd>
+    <dt>Reasoning</dt><dd>Meets isolation and readiness requirements without operational multiplication, and makes cross-organisation queries impossible by construction rather than by developer discipline.</dd>
+    <dt>Trade-offs</dt><dd>Noisy-neighbour risk and a heavier migration story at scale; acceptable for one organisation plus a few future tenants.</dd>
+  </dl></div>
+
+  <div class="dec"><span class="id">D-13</span><h3>CRM strategy</h3><dl>
+    <dt>Option A</dt><dd>Build the lead engine in the platform, integrate a CRM later</dd>
+    <dt>Option B</dt><dd>Integrate a CRM from day one as the lead system of record</dd>
+    <dt>Recommend</dt><dd><strong>Option A for MVP, with the model designed for B</strong></dd>
+    <dt>Reasoning</dt><dd>No CRM is named in the workbook, and the changelog only says the lead log belongs in a CRM at sustained full-team volume. Building an integration to an unchosen product is not possible; building sync-ready contracts is.</dd>
+    <dt>Trade-offs</dt><dd>A future migration of lead ownership, mitigated by specifying the sync contract now.</dd>
+  </dl></div>
+
+  <p class="prose">Two further decisions — <span class="rid">D-08</span> cloud provider and region, and <span class="rid">D-14</span> frontend framework — are recorded in the repository with the same structure. D-08 depends on the data-residency answer, which is a blocking prerequisite.</p>
+</section>
+
+<section id="s14">
+  <div class="sechead"><span class="secnum">14</span><h2>Automation Risk Register</h2></div>
+  <p class="prose">Twenty-two entries. The stripe encodes severity: <span class="pill p-crit">prohibited or high</span>, <span class="pill p-warn">medium</span>, <span class="pill p-ok">low</span>.</p>
+  <div class="scroller"><table>
+    <thead><tr><th>ID</th><th>Process</th><th>Risk</th><th>Why</th><th>Mitigation or redesign</th></tr></thead>
+    <tbody>
+      <tr class="sev-x"><td class="rid">R-001</td><td>Automated LinkedIn connects, DMs, comments, scraping</td><td><span class="pill p-crit">Prohibited</span></td><td>Four separate workbook rules plus LinkedIn’s terms; a restricted account cannot be recovered</td><td>Never build. Human-assisted queue; the platform does the research, personalisation, sequencing, compliance and measurement</td></tr>
+      <tr class="sev-h"><td class="rid">R-002</td><td>Mass AI content from 5,683 briefs</td><td><span class="pill p-crit">High</span></td><td>Technique 15 names AI-generated thin content at scale as demoted. The bank is a supply of briefs, not a mandate to publish them</td><td>Editorial throughput cap; mandatory expert edit; similarity rejection; indexation monitoring. <strong>Recommend 2–3 publications a week initially, matching the workbook’s own cadence</strong></td></tr>
+      <tr class="sev-x"><td class="rid">R-003</td><td>Automated posting to Reddit, Quora, DEV, Stack Exchange</td><td><span class="pill p-crit">Prohibited</span></td><td>Anti-promotion terms; identical answers draw shadowbans; bans are permanent</td><td>Draft only, human posts, per-community link ratios, rules recorded per community</td></tr>
+      <tr class="sev-h"><td class="rid">R-004</td><td>Auto-publishing because a schedule fired</td><td><span class="pill p-crit">High</span></td><td>A clock firing is not evidence content is correct, accurate or still relevant</td><td>The clock triggers a workflow, never a write</td></tr>
+      <tr class="sev-h"><td class="rid">R-005</td><td>AI stating fees, legitimacy or certification outcomes</td><td><span class="pill p-crit">High</span></td><td>Golden Rules 1 and 2; QA checks 1, 3 and 13; reputationally and potentially legally actionable</td><td>Banned-phrase gate, claim classifier, manager approval, four-eyes; no fee statement without a written approved position</td></tr>
+      <tr class="sev-h"><td class="rid">R-006</td><td>Contacting a suppressed or declined person</td><td><span class="pill p-crit">High</span></td><td>Golden Rule 7; QA check 4; legal exposure across markets</td><td>Deterministic suppression at queue entry, never a model judgement</td></tr>
+      <tr class="sev-h"><td class="rid">R-007</td><td>Prospect research and enrichment</td><td><span class="pill p-crit">Medium–High</span></td><td>Prospect lists are personal data across UK, EU, Saudi and UAE regimes</td><td>Lawful basis at capture, purpose limitation, retention schedule, erasure workflow, restricted access, no sensitive inference</td></tr>
+      <tr class="sev-m"><td class="rid">R-008</td><td>Automated email, WhatsApp and SMS</td><td><span class="pill p-warn">Medium</span></td><td>Consent, deliverability and platform rules; bought lists are illegal and kill deliverability</td><td>Consent required, authentication gate, frequency caps, same-day unsubscribe propagation</td></tr>
+      <tr class="sev-m"><td class="rid">R-009</td><td>Programmatic geo × role pages</td><td><span class="pill p-warn">Medium</span></td><td>Technique 22 warns this is thin-content spam without genuine local substance</td><td>Keyword-backed, batches of ten, 30-day indexation gate, rewrite-or-noindex</td></tr>
+      <tr class="sev-l"><td class="rid">R-010</td><td>Press release distribution</td><td><span class="pill p-ok">Low–Medium</span></td><td>Links are nofollow; value is corroboration; wires impose cadence limits</td><td>Rate-aware scheduling, newsroom first, no keyword stuffing</td></tr>
+      <tr class="sev-m"><td class="rid">R-011</td><td>Review solicitation</td><td><span class="pill p-warn">Medium</span></td><td>Incentivised or gated reviews are illegal in several jurisdictions</td><td>Never model incentives or gating; human action, genuine customers only</td></tr>
+      <tr class="sev-h"><td class="rid">R-012</td><td>Agents changing strategy from observed performance</td><td><span class="pill p-crit">High</span></td><td>“The system learns” must never mean the AI rewrites the business rules</td><td>Store results, analyse patterns, recommend; adjust only pre-authorised configuration; policies never self-modifiable</td></tr>
+      <tr class="sev-m"><td class="rid">R-013</td><td>Uncontrolled AI spend</td><td><span class="pill p-warn">Medium</span></td><td>Thousands of briefs on premium models is an easily triggered bill; research agents loop</td><td>Hard budgets per agent, workflow, day and month; model-class routing; step, tool, time, token and cost ceilings</td></tr>
+      <tr class="sev-h"><td class="rid">R-014</td><td>Prompt injection via researched pages, uploads or pasted replies</td><td><span class="pill p-crit">High</span></td><td>Research agents read hostile content by definition; reply triage ingests externally authored text</td><td>Instruction/data separation, delimited retrieval, tool allow-lists, deny-by-default writes, alerting on denials</td></tr>
+      <tr class="sev-m"><td class="rid">R-015</td><td>Duplicate external actions on retry</td><td><span class="pill p-warn">Medium</span></td><td>Duplicate posts, outreach and CRM records</td><td>Idempotency keys, execution locks, provider-side dedup checks</td></tr>
+      <tr class="sev-m"><td class="rid">R-016</td><td>KPI misreporting</td><td><span class="pill p-warn">Medium</span></td><td>Already happened: a row insert made the revenue tile display meetings</td><td>Stable identifiers, one definition per KPI, lineage, tile-identity regression test</td></tr>
+      <tr class="sev-m"><td class="rid">R-017</td><td>Applying an employee scoring engine to humans</td><td><span class="pill p-warn">Medium</span></td><td>Employment-law and fairness exposure if a score drives decisions</td><td>Restricted access, activity gate retained, never an automated employment decision</td></tr>
+      <tr class="sev-m"><td class="rid">R-018</td><td>Agent work credited to humans, or the reverse</td><td><span class="pill p-warn">Medium</span></td><td>Corrupts the scorecards used for coaching and pay conversations</td><td>Actor type is first-class; separate human and agent scorecards</td></tr>
+      <tr class="sev-l"><td class="rid">R-019</td><td>Treating vendor benchmarks as targets</td><td><span class="pill p-ok">Low</span></td><td>The workbook itself warns they skew to heavy automated senders</td><td>Thresholds carry provenance; your own four-week trend supersedes them</td></tr>
+      <tr class="sev-m"><td class="rid">R-020</td><td>Stale platform rules</td><td><span class="pill p-warn">Medium</span></td><td>Every platform fact is stamped for six-monthly re-verification; acting on an expired rule can breach terms</td><td>Verification expiry with tasks and warnings; re-verify before implementing</td></tr>
+      <tr class="sev-h"><td class="rid">R-021</td><td>Emergency stop missing approved-but-unexecuted items</td><td><span class="pill p-crit">High</span></td><td>An approval granted before a problem is discovered would still fire</td><td>Emergency stop cancels pending external writes including approved items</td></tr>
+      <tr class="sev-m"><td class="rid">R-022</td><td>Single-provider outage halting operations</td><td><span class="pill p-warn">Medium</span></td><td>Provider outages are routine</td><td>Fallback chains with classification routing; queue and resume; alert if deadline-critical</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="s15">
+  <div class="sechead"><span class="secnum">15</span><h2>Workbook Gaps</h2></div>
+  <p class="prose">Things the software needs that the workbook does not define. <strong>None of these is invented here.</strong> Each is listed for your decision.</p>
+  <div class="scroller"><table>
+    <thead><tr><th>ID</th><th>Gap</th><th>Impact if unresolved</th><th>Needed from PCI AI</th></tr></thead>
+    <tbody>
+      <tr class="sev-h"><td class="rid">G-001</td><td>No named accountable owner — the cell is blank</td><td>Approval routing, compliance sign-off and escalation have no destination</td><td>Name the owner and a deputy</td></tr>
+      <tr class="sev-h"><td class="rid">G-002</td><td>Roster is a placeholder</td><td>Capacity, expectation and assignment cannot be computed</td><td>Real roster with roles and time zones</td></tr>
+      <tr class="sev-h"><td class="rid">G-003</td><td>63 Master Tasks have no owners or due dates</td><td>Nothing can be scheduled or escalated</td><td>Owner and due date per task</td></tr>
+      <tr class="sev-h"><td class="rid">G-004</td><td>15 QA checks have no owners; check 15 self-reports FAIL</td><td>Compliance attestation cannot be signed</td><td>Owner per check</td></tr>
+      <tr class="sev-m"><td class="rid">G-005</td><td>Message Bank approvals unsigned</td><td>The template rule has no valid approver record</td><td>Manager signs each; new ones enter as Draft</td></tr>
+      <tr class="sev-h"><td class="rid">G-006</td><td>No fee schedule</td><td>Fee responses and their approvals cannot be pre-checked</td><td>Written fee positions per credential</td></tr>
+      <tr class="sev-m"><td class="rid">G-007</td><td>No revenue targets or price points</td><td>Revenue is recorded with nothing to measure against; ROI is uncomputable</td><td>Targets per credential per period</td></tr>
+      <tr class="sev-m"><td class="rid">G-008</td><td>Channel cost baseline empty</td><td>Cost per meeting and budget guardrails cannot be set</td><td>Monthly cost per tool and channel</td></tr>
+      <tr class="sev-m"><td class="rid">G-009</td><td>No CRM selected</td><td>The lead-ownership decision stays provisional</td><td>Decision, or explicit deferral</td></tr>
+      <tr class="sev-m"><td class="rid">G-010</td><td>No ESP, webinar, badge or analytics vendor named — only categories</td><td>Connectors cannot be built</td><td>Vendor per category</td></tr>
+      <tr class="sev-h"><td class="rid">G-011</td><td>Website and CMS unknown; pillar URLs empty</td><td>The MVP’s anchor integration cannot be specified</td><td>CMS name, hosting, API access, URL structure</td></tr>
+      <tr class="sev-h"><td class="rid">G-012</td><td>Data-retention periods undefined — “stored only where agreed”, but the agreement is missing</td><td>Privacy controls cannot be configured</td><td>Retention per data class; legal basis per market</td></tr>
+      <tr class="sev-l"><td class="rid">G-013</td><td>No definition of an agent-generated lead versus a human-researched one</td><td>Scorecards mix populations</td><td>Policy decision</td></tr>
+      <tr class="sev-m"><td class="rid">G-014</td><td>LinkedIn seat model unknown</td><td>The workbook’s volume targets may be unreachable — it flags this itself</td><td>Seat inventory</td></tr>
+      <tr class="sev-m"><td class="rid">G-015</td><td>No approved-claims evidence store exists</td><td>Claim verification has nothing to verify against</td><td>Approved claims and evidence library</td></tr>
+      <tr class="sev-l"><td class="rid">G-016</td><td>Arabic and localisation ownership undefined</td><td>Localisation requirements cannot be operationalised</td><td>Named translator and reviewer</td></tr>
+      <tr class="sev-l"><td class="rid">G-017</td><td>Approval SLA expectations undefined</td><td>The expiry defaults are my proposal, not yours</td><td>Confirm or amend</td></tr>
+      <tr class="sev-m"><td class="rid">G-018</td><td>AI budget undefined</td><td>Cost caps cannot be configured</td><td>Monthly ceiling</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="s16">
+  <div class="sechead"><span class="secnum">16</span><h2>Open Questions</h2></div>
+  <div class="prose">
+    <p>The eighteen gaps above are the open questions of substance. Five of them determine whether Phase 2 can start at all, and they are restated as prerequisites in the next section. The remaining thirteen have stated defaults I will proceed on if you would rather not decide them now — each default is recorded so that it can be corrected later without archaeology.</p>
+    <p>Two questions sit outside the workbook entirely and need answers from outside the marketing function:</p>
+    <ul>
+      <li><strong>Data residency.</strong> Prospect and customer personal data spans UK, EU and Gulf subjects. The cloud region decision follows from the answer, and the answer is a legal one.</li>
+      <li><strong>Engineering capacity.</strong> Not just language competence, but how many people will maintain this. The architecture recommendations assume a small team and one administrator; they would change materially for a team of ten.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="s17">
+  <div class="sechead"><span class="secnum">17</span><h2>Phase 2 Prerequisites</h2></div>
+  <p class="prose">Items marked blocking genuinely prevent architecture design. The rest can be assumed with a stated default and corrected later.</p>
+  <div class="scroller"><table>
+    <thead><tr><th>ID</th><th>Needed</th><th>Type</th><th>Default if not provided</th></tr></thead>
+    <tbody>
+      <tr class="sev-h"><td class="rid">P2-01</td><td>Engineering team composition and language competence</td><td><span class="pill p-crit">Blocking</span></td><td>—</td></tr>
+      <tr class="sev-h"><td class="rid">P2-02</td><td>Approval or amendment of the fourteen decisions</td><td><span class="pill p-crit">Blocking</span></td><td>—</td></tr>
+      <tr class="sev-h"><td class="rid">P2-03</td><td>Website and CMS platform, hosting, API access, URL structure</td><td><span class="pill p-crit">Blocking</span></td><td>—</td></tr>
+      <tr class="sev-h"><td class="rid">P2-04</td><td>Named owner and deputy</td><td><span class="pill p-crit">Blocking</span></td><td>—</td></tr>
+      <tr class="sev-h"><td class="rid">P2-05</td><td>Cloud provider, region, data-residency constraints</td><td><span class="pill p-crit">Blocking</span></td><td>—</td></tr>
+      <tr class="sev-m"><td class="rid">P2-06</td><td>Roster with roles and time zones</td><td><span class="pill p-warn">High</span></td><td>1 manager + 3 operators, org time zone</td></tr>
+      <tr class="sev-m"><td class="rid">P2-07</td><td>Owners and due dates for 63 tasks and 15 checks</td><td><span class="pill p-warn">High</span></td><td>All assigned to the owner</td></tr>
+      <tr class="sev-m"><td class="rid">P2-08</td><td>Monthly AI budget ceiling</td><td><span class="pill p-warn">High</span></td><td>A costed estimate proposed in Phase 2</td></tr>
+      <tr class="sev-l"><td class="rid">P2-09</td><td>Vendor decisions: ESP, webinar, badges, analytics</td><td><span class="pill p-neut">Medium</span></td><td>Category-level interfaces only</td></tr>
+      <tr class="sev-l"><td class="rid">P2-10</td><td>CRM decision or deferral</td><td><span class="pill p-neut">Medium</span></td><td>Defer; build sync-ready</td></tr>
+      <tr class="sev-l"><td class="rid">P2-11</td><td>Fee positions and revenue targets</td><td><span class="pill p-neut">Medium</span></td><td>Fee statements stay blocked at the approval gate</td></tr>
+      <tr class="sev-l"><td class="rid">P2-12</td><td>Approved claims and evidence library</td><td><span class="pill p-neut">Medium</span></td><td>Material claims blocked pending evidence</td></tr>
+      <tr class="sev-l"><td class="rid">P2-13</td><td>LinkedIn seat inventory</td><td><span class="pill p-neut">Medium</span></td><td>Assume free accounts, and flag that workbook targets are then unreachable</td></tr>
+      <tr class="sev-l"><td class="rid">P2-14</td><td>Retention periods per data class</td><td><span class="pill p-neut">Medium</span></td><td>24 months prospect, 7 years commercial — to be confirmed with legal</td></tr>
+      <tr class="sev-l"><td class="rid">P2-15</td><td>Confirmation of approval SLAs and expiry windows</td><td><span class="pill p-neut">Medium</span></td><td>As proposed in section 06</td></tr>
+      <tr class="sev-m"><td class="rid">P2-16</td><td>Decision on the content throughput cap</td><td><span class="pill p-warn">High</span></td><td>2–3 published items a week, matching the workbook’s own cadence</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="sa">
+  <div class="sechead"><span class="secnum">A</span><h2>Challenges to the Brief</h2></div>
+  <p class="prose">Raised as the brief requires: problem, why it matters, recommended solution. A senior architect who agrees with everything is not doing the job.</p>
+
+  <div class="scroller"><table>
+    <thead><tr><th class="num">#</th><th>Problem</th><th>Why it matters</th><th>Recommended solution</th></tr></thead>
+    <tbody>
+      <tr><td class="num">1</td><td>The example schedule implies clock-driven publishing</td><td>The Content Scheduler is a coverage tracker, not a trigger; publishing on a clock is how unreviewed content reaches the public</td><td>The clock triggers a workflow, never an external write — now a hard requirement</td></tr>
+      <tr><td class="num">2</td><td>The brief asks for a LinkedIn Agent; the workbook forbids the actions it would perform</td><td>Building it breaches Golden Rule 5, QA check 5 and LinkedIn’s terms, risking permanent account loss — the largest operational risk in this business</td><td>Preparation-only lane with a human send queue. Not a reduced feature: qualification, personalisation, sequencing, compliance and measurement are most of the labour</td></tr>
+      <tr><td class="num">3</td><td>The 5,683 briefs read like a throughput target</td><td>Technique 15 names AI-generated thin content at scale as demoted, and the whole authority strategy depends on the domain’s quality signal</td><td>Editorial cap, mandatory expert edit, similarity rejection, indexation gating; throughput rises only as measured quality holds</td></tr>
+      <tr><td class="num">4</td><td>The data model treats leads as platform-owned</td><td>Competing systems of record produce two different revenue numbers — the exact failure the data-health section exists to prevent</td><td>Systems of record defined explicitly; conversions require the PCI order reference; the lead model is built sync-ready</td></tr>
+      <tr><td class="num">5</td><td>Agent confidence as a first-class signal</td><td>Model-reported confidence is not calibrated probability; treating it as such produces false safety</td><td>Confidence routes and escalates, and is never presented as a probability unless calibration is implemented and measured</td></tr>
+      <tr><td class="num">6</td><td>.NET versus Python framed as an architectural choice</td><td>A split-stack system maintained by a single-stack team accumulates an unmaintained half</td><td>The decision is conditional on team composition, which is a blocking prerequisite</td></tr>
+      <tr><td class="num">7</td><td>Cost controls focus on model spend; the workbook’s economics are cost per meeting</td><td>Optimising AI cost in isolation can degrade the output that produces meetings, worsening real unit economics</td><td>Report cost per unit of output; optimisation may not degrade workflow quality</td></tr>
+      <tr><td class="num">8</td><td>Carrying the Employee Score forward unchanged</td><td>Once agents do much of the work, a volume-based human scorecard measures the wrong thing, and an automated score influencing employment decisions carries legal risk</td><td>Restricted access, no automated employment decisions, actor-type separation, and a distinct agent scorecard measuring quality and rejection rate</td></tr>
+      <tr><td class="num">9</td><td>Every platform fact is stamped “verified August 2026”</td><td>Implementing against an expired fact can breach a platform’s current terms</td><td>Verification expiry is a scheduled obligation; re-verify before implementation</td></tr>
+      <tr><td class="num">10</td><td>A workflow builder, Executive AI, knowledge base, 24 agents and 13 workspaces in one product</td><td>Attempting it all at once produces a prototype presented as enterprise software — explicitly what the brief says not to build</td><td>The MVP proves the spine on two lanes; everything else is specified, sequenced and deferred</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<footer>
+  <p><strong>Phase 1 ends here.</strong> No application code, database migrations, frontend or deployment artefacts have been produced. On approval — or on receipt of the five blocking prerequisites — Phase 2 delivers system, service, agent, data, security, integration and deployment architecture, with sequence and workflow diagrams.</p>
+  <p>Derived from <code>PCI_AI_Growth_OS.xlsx</code>, 42 of 42 worksheets. Full documents in the repository under <code>docs/</code>.</p>
+</footer>
+
+</div>
+</main>
+</div>
+
+<script>
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('.navlist a'));
+  var map = {};
+  links.forEach(function(a){ map[a.getAttribute('href').slice(1)] = a; });
+  var sections = Array.prototype.slice.call(document.querySelectorAll('section[id]'));
+  if(!('IntersectionObserver' in window)) return;
+  var visible = {};
+  var obs = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ visible[e.target.id] = e.isIntersecting ? e.intersectionRatio : 0; });
+    var best=null, bestVal=0;
+    Object.keys(visible).forEach(function(id){ if(visible[id] > bestVal){ bestVal = visible[id]; best = id; } });
+    links.forEach(function(a){ a.removeAttribute('aria-current'); });
+    if(best && map[best]) map[best].setAttribute('aria-current','true');
+  }, {rootMargin:'-10% 0px -70% 0px', threshold:[0,0.05,0.25,0.5,1]});
+  sections.forEach(function(s){ obs.observe(s); });
+})();
+</script>

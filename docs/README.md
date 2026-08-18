@@ -15,6 +15,7 @@
 | 05 | [Requirements Traceability Matrix](05-traceability-matrix.md) | Workbook sheet → Requirement ID → Workflow → Agent → Entity → API → UI → Test |
 | 06 | [Software Requirements Specification](06-srs.md) | The full SRS, sections 1–36, with testable requirement IDs |
 | 07 | [Decisions, Risks, Gaps, MVP](07-decisions-risks-mvp.md) | Architecture Decisions Requiring Approval; Automation Risk Register; Workbook Gaps; Open Questions; Recommended MVP; Phase 2 Prerequisites |
+| — | [`phase-1-specification.html`](phase-1-specification.html) | The whole of Phase 1 as a single readable document, in the 17-section order the brief requires (published version of documents 01–07) |
 
 ## Requirement ID namespaces
 
