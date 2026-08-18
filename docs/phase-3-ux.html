@@ -1,0 +1,1003 @@
+<title>PCI AI Growth OS Phase 3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --paper:#F4F6F5;
+  --surface:#FFFFFF;
+  --surface-2:#EDF1EF;
+  --ink:#16211E;
+  --ink-2:#3D4E49;
+  --ink-3:#697A75;
+  --rule:#D5DDDA;
+  --rule-strong:#B6C3BF;
+  --accent:#0F5F52;
+  --accent-soft:#DCEBE7;
+  --warn:#8A6212;
+  --warn-soft:#F5EBD6;
+  --crit:#9B3A2E;
+  --crit-soft:#F6E2DE;
+  --ok:#2C6E49;
+  --ok-soft:#DFEDE4;
+
+  --f-display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --f-body:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --f-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+
+  --nav-w:16.5rem;
+  --measure:70ch;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#0D1412;
+    --surface:#141D1A;
+    --surface-2:#1B2724;
+    --ink:#E3EAE7;
+    --ink-2:#B4C2BE;
+    --ink-3:#849791;
+    --rule:#2A3733;
+    --rule-strong:#3C4B47;
+    --accent:#5BBBA6;
+    --accent-soft:#12332C;
+    --warn:#D9AC5B;
+    --warn-soft:#33290F;
+    --crit:#E28879;
+    --crit-soft:#37201B;
+    --ok:#6FBF8F;
+    --ok-soft:#14301F;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0D1412;
+  --surface:#141D1A;
+  --surface-2:#1B2724;
+  --ink:#E3EAE7;
+  --ink-2:#B4C2BE;
+  --ink-3:#849791;
+  --rule:#2A3733;
+  --rule-strong:#3C4B47;
+  --accent:#5BBBA6;
+  --accent-soft:#12332C;
+  --warn:#D9AC5B;
+  --warn-soft:#33290F;
+  --crit:#E28879;
+  --crit-soft:#37201B;
+  --ok:#6FBF8F;
+  --ok-soft:#14301F;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--f-body);
+  font-size:16.5px;
+  line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:var(--accent);text-underline-offset:.18em;text-decoration-thickness:.06em}
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+
+.skip{position:absolute;left:-9999px;top:0}
+.skip:focus{left:.75rem;top:.75rem;z-index:99;background:var(--surface);color:var(--ink);padding:.5rem .8rem;border:1px solid var(--rule-strong)}
+
+/* ---------- shell ---------- */
+.shell{display:grid;grid-template-columns:var(--nav-w) minmax(0,1fr);gap:0;align-items:start}
+
+/* ---------- nav ---------- */
+.nav{
+  position:sticky;top:0;height:100vh;overflow-y:auto;
+  border-right:1px solid var(--rule);
+  background:var(--surface);
+  padding:1.9rem 1.15rem 3rem 1.5rem;
+  font-family:var(--f-display);
+}
+.brandmark{font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+.brandname{font-size:1.06rem;font-weight:700;line-height:1.25;margin:.45rem 0 .1rem;letter-spacing:-.01em}
+.brandsub{font-size:.78rem;color:var(--ink-3);line-height:1.4}
+.navstatus{
+  margin:1.15rem 0 1.3rem;padding:.5rem .6rem;
+  background:var(--warn-soft);color:var(--warn);
+  font-size:.68rem;letter-spacing:.09em;text-transform:uppercase;font-weight:600;
+  border-left:2px solid currentColor;
+}
+.navlist{display:flex;flex-direction:column;gap:.06rem;margin:0;padding:0;list-style:none}
+.navlist a{
+  display:grid;grid-template-columns:1.5rem 1fr;gap:.4rem;
+  padding:.3rem .35rem;border-radius:2px;
+  font-size:.82rem;line-height:1.32;color:var(--ink-2);text-decoration:none;
+}
+.navlist a:hover{background:var(--surface-2);color:var(--ink)}
+.navlist a .n{font-family:var(--f-mono);font-size:.68rem;color:var(--ink-3);padding-top:.16em;font-variant-numeric:tabular-nums}
+.navlist a[aria-current="true"]{background:var(--accent-soft);color:var(--ink);font-weight:600}
+.navlist a[aria-current="true"] .n{color:var(--accent)}
+.navdiv{height:1px;background:var(--rule);margin:.85rem 0}
+
+/* ---------- main ---------- */
+main{padding:0 clamp(1.1rem,3.4vw,3.4rem) 7rem;min-width:0}
+.inner{max-width:76rem;margin:0 auto}
+.prose{max-width:var(--measure)}
+
+/* masthead */
+.masthead{padding:3.4rem 0 1.6rem;border-bottom:2px solid var(--ink)}
+.eyebrow{font-family:var(--f-display);font-size:.7rem;letter-spacing:.19em;text-transform:uppercase;color:var(--accent);font-weight:600}
+h1{
+  font-family:var(--f-display);font-weight:700;letter-spacing:-.026em;
+  font-size:clamp(2.1rem,5.2vw,3.4rem);line-height:1.03;margin:.55rem 0 .7rem;text-wrap:balance;
+}
+.standfirst{font-size:1.11rem;line-height:1.55;color:var(--ink-2);max-width:56ch;margin:0}
+
+/* doc control block */
+.control{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(11rem,1fr));
+  gap:0;border:1px solid var(--rule-strong);margin:1.9rem 0 0;background:var(--surface);
+}
+.control div{padding:.72rem .85rem;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.control div:last-child{border-right:none}
+.control dt{font-family:var(--f-display);font-size:.63rem;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);font-weight:600;margin:0 0 .25rem}
+.control dd{margin:0;font-family:var(--f-display);font-size:.9rem;font-weight:500;line-height:1.3}
+
+/* sections */
+section{padding-top:3.6rem;scroll-margin-top:1rem}
+.sechead{display:flex;align-items:baseline;gap:.8rem;border-top:1px solid var(--rule-strong);padding-top:.75rem;margin-bottom:1.15rem}
+.secnum{font-family:var(--f-mono);font-size:.78rem;color:var(--accent);font-weight:600;font-variant-numeric:tabular-nums;padding-top:.35em}
+h2{font-family:var(--f-display);font-weight:700;letter-spacing:-.018em;font-size:clamp(1.42rem,2.7vw,1.92rem);line-height:1.14;margin:0;text-wrap:balance}
+h3{font-family:var(--f-display);font-weight:600;font-size:1.08rem;letter-spacing:-.005em;margin:2.1rem 0 .55rem;text-wrap:balance}
+h4{font-family:var(--f-display);font-weight:600;font-size:.72rem;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);margin:1.7rem 0 .5rem}
+p{margin:0 0 .95rem}
+ul,ol{margin:0 0 1rem;padding-left:1.15rem}
+li{margin-bottom:.32rem}
+strong{font-weight:600}
+em{font-style:italic}
+
+/* callouts */
+.note{
+  border-left:3px solid var(--accent);background:var(--surface);
+  padding:.9rem 1.1rem;margin:1.3rem 0;max-width:var(--measure);
+}
+.note.warn{border-left-color:var(--warn);background:var(--warn-soft)}
+.note.crit{border-left-color:var(--crit);background:var(--crit-soft)}
+.note p:last-child{margin-bottom:0}
+.note .lbl{font-family:var(--f-display);font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--accent);display:block;margin-bottom:.35rem}
+.note.warn .lbl{color:var(--warn)}
+.note.crit .lbl{color:var(--crit)}
+
+/* tables */
+.scroller{overflow-x:auto;margin:1.15rem 0 1.5rem;border:1px solid var(--rule);background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-family:var(--f-display);font-size:.83rem;line-height:1.42}
+caption{text-align:left;font-family:var(--f-display);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);font-weight:600;padding:.7rem .85rem .1rem}
+th,td{padding:.52rem .8rem;text-align:left;vertical-align:top;border-bottom:1px solid var(--rule)}
+thead th{
+  font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:600;
+  background:var(--surface-2);border-bottom:1px solid var(--rule-strong);white-space:nowrap;position:sticky;top:0;
+}
+tbody tr:last-child td{border-bottom:none}
+td.num,th.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+.rid{font-family:var(--f-mono);font-size:.76rem;font-weight:600;color:var(--accent);white-space:nowrap;font-variant-numeric:tabular-nums}
+code{font-family:var(--f-mono);font-size:.86em;background:var(--surface-2);padding:.08em .32em;border-radius:2px}
+
+/* pills */
+.pill{
+  display:inline-block;font-family:var(--f-display);font-size:.65rem;font-weight:600;
+  letter-spacing:.07em;text-transform:uppercase;padding:.14rem .44rem;white-space:nowrap;border-radius:2px;
+}
+.p-ok{background:var(--ok-soft);color:var(--ok)}
+.p-warn{background:var(--warn-soft);color:var(--warn)}
+.p-crit{background:var(--crit-soft);color:var(--crit)}
+.p-neut{background:var(--surface-2);color:var(--ink-2)}
+.p-acc{background:var(--accent-soft);color:var(--accent)}
+
+/* severity stripe rows */
+tr.sev-h td:first-child{box-shadow:inset 3px 0 0 var(--crit)}
+tr.sev-m td:first-child{box-shadow:inset 3px 0 0 var(--warn)}
+tr.sev-l td:first-child{box-shadow:inset 3px 0 0 var(--ok)}
+tr.sev-x td:first-child{box-shadow:inset 3px 0 0 var(--ink)}
+
+/* stat strip */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(8.2rem,1fr));gap:0;border:1px solid var(--rule-strong);margin:1.4rem 0 1.8rem;background:var(--surface)}
+.stat{padding:.9rem .95rem;border-right:1px solid var(--rule)}
+.stat:last-child{border-right:none}
+.stat b{display:block;font-family:var(--f-display);font-weight:700;font-size:1.55rem;letter-spacing:-.02em;line-height:1;font-variant-numeric:tabular-nums}
+.stat span{display:block;font-family:var(--f-display);font-size:.67rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:600;margin-top:.4rem;line-height:1.3}
+
+/* decision cards */
+.dec{border:1px solid var(--rule);background:var(--surface);margin:1rem 0;padding:1rem 1.15rem}
+.dec .id{font-family:var(--f-mono);font-size:.72rem;font-weight:600;color:var(--accent)}
+.dec h3{margin:.25rem 0 .7rem;font-size:1.02rem}
+.dec dl{display:grid;grid-template-columns:7.2rem 1fr;gap:.3rem .9rem;margin:0;font-family:var(--f-display);font-size:.85rem;line-height:1.5}
+.dec dt{font-size:.65rem;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3);font-weight:600;padding-top:.28em}
+.dec dd{margin:0}
+
+/* agent grid */
+.agents{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);margin:1.1rem 0 1.6rem}
+.agent{background:var(--surface);padding:.8rem .9rem}
+.agent .code{font-family:var(--f-mono);font-size:.72rem;font-weight:600;color:var(--accent)}
+.agent .nm{font-family:var(--f-display);font-weight:600;font-size:.94rem;margin:.15rem 0 .3rem;line-height:1.25}
+.agent p{font-size:.82rem;font-family:var(--f-display);color:var(--ink-2);margin:0;line-height:1.45}
+.divhead{font-family:var(--f-display);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:700;margin:1.5rem 0 .5rem}
+
+footer{margin-top:4.5rem;border-top:2px solid var(--ink);padding:1.5rem 0 0;font-family:var(--f-display);font-size:.83rem;color:var(--ink-3);max-width:var(--measure)}
+
+@media (max-width:900px){
+  .shell{grid-template-columns:1fr}
+  .nav{position:static;height:auto;border-right:none;border-bottom:1px solid var(--rule-strong);padding:1.3rem 1.2rem}
+  .navlist{display:grid;grid-template-columns:repeat(auto-fit,minmax(13rem,1fr));gap:.05rem}
+  thead th{position:static}
+  body{font-size:16px}
+}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+html{scroll-behavior:smooth}
+</style>
+<style>
+figure{margin:1.5rem 0 1.9rem}
+figcaption{font-family:var(--f-display);font-size:.79rem;line-height:1.45;color:var(--ink-3);margin-top:.65rem;max-width:64ch}
+figcaption b{color:var(--ink-2);font-weight:600}
+/* wireframe blocks */
+.wf{border:1px solid var(--rule-strong);background:var(--surface);font-family:var(--f-display);overflow-x:auto}
+.wf-top{display:flex;align-items:center;gap:.5rem;padding:.45rem .7rem;border-bottom:1px solid var(--rule);background:var(--surface-2);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+.wf-top .dot{width:7px;height:7px;border-radius:50%;background:var(--rule-strong);flex:none}
+.wf-body{display:grid;grid-template-columns:104px minmax(0,1fr);min-width:640px}
+.wf-rail{border-right:1px solid var(--rule);padding:.6rem .5rem;display:flex;flex-direction:column;gap:.16rem}
+.wf-rail span{font-size:.6rem;color:var(--ink-3);padding:.16rem .25rem;line-height:1.3}
+.wf-rail span.g{letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3);opacity:.65;margin-top:.4rem;font-weight:600;font-size:.55rem}
+.wf-rail span.on{background:var(--accent-soft);color:var(--accent);font-weight:600;border-radius:2px}
+.wf-main{padding:.7rem .8rem;display:flex;flex-direction:column;gap:.5rem;min-width:0}
+.wf-b{border:1px dashed var(--rule-strong);padding:.5rem .6rem;font-size:.66rem;color:var(--ink-2);line-height:1.4;min-height:2.1rem;display:flex;flex-direction:column;justify-content:center;gap:.2rem}
+.wf-b .t{font-size:.55rem;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+.wf-b.acc{border-color:var(--accent);border-style:solid}
+.wf-b.acc .t{color:var(--accent)}
+.wf-b.solid{border-style:solid;border-color:var(--rule-strong)}
+.wf-g2{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+.wf-g3{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem}
+.wf-g4{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem}
+.wf-split{display:grid;grid-template-columns:38% 1fr;gap:.5rem}
+.wf-note{font-size:.6rem;color:var(--ink-3);font-style:italic}
+.codeblk{border:1px solid var(--rule);background:var(--surface-2);padding:.85rem 1rem;overflow-x:auto;margin:1.1rem 0 1.5rem}
+.codeblk pre{margin:0;font-family:var(--f-mono);font-size:.76rem;line-height:1.6;white-space:pre}
+.screen{border:1px solid var(--rule);background:var(--surface);margin:1.1rem 0;padding:1rem 1.15rem}
+.screen .sid{font-family:var(--f-mono);font-size:.72rem;font-weight:600;color:var(--accent)}
+.screen h3{margin:.2rem 0 .5rem;font-size:1.02rem}
+.screen dl{display:grid;grid-template-columns:6.6rem 1fr;gap:.28rem .9rem;margin:.6rem 0 0;font-family:var(--f-display);font-size:.83rem;line-height:1.5}
+.screen dt{font-size:.62rem;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3);font-weight:600;padding-top:.3em}
+.screen dd{margin:0}
+</style>
+
+<a class="skip" href="#main">Skip to content</a>
+<div class="shell">
+<nav class="nav" aria-label="UX contents">
+  <div class="brandmark">PCI AI</div>
+  <div class="brandname">Autonomous Growth OS</div>
+  <div class="brandsub">Phase 3 — UX &amp; Screen Specifications</div>
+  <div class="navstatus">Awaiting approval</div>
+  <ul class="navlist">
+    <li><a href="#s0"><span class="n">00</span><span>Assumption Carried</span></a></li>
+    <li><a href="#s1"><span class="n">01</span><span>What This Product Is</span></a></li>
+    <li><a href="#s2"><span class="n">02</span><span>Navigation &amp; Inventory</span></a></li>
+    <li><a href="#s3"><span class="n">03</span><span>Command Center</span></a></li>
+    <li><a href="#s4"><span class="n">04</span><span>Approval Inbox</span></a></li>
+    <li><a href="#s5"><span class="n">05</span><span>Send Queue</span></a></li>
+    <li><a href="#s6"><span class="n">06</span><span>Work Screens</span></a></li>
+    <li><a href="#s7"><span class="n">07</span><span>Workforce Screens</span></a></li>
+    <li><a href="#s8"><span class="n">08</span><span>Insight Screens</span></a></li>
+    <li><a href="#s9"><span class="n">09</span><span>System Screens</span></a></li>
+    <li><a href="#s10"><span class="n">10</span><span>Cross-Cutting States</span></a></li>
+  </ul>
+  <div class="navdiv"></div>
+  <ul class="navlist">
+    <li><a href="#s11"><span class="n">A</span><span>Two Deliberate Refusals</span></a></li>
+    <li><a href="#s12"><span class="n">B</span><span>Phase 4 Prerequisites</span></a></li>
+  </ul>
+</nav>
+
+<main id="main">
+<div class="inner">
+
+<header class="masthead">
+  <div class="eyebrow">Phase 3 deliverable · UX only</div>
+  <h1>An Operations Console</h1>
+  <p class="standfirst">Information architecture, navigation and wireframe specifications for twenty-five screens — designed so the owner manages an AI workforce rather than operating it.</p>
+  <dl class="control">
+    <div><dt>Status</dt><dd>Phase 3 — awaiting approval</dd></div>
+    <div><dt>Screens specified</dt><dd>25</dd></div>
+    <div><dt>Wireframes drawn</dt><dd>5</dd></div>
+    <div><dt>Nav groups</dt><dd>5</dd></div>
+    <div><dt>Blocking answers received</dt><dd>0 of 5 — assumptions hold</dd></div>
+    <div><dt>Date</dt><dd>18 August 2026</dd></div>
+  </dl>
+</header>
+
+<section id="s0">
+  <div class="sechead"><span class="secnum">00</span><h2>Assumption Carried</h2></div>
+  <div class="prose">
+    <p><span class="rid">P3-02</span> — who approves, on what device, in what window — is unanswered. <strong>Assumption A-06: desktop-first, with full mobile support for approval, notification, dashboard, agent status, daily report and emergency pause.</strong></p>
+    <p>If approvals in practice happen on a phone between meetings — which the two-hour journalist-request SLA implies — the Approval Inbox becomes a mobile-first design and the desktop layout becomes secondary. That inverts the layout work for <em>one</em> screen and changes nothing else, which is why it was safe to proceed.</p>
+    <p>The five Phase 2 assumptions still stand. One matters here: if the CMS has no write API, the Content Command Center's publish control becomes a hand-off to the send queue, identical to outreach.</p>
+  </div>
+</section>
+
+<section id="s1">
+  <div class="sechead"><span class="secnum">01</span><h2>What This Product Is</h2></div>
+  <div class="prose">
+    <p>An <strong>AI Workforce Command Center</strong> — an operations console, not a document system and not a chatbot. Screens here are scanned and operated, not read top to bottom, so the craft is information design first and typography second.</p>
+    <p>Every design decision below is subordinate to three questions, in this order:</p>
+    <ol>
+      <li><strong>What did the workforce do?</strong> — since I last looked, without opening a log.</li>
+      <li><strong>What needs me?</strong> — decisions only I can make, ordered by cost of delay.</li>
+      <li><strong>What happens next?</strong> — today's plan, and whether it is at risk.</li>
+    </ol>
+    <p>A dashboard that answers these badly is a wall of charts. A dashboard that answers them well is short.</p>
+  </div>
+
+  <div class="scroller"><table>
+    <caption>Design principles</caption>
+    <thead><tr><th class="num">#</th><th>Principle</th><th>Consequence</th></tr></thead>
+    <tbody>
+      <tr><td class="num">P1</td><td>Summary before detail</td><td>Every workspace opens on state, not on a table. The table is one click down</td></tr>
+      <tr><td class="num">P2</td><td><strong>No number without provenance</strong></td><td>Every metric drills to lineage: source → observation → formula → value. A figure that cannot be traced is not displayed</td></tr>
+      <tr><td class="num">P3</td><td>State in form, not only colour</td><td>Pills, stripes and icons carry status; colour reinforces. An accessibility requirement that also survives printing</td></tr>
+      <tr><td class="num">P4</td><td>Every recommendation shows why</td><td>Evidence, rules, KPIs, sources, assumptions — never hidden chain-of-thought</td></tr>
+      <tr><td class="num">P5</td><td>Research · draft · recommendation · approval · execution are visually distinct</td><td>A draft must never look like something that has been sent</td></tr>
+      <tr><td class="num">P6</td><td><strong>The target is visible before the action</strong></td><td>You see who receives this, on what channel, before you can approve it</td></tr>
+      <tr><td class="num">P7</td><td>Emergency stop is always reachable</td><td>Persistent in the top bar, two-step confirm, never buried in settings</td></tr>
+      <tr><td class="num">P8</td><td>Empty states teach</td><td>The workbook starts empty and so does the platform. First-run emptiness explains what will fill it</td></tr>
+      <tr><td class="num">P9</td><td>Freshness is stated</td><td>Every externally-fed panel shows when that source was last read</td></tr>
+      <tr><td class="num">P10</td><td>Agent work is labelled as agent work</td><td>Attribution to agent and version everywhere a human would otherwise assume a person did it</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="s2">
+  <div class="sechead"><span class="secnum">02</span><h2>Navigation &amp; Screen Inventory</h2></div>
+  <div class="prose">
+    <p>A persistent left rail, five groups. The grouping deliberately echoes the workbook's own <code>MAP</code> structure — read-first, daily work, results, management, reference — so a team that already knows the workbook can find things without retraining.</p>
+  </div>
+
+  <div class="codeblk"><pre>TODAY          Command Center          the home screen
+               Approvals          ●4   the decision queue
+               Send Queue         ●12  the human-assisted lane
+               Timeline                chronological operations record
+
+WORK           Content                 calendar · briefs · drafts · schedules
+               Leads                   pipeline · qualification · suppression
+               Partnerships            twelve-stage pipeline
+               SEO                     clusters · keywords · opportunities · links
+               Campaigns               briefs and coordination
+               Experiments             hypotheses and results
+
+WORKFORCE      Agents                  24 agents, status and scorecards
+               Workflows               catalogue and editor
+               Scheduler               business calendar and job state
+
+INSIGHT        Analytics               KPIs with lineage
+               Reports                 daily brief · end of day · weekly
+               Costs                   AI and channel spend against budget
+
+SYSTEM         Knowledge               documents, versions, workbook importer
+               Integrations            connector health and scopes
+               Audit                   the immutable record
+               Errors                  failures and dead letters
+               Admin                   users, agents, policies, budgets, templates
+               Settings                org, calendar, targets, objectives</pre></div>
+
+  <p class="prose"><strong>Badges appear on three items only</strong> — Approvals, Send Queue and Errors — the three places where an unattended number means work is not happening. Badging everything trains people to ignore badges.</p>
+  <p class="prose"><strong>Global search</strong> (<code>⌘K</code>) spans lead, company, campaign, task, agent, content, workflow, report and partnership, and doubles as a command palette. The <strong>top bar</strong> always carries the organisation and its time zone — so nobody misreads a schedule — plus notifications, the current user, and <strong>Emergency Stop</strong>.</p>
+
+  <div class="scroller"><table>
+    <caption>Screen inventory — 25 screens</caption>
+    <thead><tr><th>ID</th><th>Screen</th><th>Group</th><th>Primary user</th><th>Mobile</th></tr></thead>
+    <tbody>
+      <tr><td class="rid">S-01</td><td>Executive Command Center</td><td>Today</td><td>Owner</td><td><span class="pill p-ok">Full</span></td></tr>
+      <tr><td class="rid">S-02</td><td>Approval Inbox</td><td>Today</td><td>Manager, Owner</td><td><span class="pill p-ok">Full</span></td></tr>
+      <tr><td class="rid">S-03</td><td><strong>Send Queue</strong></td><td>Today</td><td>Operator</td><td><span class="pill p-ok">Full</span></td></tr>
+      <tr><td class="rid">S-04</td><td>Operations Timeline</td><td>Today</td><td>Owner, Manager</td><td><span class="pill p-neut">Read</span></td></tr>
+      <tr><td class="rid">S-05</td><td>Content Command Center</td><td>Work</td><td>Manager, Operator</td><td><span class="pill p-neut">Read + approve</span></td></tr>
+      <tr><td class="rid">S-06</td><td>Content Item Detail</td><td>Work</td><td>Operator, Manager</td><td><span class="pill p-neut">Read + approve</span></td></tr>
+      <tr><td class="rid">S-07</td><td>Lead Command Center</td><td>Work</td><td>Manager, Operator</td><td><span class="pill p-neut">Read</span></td></tr>
+      <tr><td class="rid">S-08</td><td>Lead Detail</td><td>Work</td><td>Operator, Closer</td><td><span class="pill p-neut">Read</span></td></tr>
+      <tr><td class="rid">S-09</td><td>Partnership Pipeline</td><td>Work</td><td>Manager</td><td><span class="pill p-neut">Read</span></td></tr>
+      <tr><td class="rid">S-10</td><td>SEO Workspace</td><td>Work</td><td>SEO owner</td><td><span class="pill p-neut">Read</span></td></tr>
+      <tr><td class="rid">S-11</td><td>Campaigns</td><td>Work</td><td>Manager</td><td><span class="pill p-neut">Read</span></td></tr>
+      <tr><td class="rid">S-12</td><td>Experiments</td><td>Work</td><td>Manager</td><td><span class="pill p-neut">Read</span></td></tr>
+      <tr><td class="rid">S-13</td><td>Agent Workforce</td><td>Workforce</td><td>Owner, Admin</td><td><span class="pill p-neut">Status</span></td></tr>
+      <tr><td class="rid">S-14</td><td>Agent Detail &amp; Versions</td><td>Workforce</td><td>Admin</td><td><span class="pill p-neut">Read</span></td></tr>
+      <tr><td class="rid">S-15</td><td>Workflow Catalogue &amp; Editor</td><td>Workforce</td><td>Admin</td><td><span class="pill p-crit">Desktop only</span></td></tr>
+      <tr><td class="rid">S-16</td><td>Scheduler &amp; Business Calendar</td><td>Workforce</td><td>Manager, Admin</td><td><span class="pill p-neut">Read</span></td></tr>
+      <tr><td class="rid">S-17</td><td>Analytics Workspace</td><td>Insight</td><td>Owner, Analyst</td><td><span class="pill p-neut">Read</span></td></tr>
+      <tr><td class="rid">S-18</td><td>Reports</td><td>Insight</td><td>Owner</td><td><span class="pill p-ok">Full</span></td></tr>
+      <tr><td class="rid">S-19</td><td>Costs &amp; Budget</td><td>Insight</td><td>Owner, Admin</td><td><span class="pill p-neut">Read</span></td></tr>
+      <tr><td class="rid">S-20</td><td>Knowledge Base &amp; Importer</td><td>System</td><td>Admin</td><td><span class="pill p-neut">Read</span></td></tr>
+      <tr><td class="rid">S-21</td><td>Integration Center</td><td>System</td><td>Admin</td><td><span class="pill p-neut">Status</span></td></tr>
+      <tr><td class="rid">S-22</td><td>Audit Center</td><td>System</td><td>Compliance, Admin</td><td><span class="pill p-neut">Read</span></td></tr>
+      <tr><td class="rid">S-23</td><td>Error Center</td><td>System</td><td>Admin</td><td><span class="pill p-neut">Read</span></td></tr>
+      <tr><td class="rid">S-24</td><td>Administration</td><td>System</td><td>Admin, Owner</td><td><span class="pill p-crit">Desktop only</span></td></tr>
+      <tr><td class="rid">S-25</td><td>Settings</td><td>System</td><td>Owner, Manager</td><td><span class="pill p-neut">Read</span></td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="note">
+    <span class="lbl">One screen added to the brief's list</span>
+    <p><strong>S-03 Send Queue</strong> was not in the original brief. It is added because Phase 1 established that the highest-value lane ends in a human action, and Phase 2 made human-assisted channels first-class. Without this screen the outreach lane has no interface — and the most valuable thing the platform does would have nowhere to happen.</p>
+  </div>
+</section>
+
+<section id="s3">
+  <div class="sechead"><span class="secnum">03</span><h2>Executive Command Center</h2></div>
+  <p class="prose">The screen that has to make the Phase 1 success criterion true. Its vertical order <em>is</em> the argument: what happened, what needs me, what happens next.</p>
+
+  <figure>
+    <div class="wf">
+      <div class="wf-top"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span>S-01 · Executive Command Center</span></div>
+      <div class="wf-body">
+        <div class="wf-rail">
+          <span class="g">Today</span><span class="on">Command Center</span><span>Approvals ●4</span><span>Send Queue ●12</span><span>Timeline</span>
+          <span class="g">Work</span><span>Content</span><span>Leads</span><span>Partnerships</span><span>SEO</span>
+          <span class="g">Workforce</span><span>Agents</span><span>Workflows</span><span>Scheduler</span>
+          <span class="g">Insight</span><span>Analytics</span><span>Reports</span><span>Costs</span>
+          <span class="g">System</span><span>Knowledge</span><span>Integrations</span><span>Audit</span><span>Admin</span>
+        </div>
+        <div class="wf-main">
+          <div class="wf-b solid"><span class="t">top bar</span>PCI AI · Europe/London 08:12 &nbsp;·&nbsp; ⌘K search &nbsp;·&nbsp; 🔔 &nbsp;·&nbsp; user &nbsp;·&nbsp; <strong>Emergency Stop</strong></div>
+          <div class="wf-b"><span class="t">status line</span>Good morning. 24 agents operational · 43 tasks planned · 18 complete · <strong>4 need you</strong></div>
+          <div class="wf-g4">
+            <div class="wf-b acc"><span class="t">decision tile</span>Awaiting you — 4<br><span class="wf-note">oldest 3h 20m</span></div>
+            <div class="wf-b"><span class="t">decision tile</span>Blocked — 1<br><span class="wf-note">CMS auth expired</span></div>
+            <div class="wf-b"><span class="t">decision tile</span>KPI alerts — 2<br><span class="wf-note">acceptance 19%</span></div>
+            <div class="wf-b"><span class="t">decision tile</span>Spend today — £6.40<br><span class="wf-note">of £25 budget</span></div>
+          </div>
+          <div class="wf-b acc" style="min-height:4.4rem"><span class="t">needs you · ordered by cost of delay</span>
+            · Outreach to R. Haddad — expires 2h · <em>approve / reject inline</em><br>
+            · Article “EVM explained” ready — publish to website<br>
+            · Low-confidence qualification escalated by LEAD v4<br>
+            · Integration: CMS authentication expired — reauthorise</div>
+          <div class="wf-g2">
+            <div class="wf-b" style="min-height:4.4rem"><span class="t">today's plan · by lane</span>Content 8 · 3 done · 1 failed<br>Outreach 20 · 12 prepared · <strong>human step</strong><br>SEO 6 · 6 done<br>Partnerships 5 · 2 done<br><span class="wf-note">human-executed steps marked distinctly</span></div>
+            <div class="wf-b" style="min-height:4.4rem"><span class="t">live operations</span>CWRITE · drafting AB-01142 · step 3/6 · 41s<br>SEO · cluster refresh · step 2/4 · 1m 12s<br><span class="wf-note">cancel control per row</span></div>
+          </div>
+          <div class="wf-g3">
+            <div class="wf-b"><span class="t">kpi tile</span>Acceptance 19% ▾<br><span class="wf-note">sparkline · target 30–45% · critical</span></div>
+            <div class="wf-b"><span class="t">kpi tile</span>Published this week 4 ▴<br><span class="wf-note">sparkline · cap 2–3/wk</span></div>
+            <div class="wf-b"><span class="t">kpi tile</span>Leads qualified 34 ▴<br><span class="wf-note">sparkline · vs 4-week avg</span></div>
+          </div>
+          <div class="wf-b"><span class="t">operations timeline · last 24h</span>09:07 ORCH created 11 tasks · 10:02 CQA rejected draft #231 · 10:11 revision · 11:20 approved · 11:22 published</div>
+          <div class="wf-b"><span class="t">system health</span>Integrations 5/6 · Data health 0/10 failing · Queues normal · Dead letters 0</div>
+        </div>
+      </div>
+    </div>
+    <figcaption><b>Wireframe 1 — S-01 Executive Command Center.</b> Note what is <em>not</em> here: a chart wall. Two panels carry accent weight — the decision tile and “needs you” — because they are the only parts that represent work the owner must do. KPI tiles show a sparkline, the threshold and the direction, and each drills to lineage. The single bolded figure in the status line is the one requiring action.</figcaption>
+  </figure>
+
+  <div class="screen">
+    <span class="sid">S-01</span>
+    <h3>Executive Command Center</h3>
+    <dl>
+      <dt>Purpose</dt><dd>Answer, in under sixty seconds and without opening a log: what the workforce did, what needs me, what happens next</dd>
+      <dt>Primary user</dt><dd>Owner. Secondary: Manager</dd>
+      <dt>Data</dt><dd>Agent count and status; today's plan and completion; approval backlog with ages; blocked items; KPI values with deltas, targets and thresholds; leads and partnership opportunities discovered; content ready; SEO opportunities; integration health; yesterday's AI cost</dd>
+      <dt>Actions</dt><dd>Approve or reject inline; open any item; cancel a running task; pause an agent or workflow; run a workflow manually; emergency stop; change date range; drill any number to lineage</dd>
+      <dt>Filters</dt><dd>Date (today · yesterday · 7 days) · lane · brand · objective. Persist per user</dd>
+      <dt>Search</dt><dd>Global <code>⌘K</code> only — no local search</dd>
+      <dt>Tables</dt><dd>Today's plan; live operations. Both scroll within their own container</dd>
+      <dt>Cards</dt><dd>Decision tiles; KPI tiles with threshold markers; agent-status summary</dd>
+      <dt>Charts</dt><dd>Sparklines on KPI tiles; one stacked bar of tasks by state over 14 days. Deliberately restrained — analysis lives in S-17</dd>
+      <dt>Notifications</dt><dd>Inline banner for integration failure, budget threshold, data-health non-zero. Approval count is a badge, not a banner</dd>
+      <dt>Empty</dt><dd><em>First run:</em> the plan panel explains that the orchestrator produces a plan each working morning and shows the next run time; KPI tiles show definition and target with no value. <em>Nothing needs you:</em> stated plainly with the next scheduled run</dd>
+      <dt>Error</dt><dd>Data-health non-zero raises a banner stating the executive report is held until acknowledged. If planning did not run, the panel says so and offers to run it — rather than showing an empty plan</dd>
+      <dt>Loading</dt><dd>Progressive: status line and decision strip first, then plan, then KPIs, then timeline. Nothing blocks the page</dd>
+      <dt>Mobile</dt><dd>Full. Vertical stack in the same order; decision strip becomes 2×2; timeline collapses to ten events; emergency stop in the top bar</dd>
+      <dt>Permissions</dt><dd>Owner and Manager see all. Operator sees own tasks and the shared plan, not costs or scorecards. Analyst read-only. Compliance sees health, audit and policy panels. Costs require Owner or Admin</dd>
+    </dl>
+  </div>
+</section>
+
+<section id="s4">
+  <div class="sechead"><span class="secnum">04</span><h2>Approval Inbox</h2></div>
+  <p class="prose">The human-in-the-loop requirement is the platform's central control and its most likely bottleneck. This screen has to make careful review <em>fast</em> — because an approval queue that feels slow is one that gets rubber-stamped, and a rubber-stamped queue is worse than no queue at all.</p>
+
+  <figure>
+    <div class="wf">
+      <div class="wf-top"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span>S-02 · Approval Inbox</span></div>
+      <div class="wf-body">
+        <div class="wf-rail">
+          <span class="g">Today</span><span>Command Center</span><span class="on">Approvals ●4</span><span>Send Queue ●12</span><span>Timeline</span>
+          <span class="g">Work</span><span>Content</span><span>Leads</span><span>Partnerships</span><span>SEO</span>
+          <span class="g">Workforce</span><span>Agents</span><span>Workflows</span>
+        </div>
+        <div class="wf-main">
+          <div class="wf-b solid"><span class="t">filters</span>type · risk · agent · campaign · brand · expiry window · requires me &nbsp;|&nbsp; search queue &nbsp;|&nbsp; <span class="wf-note">throughput: median decision 6m ▾</span></div>
+          <div class="wf-split">
+            <div style="display:flex;flex-direction:column;gap:.5rem">
+              <div class="wf-b acc"><span class="t">expiring soon</span>▸ Outreach · R. Haddad · <strong>2h 04m</strong><br>▸ Journalist reply · Construction Week · <strong>41m</strong></div>
+              <div class="wf-b"><span class="t">high risk</span>▸ Partnership proposal · APM<br>▸ Fee statement · M7 variant</div>
+              <div class="wf-b"><span class="t">standard</span>▸ Article · “EVM explained”<br>▸ LinkedIn page post · carousel<br>▸ Link outreach · 3 prospects</div>
+              <div class="wf-b"><span class="t">bulk</span>reject only, one type at a time<br><span class="wf-note">no bulk approve — see §A</span></div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:.5rem">
+              <div class="wf-b solid"><span class="t">proposed action</span><strong>Send a first message on LinkedIn</strong> · OUT v6 · prompt v11</div>
+              <div class="wf-b acc"><span class="t">target — visible before any action</span>Rania Haddad · Head of Project Controls · Parsons · Riyadh<br><span class="wf-note">band B · score 72 · not suppressed · no prior contact</span></div>
+              <div class="wf-b" style="min-height:3.4rem"><span class="t">preview — exactly what will be sent</span>“Thanks for connecting, Rania. PCI recognises senior project controls practitioners through an honorary certification, assessed on experience and contribution rather than an exam…”<br><span class="wf-note">287 / 300 characters</span></div>
+              <div class="wf-g2">
+                <div class="wf-b"><span class="t">risk</span>Medium — outbound to a named individual</div>
+                <div class="wf-b"><span class="t">expected benefit</span>Reply rate KPI · band B pipeline</div>
+              </div>
+              <div class="wf-b"><span class="t">compliance checks</span>✓ length 287/300 · ✓ no award language · ✓ personal line cited · ✓ not suppressed · ✓ frequency cap · ✓ template approved</div>
+              <div class="wf-b"><span class="t">supporting research · evidence</span>“Led cost control on Riyadh Metro package 3” — LinkedIn profile, retrieved 18 Aug, posted 2 Jun</div>
+              <div class="wf-b"><span class="t">why panel</span>rules applied · KPIs consulted · knowledge retrieved with versions · assumptions · missing information<br><span class="wf-note">never chain-of-thought</span></div>
+              <div class="wf-b"><span class="t">four-eyes trail</span>generated OUT v6 · reviewed COMP v3 · <strong>neither can approve</strong></div>
+              <div class="wf-b solid acc"><span class="t">actions</span>Approve (a) · Reject (r) · Edit (e) · Request revision &nbsp;—&nbsp; reject and revision require structured feedback</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <figcaption><b>Wireframe 2 — S-02 Approval Inbox.</b> Two panes: queue grouped by <em>expiring → high risk → standard</em>, and the item in full. The target panel carries accent weight because of principle P6 — you see who receives this before you can act. The compliance strip turns Phase 1's abstract rules into six visible ticks, which is what makes fast review safe rather than careless. Keyboard throughout: <code>j</code>/<code>k</code> navigate, <code>a</code> approve, <code>r</code> reject, <code>e</code> edit.</figcaption>
+  </figure>
+
+  <div class="scroller"><table>
+    <caption>The approval item anatomy — every element is mandatory, on every item</caption>
+    <thead><tr><th>Element</th><th>Why it cannot be optional</th></tr></thead>
+    <tbody>
+      <tr><td>Agent · version · prompt version</td><td>Attribution, and rollback if a pattern of bad output appears</td></tr>
+      <tr><td>Proposed action as an <em>effect</em></td><td>“Publish to the website”, not “approve content #812”</td></tr>
+      <tr><td><strong>Target</strong></td><td>Who receives this, on what channel — visible before any action is possible</td></tr>
+      <tr><td>Reason</td><td>Why the agent proposed it now</td></tr>
+      <tr><td>Preview</td><td>Exactly what will happen, rendered as it will appear</td></tr>
+      <tr><td>Risk classification</td><td>With the specific rule that set it</td></tr>
+      <tr><td>Expected benefit</td><td>The KPI it serves</td></tr>
+      <tr><td>Supporting research</td><td>Evidence with sources, retrieval dates and publication dates</td></tr>
+      <tr><td>Why panel</td><td>Rules, KPIs, knowledge versions, assumptions, missing information</td></tr>
+      <tr><td>Compliance checks</td><td>Each named check with its pass state</td></tr>
+      <tr><td>Expiry</td><td>Countdown, and what happens at zero — cancel or regenerate</td></tr>
+      <tr><td>Four-eyes trail</td><td>Generating agent, reviewing agent, and that neither can approve</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="screen">
+    <span class="sid">S-02</span>
+    <h3>Approval Inbox</h3>
+    <dl>
+      <dt>Purpose</dt><dd>Make the human-in-the-loop requirement fast enough that it does not become the bottleneck the platform is judged by</dd>
+      <dt>Primary user</dt><dd>Manager. Secondary: Owner, Compliance</dd>
+      <dt>Data</dt><dd>The full item anatomy above, per item; queue grouped by expiry, risk and type; throughput and median decision time</dd>
+      <dt>Actions</dt><dd>Approve · Reject · Edit (inline, with a diff against the agent's version) · Request revision. Reject and revision require structured feedback — it is training data for evaluation, so it is not optional</dd>
+      <dt>Filters</dt><dd>Type · risk · agent · campaign · brand · objective · expiry window · requires-me-specifically</dd>
+      <dt>Search</dt><dd>Within the queue: subject, target, agent</dd>
+      <dt>Tables</dt><dd>Queue is a list by default; a table view exists for audit-style review</dd>
+      <dt>Cards</dt><dd>The item pane is one composed card; compliance checks are chips</dd>
+      <dt>Charts</dt><dd>One — approval throughput and median decision time over 14 days, at the top of the queue, so a growing backlog is visible before it becomes a crisis</dd>
+      <dt>Notifications</dt><dd>Push for expiring items; escalation as expiry nears; digest in the daily brief</dd>
+      <dt>Empty</dt><dd>“Nothing awaiting your approval”, plus the count decided today and the next scheduled agent run</dd>
+      <dt>Error</dt><dd>An approved item that fails to execute returns to the queue marked <em>Execution failed</em>, stating whether the external effect occurred. An item whose target was suppressed after approval is withdrawn automatically with the reason</dd>
+      <dt>Loading</dt><dd>Queue skeletons; the item pane loads independently so navigation stays instant</dd>
+      <dt>Mobile</dt><dd>Full — the highest-value mobile screen. One item per screen, actions as a fixed bottom bar. <strong>Swipe is not bound to approve or reject</strong> — a gesture that publishes content or messages a person is the wrong affordance</dd>
+      <dt>Permissions</dt><dd>Manager and Owner approve. Compliance may view all and reject on policy grounds but cannot approve. Operator sees only items they generated, read-only. <strong>No agent principal can appear as an approver anywhere on this screen</strong></dd>
+    </dl>
+  </div>
+</section>
+
+<section id="s5">
+  <div class="sechead"><span class="secnum">05</span><h2>Send Queue</h2></div>
+  <p class="prose">The human-assisted lane made concrete. Approved outreach, prepared to the point where sending takes seconds — and a confirmation that closes the loop the workbook cares most about.</p>
+
+  <figure>
+    <div class="wf">
+      <div class="wf-top"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span>S-03 · Send Queue</span></div>
+      <div class="wf-body">
+        <div class="wf-rail">
+          <span class="g">Today</span><span>Command Center</span><span>Approvals ●4</span><span class="on">Send Queue ●12</span><span>Timeline</span>
+          <span class="g">Work</span><span>Content</span><span>Leads</span><span>Partnerships</span>
+        </div>
+        <div class="wf-main">
+          <div class="wf-b solid"><span class="t">daily target progress · from the workbook's own figures</span>Connection requests 14/20 &nbsp;·&nbsp; First messages 9/15 &nbsp;·&nbsp; Follow-ups 4/10 &nbsp;·&nbsp; <span class="wf-note">spread through the morning — do not burst</span></div>
+          <div class="wf-b"><span class="t">filters</span>channel · campaign · brand · lead band · assigned to me · approval expiring</div>
+          <div class="wf-b acc" style="min-height:5.2rem"><span class="t">item · ready to send</span>
+            <strong>Rania Haddad</strong> · Head of Project Controls · Parsons · Riyadh &nbsp;·&nbsp; <span class="wf-note">band B · approved 08:42 · expires in 2h</span><br>
+            “Thanks for connecting, Rania. PCI recognises senior project controls practitioners…” &nbsp;<span class="wf-note">287/300</span><br>
+            personal line: “Led cost control on Riyadh Metro package 3” · template M2<br>
+            [ Copy message ] &nbsp; [ Open profile ↗ ] &nbsp; [ <strong>Mark sent</strong> ] &nbsp; [ Defer ] &nbsp; [ Return to manager ]</div>
+          <div class="wf-b" style="min-height:3.6rem"><span class="t">mark sent — confirmation dialog</span>
+            Text sent (pre-filled with the approved message, editable): <span class="wf-note">if you amended it, paste what you actually sent</span><br>
+            ⚠ divergence from the approved text is recorded, re-checked against the rules, and flagged as a breach if it broke one<br>
+            [ Confirm sent ] — captures actual time, exact text, sender</div>
+          <div class="wf-b"><span class="t">safety control</span>[ Report a platform warning ] → <strong>pauses this channel for the day and notifies the manager</strong></div>
+          <div class="wf-b"><span class="t">sent today</span>time · target · template · characters · outcome &nbsp;<span class="wf-note">compact table</span></div>
+        </div>
+      </div>
+    </div>
+    <figcaption><b>Wireframe 3 — S-03 Send Queue.</b> Three details carry most of the value. The <b>confirmation captures the text actually sent</b>, not the text approved — if an operator amends it, the divergence is re-checked and a rule breach is recorded, exactly as the workbook's own compliance scoring does. The <b>platform-warning control</b> implements the workbook's safety rule as a button rather than trusting people to remember it. And the <b>daily-target bar</b> is drawn from the workbook's own figures, so pace stays visible without a manager chasing it.</figcaption>
+  </figure>
+
+  <div class="screen">
+    <span class="sid">S-03</span>
+    <h3>Send Queue</h3>
+    <dl>
+      <dt>Purpose</dt><dd>The human-assisted lane: approved outreach prepared so sending takes seconds, with the confirmation that closes the loop</dd>
+      <dt>Primary user</dt><dd>Operator. Secondary: Manager</dd>
+      <dt>Data</dt><dd>Target identity, role, company, profile link; approved message with live character count; personal line and its evidence; template code; approval trail; send-window guidance; daily target progress</dd>
+      <dt>Actions</dt><dd>Copy · Open target profile · Mark sent · Defer · Return to manager · Report a platform warning</dd>
+      <dt>Filters</dt><dd>Channel · campaign · brand · lead band · assigned to me · expiring approval</dd>
+      <dt>Search</dt><dd>Target name or company</dd>
+      <dt>Tables</dt><dd>Compact “sent today” table: time, target, template, characters, outcome</dd>
+      <dt>Cards</dt><dd>One card per item; a daily-target progress card</dd>
+      <dt>Charts</dt><dd>None. This is a doing screen</dd>
+      <dt>Notifications</dt><dd>Approval expiring before send; daily target at risk; channel paused</dd>
+      <dt>Empty</dt><dd><em>First run:</em> explains that approved outreach appears here and that the platform never sends automatically. <em>Cleared:</em> “Queue clear — 15 sent today, 5 remaining against target”</dd>
+      <dt>Error</dt><dd>An item whose approval expired is withdrawn with a one-click return for regeneration. An item whose target was suppressed after approval is removed and the reason stated</dd>
+      <dt>Loading</dt><dd>Standard</dd>
+      <dt>Mobile</dt><dd>Full, and genuinely useful: copy, switch to the platform app, come back, confirm</dd>
+      <dt>Permissions</dt><dd>Operator sees items assigned to them; Manager sees all and can reassign. <strong>Nobody can mark an item sent that has not been approved</strong></dd>
+    </dl>
+  </div>
+</section>
+
+<section id="s6">
+  <div class="sechead"><span class="secnum">06</span><h2>Work Screens</h2></div>
+
+  <figure>
+    <div class="wf">
+      <div class="wf-top"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span>S-05 · Content Command Center</span></div>
+      <div class="wf-body">
+        <div class="wf-rail">
+          <span class="g">Today</span><span>Command Center</span><span>Approvals ●4</span>
+          <span class="g">Work</span><span class="on">Content</span><span>Leads</span><span>Partnerships</span><span>SEO</span><span>Campaigns</span>
+        </div>
+        <div class="wf-main">
+          <div class="wf-b solid"><span class="t">views</span><strong>Calendar</strong> | Board | List | Schedules &nbsp;&nbsp;·&nbsp;&nbsp; filters: status · platform · brand · objective · pillar · difficulty · owner</div>
+          <div class="wf-g3">
+            <div class="wf-b acc"><span class="t">this week against cap</span>2 of 3 published<br><span class="wf-note">editorial throughput cap — R-002</span></div>
+            <div class="wf-b"><span class="t">schedule coverage</span>Website 100% · LinkedIn 67% ▾<br><span class="wf-note">below target — fix before Friday</span></div>
+            <div class="wf-b"><span class="t">awaiting QA</span>3 drafts · oldest 1h</div>
+          </div>
+          <div class="wf-b" style="min-height:4.6rem"><span class="t">calendar · week</span>
+            Mon — “EVM explained” <span class="wf-note">published ✓</span> &nbsp;·&nbsp; Tue — LinkedIn carousel <span class="wf-note">approved, scheduled</span><br>
+            Wed — “Planning engineer certification” <span class="wf-note">in QA</span> &nbsp;·&nbsp; Thu — newsletter <span class="wf-note">draft</span><br>
+            Fri — Medium syndication <span class="wf-note">blocked: original not yet indexed</span></div>
+          <div class="wf-b"><span class="t">brief bank · 5,683 rows, virtualised</span>ID · title · pillar · cluster · format · funnel · effort · priority · owner · status &nbsp;<span class="wf-note">P1 and Easy first</span></div>
+          <div class="wf-b"><span class="t">performance</span>impressions · engagements · engagement rate vs 2% benchmark <span class="wf-note">(source shown on hover)</span> · clicks · leads</div>
+        </div>
+      </div>
+    </div>
+    <figcaption><b>Wireframe 4 — S-05 Content Command Center.</b> The accent panel is the <b>throughput cap</b>, not the output count — because the risk this workspace manages is publishing too much, not too little. Schedule coverage sits beside it since the workbook treats a slipping schedule as the early warning. The Friday entry shows a blocked syndication with its reason inline: the canonical rule is a gate, not a warning.</figcaption>
+  </figure>
+
+  <div class="screen">
+    <span class="sid">S-05</span><h3>Content Command Center</h3>
+    <dl>
+      <dt>Purpose</dt><dd>Run the supply chain the workbook defines: pillars → keywords → briefs → drafts → QA → approval → publication → performance, with coverage visible before it slips</dd>
+      <dt>Primary user</dt><dd>Manager, Operator</dd>
+      <dt>Data</dt><dd>Planned and published items with platform, format, brand, objective, campaign, funnel, author agent, QA and approval status, dates, URL, impressions, engagements, clicks, leads; brief bank; schedules with cadence, window, planned, published and coverage; throughput cap usage</dd>
+      <dt>Actions</dt><dd>Create from brief · claim a brief · request a draft · approve · schedule · publish · repurpose (derivative cap enforced) · pause a schedule · change cadence · export</dd>
+      <dt>Filters</dt><dd>Status · platform · brand · objective · campaign · pillar · cluster · funnel · difficulty · owner · date · coverage below target</dd>
+      <dt>Search</dt><dd>Title, keyword, URL, brief ID</dd>
+      <dt>Tables</dt><dd>Brief bank (virtualised for 5,683 rows); schedule table with coverage</dd>
+      <dt>Cards</dt><dd>Calendar entries; coverage card per schedule; “this week against cap”</dd>
+      <dt>Charts</dt><dd>Coverage bars; published-per-week against cadence; engagement rate against benchmark with provenance on hover</dd>
+      <dt>Notifications</dt><dd>Coverage below target before Friday; draft ready for QA; approval expiring; publication failed</dd>
+      <dt>Empty</dt><dd><em>First run:</em> “5,683 briefs imported. Nothing published yet — pick a P1 brief to start”</dd>
+      <dt>Error</dt><dd>Publication failure states whether the item published. Canonical violations appear as a blocked action quoting the rule, not a validation error after the fact</dd>
+      <dt>Loading</dt><dd>Calendar grid renders immediately; entries fill in</dd>
+      <dt>Mobile</dt><dd>Read and approve; calendar collapses to an agenda list</dd>
+      <dt>Permissions</dt><dd>Operator creates and drafts; Manager approves and publishes; Analyst read-only</dd>
+    </dl>
+  </div>
+
+  <div class="screen">
+    <span class="sid">S-07 · S-08</span><h3>Lead Command Center &amp; Lead Detail</h3>
+    <dl>
+      <dt>Purpose</dt><dd>The pipeline the highest-value objective depends on, with qualification evidence and suppression always visible</dd>
+      <dt>Primary user</dt><dd>Manager, Operator; Closer on detail</dd>
+      <dt>Data</dt><dd>Account, contact, role, seniority, geography, industry, ICP fit, intent, computed score, band, funnel stage, source, evidence, owner, next action, last interaction, suppression state, duplicate flag; stage counts and conversion; acceptance and reply rates against benchmark. <strong>Detail additionally shows the evidence behind every judgement</strong> — source, retrieval date, publication date — and the score arithmetic</dd>
+      <dt>Actions</dt><dd>Open · qualify or re-qualify · request outreach preparation · assign · hand off to closer · mark declined (behind a confirm that states the permanence) · merge duplicates · record an interaction · request erasure · export</dd>
+      <dt>Filters</dt><dd>Score · band · stage · geography · industry · company size · role · seniority · status · campaign · brand · owner · created date · has evidence · flagged duplicate</dd>
+      <dt>Search</dt><dd>Name, company, profile URL, email</dd>
+      <dt>Tables</dt><dd>Lead table with sortable score and band; interaction history on detail. <strong>Duplicate candidates surface above the table</strong>, never hidden in a column</dd>
+      <dt>Cards</dt><dd>Funnel stage cards with conversion; a benchmark card naming its source; score card showing <code>ICP × 12 + Intent × 8</code> with both inputs; evidence cards; consent card</dd>
+      <dt>Charts</dt><dd>Funnel bars; acceptance and reply rate trend against benchmark bands</dd>
+      <dt>Notifications</dt><dd>High-value lead discovered; duplicate detected; suppression conflict attempted; reply received; follow-up due</dd>
+      <dt>Empty</dt><dd><em>First run:</em> explains that qualified leads appear once discovery runs, and shows the ICP tests being applied</dd>
+      <dt>Error</dt><dd>A qualification without evidence never reaches this screen — it is rejected upstream. If the score cannot compute, the card names the missing input rather than showing zero</dd>
+      <dt>Loading</dt><dd>Funnel renders before the table</dd>
+      <dt>Mobile</dt><dd>Read</dd>
+      <dt>Permissions</dt><dd>Operator sees assigned; Manager all; Closer sees handed-over; Analyst read-only aggregate. Personal-data fields respect classification; erasure requires Admin and is audited</dd>
+    </dl>
+  </div>
+
+  <div class="screen">
+    <span class="sid">S-09 · S-10 · S-11 · S-12</span><h3>Partnerships · SEO · Campaigns · Experiments</h3>
+    <dl>
+      <dt>S-09 Partnerships</dt><dd>Kanban across the twelve stages, plus table. Organisation, type, country, contact, fit rationale, ICP and intent with evidence, score, band, potential value, next step and due date, deal value, signed date. Overdue next steps surface at the top. <strong>Marking a partnership signed without a deal value is blocked at the field</strong> — an aggregate invariant made visible. Charts: stage distribution, signed value by month</dd>
+      <dt>S-10 SEO</dt><dd>Five tabs — Clusters · Keywords · Opportunities · Answer engines · Links. Seven pillars with Search Console impressions, clicks and position; 76 keywords with difficulty, who ranks today, priority; typed opportunities with evidence and score; the monthly citation audit; link prospects to live. <strong>Volume bands always carry their “editorial estimate, not tool data” label</strong> so they cannot be quoted as measurements. Notifications: position drop, verification expired, indexation gate blocking a batch</dd>
+      <dt>S-11 Campaigns</dt><dd>Brief (versioned, approval-gated) plus everything produced under it across content, leads, partnerships and SEO. KPI progress against target over the campaign window; spend. Notifications: KPI at risk, budget threshold, end date approaching</dd>
+      <dt>S-12 Experiments</dt><dd>Hypothesis, baseline, action, audience, duration, success metric, guardrail metric, samples, rates, difference, guard verdict, conclusion, next action. <strong>The guard verdict always renders with its caveat — “heuristic, not a statistical test” — and anything under 100 per group is labelled directional only.</strong> Sample sizes are shown at the same visual weight as the rates. The workbook is explicit that most marketing tests are called too early; the interface must not undo that. Rolling a result into the playbook is approval-gated</dd>
+      <dt>Common</dt><dd>Filters, search, empty, error and loading follow the standard patterns in §10. All four are read-only on mobile. Manager owns; Owner approves strategy-level changes; Analyst reads</dd>
+    </dl>
+  </div>
+</section>
+
+<section id="s7">
+  <div class="sechead"><span class="secnum">07</span><h2>Workforce Screens</h2></div>
+
+  <figure>
+    <div class="wf">
+      <div class="wf-top"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span>S-13 · Agent Workforce</span></div>
+      <div class="wf-body">
+        <div class="wf-rail">
+          <span class="g">Today</span><span>Command Center</span><span>Approvals ●4</span>
+          <span class="g">Workforce</span><span class="on">Agents</span><span>Workflows</span><span>Scheduler</span>
+          <span class="g">Insight</span><span>Analytics</span><span>Costs</span>
+        </div>
+        <div class="wf-main">
+          <div class="wf-b solid"><span class="t">controls</span>filters: division · status · autonomy · has errors &nbsp;|&nbsp; search &nbsp;|&nbsp; view: <strong>Grid</strong> | Table &nbsp;|&nbsp; [ Pause all ]</div>
+          <div class="wf-g3">
+            <div class="wf-b"><span class="t">ORCH · command</span>Chief Growth Orchestrator<br><strong>Idle</strong> · next run 07:45<br><span class="wf-note">12 today · 100% · £0.82</span></div>
+            <div class="wf-b acc"><span class="t">CWRITE · content</span>Content Writer<br><strong>Working</strong> · drafting AB-01142 · 41s<br><span class="wf-note">4 today · 92% · £1.90 · rejection 18% ▴</span></div>
+            <div class="wf-b"><span class="t">LEAD · intelligence</span>Lead Intelligence<br><strong>Waiting</strong> · integration degraded<br><span class="wf-note">30 today · 97% · £0.44</span></div>
+            <div class="wf-b"><span class="t">OUT · relationships</span>Outreach Composer<br><strong>Completed</strong> · 12 prepared<br><span class="wf-note">12 today · 100% · £0.31</span></div>
+            <div class="wf-b"><span class="t">COMP · governance</span>Compliance &amp; Safety<br><strong>Idle</strong><br><span class="wf-note">0 denials today — target</span></div>
+            <div class="wf-b"><span class="t">SEO · intelligence</span>Search Optimisation<br><strong>Failed</strong> · ceiling: tool calls<br><span class="wf-note">last error 09:14 · state preserved</span></div>
+          </div>
+          <div class="wf-b"><span class="t">per-agent card contents</span>name · role · status pill · current task · next run · cost today · rejection-rate indicator · 14-day sparkline &nbsp;<span class="wf-note">no avatars — they cost space and add nothing operational</span></div>
+        </div>
+      </div>
+    </div>
+    <figcaption><b>Wireframe 5 — S-13 Agent Workforce.</b> Six status values, encoded as words and pills rather than colour alone. The card shows <b>human rejection rate</b> beside success rate, because an agent that completes everything and gets rejected half the time is failing in the way that matters. The failed card names the <b>ceiling breached</b> and confirms state was preserved — Phase 2's failure contract surfacing in the UI.</figcaption>
+  </figure>
+
+  <div class="screen">
+    <span class="sid">S-13 · S-14</span><h3>Agent Workforce &amp; Agent Detail</h3>
+    <dl>
+      <dt>Purpose</dt><dd>See the workforce as an operating entity; control one agent and the version discipline that keeps changes safe</dd>
+      <dt>Primary user</dt><dd>Owner and Admin; Admin on detail</dd>
+      <dt>Data</dt><dd>Per agent: code, name, division, status (Idle · Working · Waiting · Blocked · Failed · Completed), current task, today's completed, success rate, human rejection rate, average cost and latency, cost today, last error, next run, active version, autonomy level. <strong>Detail adds</strong> mission, prompt version, model policy by task class, tool grants with read/write classification, knowledge and memory scope, output contract, ceilings, schedule, triggers, dependencies, KPIs, escalation rules, version history, execution history, evaluation results</dd>
+      <dt>Actions</dt><dd>Pause · resume · run manually · pause all (confirm) · open detail · edit (creates a draft version) · run evaluation · promote to staging · request production approval · roll back · clone · disable · test with a sample input</dd>
+      <dt>Filters</dt><dd>Division · status · autonomy · has errors · scheduled today; executions by outcome, date, workflow, cost band</dd>
+      <dt>Search</dt><dd>Agent name or code; within execution history</dd>
+      <dt>Tables</dt><dd>Table view with sortable scorecard columns; version table; execution table</dd>
+      <dt>Cards</dt><dd>One per agent; current version card; ceiling card; grant card listing every tool</dd>
+      <dt>Charts</dt><dd>14-day sparkline per agent; cost today across agents; evaluation scores across versions; cost per task across versions</dd>
+      <dt>Notifications</dt><dd>Agent failed; repeated denials; ceiling breached; evaluation complete; regression detected</dd>
+      <dt>Empty</dt><dd><em>First run:</em> all agents idle with next scheduled run and a “run manually” control on each</dd>
+      <dt>Error</dt><dd>A failed agent shows the reason, the ceiling breached, preserved state, and whether the workflow disabled itself. A blocked promotion states which criterion regressed, by how much, against which version</dd>
+      <dt>Loading</dt><dd>Cards render names and roles immediately; live status fills in</dd>
+      <dt>Mobile</dt><dd>Status only — compact list with status and current task; pause available, editing not</dd>
+      <dt>Permissions</dt><dd>Owner and Admin control; Manager views and runs manually. <strong>Nobody can grant an agent a tool the connector manifest marks restricted</strong> — the control is absent, not disabled, and the manifest reason is shown</dd>
+    </dl>
+  </div>
+
+  <div class="screen">
+    <span class="sid">S-15 · S-16</span><h3>Workflow Catalogue &amp; Editor · Scheduler</h3>
+    <dl>
+      <dt>S-15 position</dt><dd>This is a <strong>visual editor over versioned definitions, not a free-form canvas</strong>. Nodes come from a restricted palette; every definition validates before saving; every change produces a diff and requires approval; a dry-run against sandbox connectors is required before promotion. See §A for the argument</dd>
+      <dt>S-15 data</dt><dd>Catalogue: workflow ID, name, workbook source, objective, trigger, schedule, participating agents, autonomy, KPI, expected duration and cost, enabled state, last run, success rate. Per workflow: definition graph, versions, run history, failure paths</dd>
+      <dt>S-15 actions</dt><dd>Enable · disable · pause · run manually · edit (draft) · validate · dry-run · request approval · promote · roll back · retry a failed run</dd>
+      <dt>S-15 states</dt><dd>Validation errors show on the offending node with the rule; a dry-run failure shows the step, connector and sandbox response. <strong>Mobile: not supported</strong> — the catalogue is readable, the editor is desktop only, stated plainly rather than degraded</dd>
+      <dt>S-16 purpose</dt><dd>Make time explicit: what is scheduled, in whose time zone, on which working days, and what was missed</dd>
+      <dt>S-16 data</dt><dd>Jobs with <strong>intended and actual time as separate columns</strong> — the single most useful thing this screen does when a schedule misbehaves — plus workflow, agent, status, duration, retries; the business calendar with time zone, working days, week-start, holidays, campaign dates, blackout periods; verification-expiry obligations; missed jobs inside and beyond the recovery window</dd>
+      <dt>S-16 actions</dt><dd>Pause or resume a schedule · run now · reschedule · change cadence · add a holiday or blackout · acknowledge a missed job · set time zone and week-start</dd>
+      <dt>S-16 states</dt><dd>A job that could not run states <em>why</em> — integration down, budget exhausted, kill switch, dependency unmet — rather than showing “failed”. First run shows the seeded schedule from the workbook's cadences. Charts: dispatch latency distribution, missed-job count over time</dd>
+      <dt>Permissions</dt><dd>Admin edits definitions and schedules; Owner approves promotion and sets the time zone; Manager may enable, disable and run manually</dd>
+    </dl>
+  </div>
+</section>
+
+<section id="s8">
+  <div class="sechead"><span class="secnum">08</span><h2>Insight Screens</h2></div>
+
+  <div class="screen">
+    <span class="sid">S-17</span><h3>Analytics Workspace</h3>
+    <dl>
+      <dt>Purpose</dt><dd>Answer which activities produce results, which agents produce value, and what it costs — with every number traceable</dd>
+      <dt>Primary user</dt><dd>Owner, Analyst</dd>
+      <dt>Tabs</dt><dd>KPIs · By objective · By brand · By channel · Attribution · Data health</dd>
+      <dt>Data</dt><dd>The full KPI catalogue with value, target, warning and critical thresholds, trend and <strong>freshness per source</strong>; results split by objective and brand; <strong>value rank against share of minutes</strong> — the workbook's own capital-allocation signal; content, lead, partnership and SEO outcomes; agent contribution; cost per outcome; the ten data-health checks</dd>
+      <dt>Actions</dt><dd>Drill any number to lineage · change period · compare periods · export · save a view · open the underlying records</dd>
+      <dt>Filters</dt><dd>Period · objective · brand · campaign · channel · agent · <strong>actor type (human vs agent)</strong></dd>
+      <dt>Search</dt><dd>KPI by name or ID</dd>
+      <dt>Tables</dt><dd>KPI table with definition, formula, source, freshness, value, target, status; objective performance with minutes share against value rank</dd>
+      <dt>Cards</dt><dd>KPI cards with threshold markers</dd>
+      <dt>Charts</dt><dd>Trend lines with target and threshold bands; a <strong>rank-versus-share comparison</strong> that makes misallocation visible at a glance; funnel conversion</dd>
+      <dt>The rule made visible</dt><dd>Panels are labelled <strong>Correlation</strong> or <strong>Attribution</strong>, and the platform declines to compute attribution where data cannot support it — saying so rather than producing a number. Vendor benchmark bands show their source on hover</dd>
+      <dt>Notifications</dt><dd>Threshold breached; data health non-zero; source stale beyond threshold</dd>
+      <dt>Empty</dt><dd><em>First run:</em> KPI definitions and targets shown with no values, and the date the first observation is expected</dd>
+      <dt>Error</dt><dd>A stale source labels the panel and keeps the last value with its timestamp. Hiding a number is worse than labelling it</dd>
+      <dt>Loading</dt><dd>Cards, then charts</dd>
+      <dt>Mobile</dt><dd>Read; charts simplify to a single series</dd>
+      <dt>Permissions</dt><dd>Owner and Analyst full; Manager operational KPIs; Operator their own contribution; <strong>Employee Score restricted to Owner and Manager</strong></dd>
+    </dl>
+  </div>
+
+  <div class="screen">
+    <span class="sid">S-18 · S-19</span><h3>Reports · Costs &amp; Budget</h3>
+    <dl>
+      <dt>S-18 purpose</dt><dd>The daily brief, end-of-day report and weekly growth review, generated and archived</dd>
+      <dt>S-18 data</dt><dd>Each report with generation time, period, contents, sources, freshness, and the data-health state at generation; archive by date</dd>
+      <dt>S-18 actions</dt><dd>Read · regenerate · export to PDF, Excel or CSV · share a link · subscribe to delivery</dd>
+      <dt>S-18 error</dt><dd><strong>A report generated while data-health checks are non-zero is watermarked and names the failing checks</strong> rather than being silently published</dd>
+      <dt>S-18 mobile</dt><dd>Full — this is a read-on-the-phone screen</dd>
+      <dt>S-19 purpose</dt><dd>Keep AI and channel spend proportional to output</dd>
+      <dt>S-19 data</dt><dd>Spend by day, agent, workflow, campaign, brand, model and provider; budget state daily and monthly; cost per published item and per prepared outreach item; channel costs; cost per meeting; revenue per unit of cost; optimisation recommendations</dd>
+      <dt>S-19 actions</dt><dd>Set budgets (daily, monthly, per agent, per workflow) · restrict models · accept or dismiss a recommendation · export</dd>
+      <dt>S-19 tables</dt><dd>Spend table; recommendation table showing <strong>estimated saving and quality risk side by side</strong> — a saving without its risk is how cost optimisation quietly degrades output</dd>
+      <dt>S-19 empty</dt><dd>First run shows budgets unset, with a warning that cost control is not active until they are</dd>
+      <dt>Permissions</dt><dd>Owner and Admin; budget increases require approval; Analyst may export</dd>
+    </dl>
+  </div>
+</section>
+
+<section id="s9">
+  <div class="sechead"><span class="secnum">09</span><h2>System Screens</h2></div>
+
+  <div class="screen">
+    <span class="sid">S-20</span><h3>Knowledge Base &amp; Workbook Importer</h3>
+    <dl>
+      <dt>Purpose</dt><dd>The organisational memory, and the controlled path by which the workbook updates configuration</dd>
+      <dt>Tabs</dt><dd>Documents · Search · Importer · Brand system</dd>
+      <dt>Data</dt><dd>Documents with version history, classification, permissions, chunk count, index state, and <strong>which agent executions used which version</strong>; a retrieval test console; the brand system — voice, terminology, prohibited terms, positioning, approved claims, claims requiring evidence, CTA library, pillars, competitor policy; import history</dd>
+      <dt>The importer flow</dt><dd>Upload → detect sheets → validate structure → preview extracted data → <strong>diff against current configuration</strong> → administrator approves or rejects each change group → apply → audit. Nothing is applied automatically, and the diff is the screen's centrepiece</dd>
+      <dt>Actions</dt><dd>Upload · version · set permissions and classification · re-index · test retrieval · supersede · run a workbook import</dd>
+      <dt>Search</dt><dd>Full text and semantic, <strong>with citations shown</strong></dd>
+      <dt>Empty / Error</dt><dd>First run offers the workbook import as the primary action. A malformed workbook names the sheet and the structural expectation that failed; <strong>a partial import is never applied</strong></dd>
+      <dt>Permissions</dt><dd>Admin; import approval requires Owner. Uploads are treated as untrusted input and the screen says so</dd>
+    </dl>
+  </div>
+
+  <div class="screen">
+    <span class="sid">S-21 · S-22 · S-23</span><h3>Integration Center · Audit Center · Error Center</h3>
+    <dl>
+      <dt>S-21 data</dt><dd>Per connector: tier, health state, auth state, scopes granted, rate-limit headroom, last successful call, error rate, <strong>verification date and expiry</strong>, restricted operations, credential reference (never the secret), data classifications carried</dd>
+      <dt>S-21 actions</dt><dd>Connect · reauthorise · test connection · disable · rotate credential reference · acknowledge verification · view recent calls. <strong>Secrets are never displayed to anyone</strong></dd>
+      <dt>S-21 error</dt><dd>An expired connector states which operations are blocked and which still work</dd>
+      <dt>S-22 data</dt><dd>Audit events with agent, versions, prompt version, user, trigger, input, retrieved knowledge with versions, model, output, tool calls, approval, result, error, cost, timestamp, correlation ID; chain integrity state</dd>
+      <dt>S-22 actions</dt><dd>Filter · search · open the full record · <strong>follow a correlation ID across services</strong> · verify chain integrity · export a range</dd>
+      <dt>S-22 charts</dt><dd>Denial rate over time — a leading indicator of a misconfigured agent version</dd>
+      <dt>S-22 permissions</dt><dd>Compliance, Admin and Owner full; others see only their own actions. <strong>Audit records are never editable by anyone</strong></dd>
+      <dt>S-23 data</dt><dd>Failed workflows, tasks, tool errors, integration errors, validation failures, auth failures, retries, dead letters — each with reason, inputs, attempts, last error, and <strong>whether an external effect occurred</strong></dd>
+      <dt>S-23 error</dt><dd>A retry that is not safe under the retry taxonomy is <strong>absent</strong>, with the reason shown — rather than offered and refused</dd>
+      <dt>S-23 empty</dt><dd>“No failures in this period” — a good state, stated plainly</dd>
+    </dl>
+  </div>
+
+  <div class="screen">
+    <span class="sid">S-24 · S-25</span><h3>Administration · Settings</h3>
+    <dl>
+      <dt>S-24 sections</dt><dd>Users and roles · agent principals and grants · approval rules · policies and compliance checks · <strong>message templates</strong> · enumerations and dedup rules · budgets · feature flags · data retention · environments</dd>
+      <dt>S-24 notable</dt><dd>The <strong>Message Bank</strong> lives here: templates with live character counts against limits, status, approver and approval date. New templates enter as Draft and only an approver can set them Approved, exactly as the workbook requires. The <strong>fifteen compliance checks</strong> live here too, each with owner, frequency, last result and signature — and <strong>an unsigned check reports as failing</strong>, as it does today in the workbook</dd>
+      <dt>S-24 empty</dt><dd>First run presents a setup checklist derived from the workbook's own residual actions: name the owner, populate the roster, assign owners to the 63 tasks and 15 checks, sign the templates, set budgets, connect the CMS</dd>
+      <dt>S-24 error</dt><dd>A policy change that would break an existing invariant is blocked with the conflict named</dd>
+      <dt>S-24 mobile</dt><dd>Not supported</dd>
+      <dt>S-25 sections</dt><dd>Organisation and time zone · business calendar and week-start · daily targets · brands and domains · <strong>objectives and value ranks</strong> · content approval mode (Manual · Trusted workflow · Campaign pre-approval · Emergency lock) · notification preferences · autonomy levels per workflow</dd>
+      <dt>S-25 notable</dt><dd>Value ranks are editable here, and the screen states plainly that changing them changes what the orchestrator prioritises tomorrow. Autonomy increases require evaluation evidence and Owner approval, and the control says so</dd>
+      <dt>Permissions</dt><dd>Admin; Owner approves high-risk changes. <strong>No agent principal may modify anything on either screen</strong></dd>
+    </dl>
+  </div>
+</section>
+
+<section id="s10">
+  <div class="sechead"><span class="secnum">10</span><h2>Cross-Cutting States</h2></div>
+  <p class="prose">Specified once rather than repeated across twenty-five screens.</p>
+
+  <div class="scroller"><table>
+    <caption>Loading — nothing blocks the whole page</caption>
+    <thead><tr><th>Case</th><th>Treatment</th></tr></thead>
+    <tbody>
+      <tr><td>List or table</td><td>Skeleton rows at the final row height so nothing reflows; header, filters and actions render immediately and stay usable</td></tr>
+      <tr><td>Metric tile</td><td>Label and threshold render; the value area is a muted placeholder. <strong>The label never moves</strong></td></tr>
+      <tr><td>Chart</td><td>Axes, gridlines and legend render; the plot area is muted until data lands</td></tr>
+      <tr><td>Long agent run</td><td>Progress by step, not a spinner: “Drafting · step 3 of 6 · 41s”, with cancel</td></tr>
+      <tr><td>Slow external source</td><td>The panel renders from cache and marks itself stale rather than blocking</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="scroller"><table>
+    <caption>Empty — three genuinely different things, and conflating them is the commonest dashboard failure</caption>
+    <thead><tr><th>Kind</th><th>Pattern</th><th>Example</th></tr></thead>
+    <tbody>
+      <tr><td><strong>First run</strong></td><td>Explains what will appear and what produces it</td><td>“No content published yet. Once a brief passes QA, compliance and approval, published items and their performance appear here.”</td></tr>
+      <tr><td><strong>Filtered to nothing</strong></td><td>States the filter and offers to clear it</td><td>“No leads match band A · Gulf · last 7 days. <u>Clear filters</u>”</td></tr>
+      <tr><td><strong>Nothing, and that is good</strong></td><td>Confirms the good state without celebration</td><td>“Nothing awaiting your approval.” · “Data health: all ten checks read zero.”</td></tr>
+    </tbody>
+  </table></div>
+  <p class="prose">“No data” on an empty first run reads as a bug; the same words on a cleared approval queue read as a loss. They are different screens.</p>
+
+  <div class="scroller"><table>
+    <caption>Error</caption>
+    <thead><tr><th>Kind</th><th>Treatment</th></tr></thead>
+    <tbody>
+      <tr class="sev-m"><td>Permission denied</td><td>Says what is restricted and who can grant it. Never a blank screen, never a status code</td></tr>
+      <tr class="sev-m"><td>Integration degraded</td><td>Inline banner on the affected panel only, naming the connector, its state and what still works. The rest of the screen keeps functioning</td></tr>
+      <tr class="sev-l"><td>Stale data</td><td>Freshness stamp with a marker past the threshold. The number is still shown — hiding it is worse than labelling it</td></tr>
+      <tr class="sev-h"><td>Action failed</td><td>States what failed, whether it was retried, whether the external effect happened, and the safe next step. <strong>For external writes it always distinguishes “not sent” from “may have sent”</strong></td></tr>
+      <tr class="sev-l"><td>Validation</td><td>At the field, on blur, in business terms: “298 of 300 characters”, not “maxLength exceeded”</td></tr>
+      <tr class="sev-m"><td>Agent failure</td><td>Names the agent and version, the ceiling breached or the error, that state was preserved, and what the platform did next</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Permissions expressed in the interface</h3>
+  <ul class="prose">
+    <li>Actions a role can <strong>never</strong> perform are <strong>absent</strong>, not disabled.</li>
+    <li>Actions a role could perform but not right now are <strong>disabled with the reason</strong> on hover and focus — “Awaiting compliance check”, “Requires a second approver”.</li>
+    <li>Data a role cannot see is absent; the interface never renders a redaction placeholder that reveals the shape of what is hidden.</li>
+    <li>Restricted HR data sits behind an explicit role and never appears in aggregate views a wider audience can reach.</li>
+  </ul>
+
+  <h3>Notifications</h3>
+  <p class="prose">In-app first, with connectors architected for email, Slack and Teams; configurable per event. Two rules: <strong>an approval nearing expiry escalates</strong>, and <strong>nothing notifies twice for the same item</strong> unless its state changed.</p>
+
+  <h3>Mobile</h3>
+  <p class="prose"><strong>Full:</strong> Command Center, Approvals, Send Queue, Reports, agent status, emergency pause, notifications. <strong>Read-only:</strong> most workspaces. <strong>Desktop only:</strong> workflow editor, Administration, bulk operations, the importer's diff view. On mobile the approval card is the whole screen with actions in a fixed bottom bar within thumb reach — and swipe is not bound to approve or reject.</p>
+
+  <h3>Patterns used across screens</h3>
+  <div class="scroller"><table>
+    <thead><tr><th>Pattern</th><th>Behaviour</th></tr></thead>
+    <tbody>
+      <tr><td>Why panel</td><td>Evidence with sources and dates, rules applied, KPIs consulted, knowledge retrieved with versions, assumptions, missing information. Never chain-of-thought</td></tr>
+      <tr><td>Lineage drill</td><td>Source → raw observation → transformation → formula version → value, with a link to the underlying rows</td></tr>
+      <tr><td>Freshness stamp</td><td>“Search Console · read 4h ago”</td></tr>
+      <tr><td>Agent attribution</td><td>Agent code, version, prompt version, cost, duration</td></tr>
+      <tr><td>Diff view</td><td>Side-by-side with change highlighting; required before any promotion</td></tr>
+      <tr><td>Confirm-with-target</td><td>Restates recipient or destination and the effect before committing</td></tr>
+      <tr><td>Keyboard-first queues</td><td><code>j</code>/<code>k</code> · <code>a</code> · <code>r</code> · <code>e</code> · <code>⌘↵</code> · <code>?</code></td></tr>
+      <tr><td>Saved views</td><td>Named filter sets per user, shareable within the organisation</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="s11">
+  <div class="sechead"><span class="secnum">A</span><h2>Two Deliberate Refusals</h2></div>
+
+  <div class="note crit">
+    <span class="lbl">No bulk approve for anything reaching a person or the public</span>
+    <p>Bulk actions exist for <em>reject</em>, and for internal low-risk item types only. The workbook's entire quality thesis is that personalisation and review are what make outreach work — its benchmarks, its Employee Score, its Golden Rules and its message limits all encode that. A “select all → approve” control would quietly undo it, and would reduce the four-eyes principle to theatre.</p>
+    <p>This will be asked for, probably within the first month, and probably by whoever is clearing the queue. The answer is no, and the reason is in the workbook rather than in my preference.</p>
+  </div>
+
+  <div class="note crit">
+    <span class="lbl">No free-form workflow canvas</span>
+    <p>Phase 2 established that workflow definitions are versioned, tested and owned by the platform. A builder that lets anyone assemble arbitrary graphs at runtime contradicts that directly: it produces untested execution paths with real external effects — publishing, messaging, spending.</p>
+    <p>S-15 is therefore a <strong>visual editor over versioned definitions</strong>: a restricted node palette, mandatory validation, a dry-run against sandbox connectors, and a diff plus approval before promotion. Closer to a schema editor than to a drawing canvas. If what is actually wanted is “let a manager change a cadence or a threshold without engineering”, that already exists — it is Settings, and it is safe precisely because it is bounded.</p>
+  </div>
+</section>
+
+<section id="s12">
+  <div class="sechead"><span class="secnum">B</span><h2>Phase 4 Prerequisites</h2></div>
+  <p class="prose">Phase 4 is data and API design: the PostgreSQL schema, entity-relationship model, migration strategy, API architecture and endpoints, request and response contracts, authentication and authorisation models, webhook architecture, event schemas, queue architecture, caching and vector storage. It is the most self-contained phase so far — the screens and the architecture between them determine most of it.</p>
+  <div class="scroller"><table>
+    <thead><tr><th>ID</th><th>Needed</th><th>Why</th><th>Default if not provided</th></tr></thead>
+    <tbody>
+      <tr class="sev-h"><td class="rid">P4-01</td><td>Approval of these screens, or amendments</td><td>Read models and API shapes follow from what screens display</td><td>—</td></tr>
+      <tr class="sev-m"><td class="rid">P4-02</td><td>Expected data volumes at 12 months — leads, content items, tasks, model executions</td><td>Decides partitioning and index strategy, and whether read models are materialised or computed</td><td>Extrapolated from the workbook's own targets: ~39k leads/yr at full team, ~500 content items, ~250k tasks</td></tr>
+      <tr class="sev-m"><td class="rid">P4-03</td><td>Whether any external system will call our API</td><td>Determines whether the API is internal-only or a public contract with versioning and rate limits per consumer</td><td>Internal only; public contract deferred to the SaaS phase</td></tr>
+      <tr class="sev-l"><td class="rid">P4-04</td><td>Export formats management actually uses today</td><td>The workbook implies Excel; a wrong guess means rework in reporting</td><td>Excel primary, PDF for reports, CSV for data</td></tr>
+    </tbody>
+  </table></div>
+  <p class="prose">The five Phase 2 blockers remain open. Two now bear directly on Phase 4: the <strong>CMS</strong>, whose API shape determines the content connector's contracts, and the <strong>region and residency</strong> decision, which becomes materially more expensive to change once the schema exists and data is in it.</p>
+</section>
+
+<footer>
+  <p><strong>Phase 3 ends here.</strong> No components, styles or front-end code have been produced. On approval, Phase 4 delivers the complete PostgreSQL schema, entity-relationship model, migration strategy, API endpoints with request and response contracts, authentication and authorisation models, webhook and event schemas, queue architecture, caching and vector-storage design.</p>
+  <p>Full specifications in the repository under <code>docs/</code> — information architecture and interaction patterns, plus all twenty-five screens with purpose, user, data, actions, filters, search, tables, cards, charts, notifications, empty, error and loading states, mobile behaviour and permissions.</p>
+</footer>
+
+</div>
+</main>
+</div>
+
+<script>
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('.navlist a'));
+  var map = {};
+  links.forEach(function(a){ map[a.getAttribute('href').slice(1)] = a; });
+  var sections = Array.prototype.slice.call(document.querySelectorAll('section[id]'));
+  if(!('IntersectionObserver' in window)) return;
+  var visible = {};
+  var obs = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ visible[e.target.id] = e.isIntersecting ? e.intersectionRatio : 0; });
+    var best=null, bestVal=0;
+    Object.keys(visible).forEach(function(id){ if(visible[id] > bestVal){ bestVal = visible[id]; best = id; } });
+    links.forEach(function(a){ a.removeAttribute('aria-current'); });
+    if(best && map[best]) map[best].setAttribute('aria-current','true');
+  }, {rootMargin:'-10% 0px -70% 0px', threshold:[0,0.05,0.25,0.5,1]});
+  sections.forEach(function(s){ obs.observe(s); });
+})();
+</script>

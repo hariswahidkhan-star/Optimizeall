@@ -1,6 +1,6 @@
 # PCI AI Autonomous Growth OS — Phase 0/1 Specification Set
 
-**Status:** Phase 2 (Architecture) — AWAITING APPROVAL. Phase 1 delivered; five blocking prerequisites still unanswered and carried as explicit assumptions in document 08.
+**Status:** Phase 3 (UX) — AWAITING APPROVAL. Phase 1 delivered; five blocking prerequisites still unanswered and carried as explicit assumptions in document 08.
 **Source of truth:** `PCI_AI_Growth_OS.xlsx` (42 worksheets, read in full 18 Aug 2026)
 **Rule:** No application code, schema migrations, frontend, or deployment artefacts are produced until Phase 1 is explicitly approved.
 
@@ -23,6 +23,9 @@
 | 12 | [Integration Architecture](12-integration-architecture.md) | Connector manifest; health state machine; human-assisted channels as first-class; rate limiting; retry taxonomy; MVP connector set |
 | 13 | [Sequences & Workflows](13-sequences-and-workflows.md) | Seven sequence diagrams and three workflow state machines |
 | — | [`phase-2-architecture.html`](phase-2-architecture.html) | The whole of Phase 2 as a single readable document with six architecture figures (published version of documents 08–13) |
+| 14 | [Information Architecture](14-information-architecture.md) | Product stance; the three questions; ten design principles; navigation; screen inventory; cross-cutting loading, empty, error, notification, permission and mobile patterns |
+| 15 | [Screen Specifications](15-screen-specifications.md) | All 25 screens with purpose, primary user, data, actions, filters, search, tables, cards, charts, notifications, empty/error/loading states, mobile behaviour and permissions |
+| — | [`phase-3-ux.html`](phase-3-ux.html) | The whole of Phase 3 as a single readable document with five wireframes (published version of documents 14–15) |
 
 ## Requirement ID namespaces
 
