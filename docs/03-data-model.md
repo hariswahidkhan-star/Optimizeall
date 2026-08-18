@@ -182,7 +182,7 @@ authorisation query a single index seek.
 | `id` | uuid PK | |
 | `workspace_id` | uuid FK NOT NULL | |
 | `agent_key` | text NOT NULL | e.g. `seo-agent` |
-| `version` | integer NOT NULL | UNIQUE `(workspace_id, agent_key, version)` |
+| `definition_version` | integer NOT NULL | UNIQUE `(workspace_id, agent_key, definition_version)` |
 | `status` | text NOT NULL | `Draft`\|`Published`\|`Deprecated` |
 | `display_name` | text NOT NULL | |
 | `mission` | text NOT NULL | |

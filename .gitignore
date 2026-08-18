@@ -1,0 +1,39 @@
+# Build output
+[Bb]in/
+[Oo]bj/
+*.user
+*.suo
+TestResults/
+coverage/
+*.coverage
+*.trx
+
+# Node
+node_modules/
+dist/
+.vite/
+*.tsbuildinfo
+
+# Environment
+.env
+.env.local
+.env.*.local
+*.pfx
+*.p12
+
+# Editors
+.vs/
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/launch.json
+*.swp
+.DS_Store
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.example
+.terraform.lock.hcl
