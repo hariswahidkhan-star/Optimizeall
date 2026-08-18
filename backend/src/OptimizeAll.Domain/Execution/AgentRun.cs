@@ -264,13 +264,21 @@ public sealed class AgentRun : AggregateRoot<AgentRunId>, IAuditable, ITenantOwn
     public void RecordCompletionUsage(long promptTokens, long completionTokens, Money cost)
         => Budget = Budget.RecordCompletion(promptTokens, completionTokens, cost);
 
-    public ToolInvocation RecordToolInvocation(ToolInvocation invocation)
+    /// <summary>
+    /// Attaches a proposed tool call to the run's record. Deliberately does not consume budget:
+    /// the call has not been authorised yet, and a denied call must not spend the agent's
+    /// allowance — otherwise an agent could exhaust its own budget on calls it was never permitted
+    /// to make.
+    /// </summary>
+    public ToolInvocation AttachToolInvocation(ToolInvocation invocation)
     {
         Ensure.NotNull(invocation);
         _toolInvocations.Add(invocation);
-        Budget = Budget.RecordToolCall();
         return invocation;
     }
+
+    /// <summary>Consumes one unit of the tool-call budget. Called only once a call is authorised to proceed.</summary>
+    public void CountToolCall() => Budget = Budget.RecordToolCall();
 
     /// <summary>
     /// Suspends the run pending a human decision and releases the worker. The lease is dropped
