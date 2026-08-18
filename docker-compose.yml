@@ -1,0 +1,98 @@
+# Local development stack.
+#
+# Brings up the full platform — database, cache, API, workers and web — so the governance behaviour
+# can be exercised end to end. Credentials here are development-only and are deliberately obvious
+# about it; production secrets come from Key Vault via workload identity.
+
+name: optimizeall
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: devpassword
+      POSTGRES_DB: optimizeall
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./infra/docker/postgres-init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d optimizeall"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: backend/src/OptimizeAll.Api/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      # The application connects as optimizeall_app, never as the owner or a superuser. Row-level
+      # security is bypassed by both, so connecting as postgres locally would mean the isolation
+      # policies are never actually exercised in development.
+      Infrastructure__PostgresConnectionString: "Host=postgres;Port=5432;Database=optimizeall;Username=optimizeall_app;Password=devpassword"
+      Infrastructure__RedisConnectionString: "redis:6379"
+      Infrastructure__AnthropicApiKey: "${ANTHROPIC_API_KEY:-}"
+      Infrastructure__OpenAiApiKey: "${OPENAI_API_KEY:-}"
+      Infrastructure__GoogleApiKey: "${GOOGLE_API_KEY:-}"
+      Cors__AllowedOrigins__0: "http://localhost:5173"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel-collector:4317"
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  worker:
+    build:
+      context: .
+      dockerfile: backend/src/OptimizeAll.Worker/Dockerfile
+    environment:
+      DOTNET_ENVIRONMENT: Development
+      Infrastructure__PostgresConnectionString: "Host=postgres;Port=5432;Database=optimizeall;Username=optimizeall_app;Password=devpassword"
+      Infrastructure__RedisConnectionString: "redis:6379"
+      Infrastructure__AnthropicApiKey: "${ANTHROPIC_API_KEY:-}"
+      Infrastructure__OpenAiApiKey: "${OPENAI_API_KEY:-}"
+      Infrastructure__GoogleApiKey: "${GOOGLE_API_KEY:-}"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel-collector:4317"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    # Two replicas locally so the exactly-once scheduling and lease reclamation paths are exercised
+    # rather than assumed. Bugs in those only appear with more than one worker.
+    deploy:
+      replicas: 2
+
+  web:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    ports:
+      - "5173:8080"
+    depends_on:
+      - api
+
+volumes:
+  postgres-data:
+  redis-data:

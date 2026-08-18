@@ -14,11 +14,24 @@ public static class ToolRegistry
 {
     public const string KnowledgeSearch = "knowledge.search";
     public const string KnowledgeWrite = "knowledge.write";
+
+    /// <summary>
+    /// Withdrawing a document from retrieval. Irreversible in effect for agents: every future run
+    /// loses access to it, and no agent can restore it.
+    /// </summary>
+    public const string KnowledgeDeprecate = "knowledge.deprecate";
     public const string WebSearch = "web.search";
     public const string WebFetch = "web.fetch";
     public const string AnalyticsQuery = "analytics.query";
     public const string CrmRead = "crm.read";
     public const string CrmWrite = "crm.write";
+
+    /// <summary>
+    /// Merging two CRM records. Separate from <see cref="CrmWrite"/> because a merge destroys
+    /// information that cannot be recovered, and collapsing the two would let an Irreversible action
+    /// through an External-class gate.
+    /// </summary>
+    public const string CrmMerge = "crm.merge";
     public const string ContentDraft = "content.draft";
     public const string ContentPublish = "content.publish";
     public const string EmailSend = "email.send";
@@ -39,11 +52,13 @@ public static class ToolRegistry
     {
         [KnowledgeSearch] = ActionRiskClass.Read,
         [KnowledgeWrite] = ActionRiskClass.Write,
+        [KnowledgeDeprecate] = ActionRiskClass.Irreversible,
         [WebSearch] = ActionRiskClass.Read,
         [WebFetch] = ActionRiskClass.Read,
         [AnalyticsQuery] = ActionRiskClass.Read,
         [CrmRead] = ActionRiskClass.Read,
         [CrmWrite] = ActionRiskClass.External,
+        [CrmMerge] = ActionRiskClass.Irreversible,
         [ContentDraft] = ActionRiskClass.Write,
         [ContentPublish] = ActionRiskClass.External,
         [EmailSend] = ActionRiskClass.External,

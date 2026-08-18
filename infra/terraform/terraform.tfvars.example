@@ -1,0 +1,17 @@
+# Copy to <environment>.tfvars and fill in. Never commit a real tfvars file.
+
+environment = "dev"
+location    = "westeurope"
+project     = "optimizeall"
+
+container_registry_server = "youracr.azurecr.io"
+api_image                 = "youracr.azurecr.io/optimizeall/api:v1.0.0"
+worker_image              = "youracr.azurecr.io/optimizeall/worker:v1.0.0"
+web_image                 = "youracr.azurecr.io/optimizeall/web:v1.0.0"
+
+alert_email = "platform-oncall@example.com"
+
+tags = {
+  cost_centre = "engineering"
+  owner       = "platform-team"
+}

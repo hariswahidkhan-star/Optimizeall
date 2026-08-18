@@ -1,0 +1,193 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# A superseded run on the same branch has nothing left to tell us, and cancelling it returns
+# capacity to the runs that do.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+
+jobs:
+  backend:
+    name: Backend build and test
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: optimizeall_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+
+      redis:
+        image: redis:7-alpine
+        ports: ['6379:6379']
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('backend/**/*.csproj', 'backend/Directory.Packages.props') }}
+          restore-keys: nuget-${{ runner.os }}-
+
+      - name: Restore
+        working-directory: backend
+        run: dotnet restore OptimizeAll.sln
+
+      # TreatWarningsAsErrors is on, so this also fails the build on a vulnerable transitive
+      # package. That is the point: a known CVE should stop a release, not appear in a report
+      # nobody reads.
+      - name: Build
+        working-directory: backend
+        run: dotnet build OptimizeAll.sln --configuration Release --no-restore
+
+      - name: Test
+        working-directory: backend
+        run: >-
+          dotnet test OptimizeAll.sln
+          --configuration Release
+          --no-build
+          --logger "trx;LogFileName=results.trx"
+          --collect:"XPlat Code Coverage"
+          --results-directory ./TestResults
+        env:
+          ConnectionStrings__Postgres: "Host=localhost;Port=5432;Database=optimizeall_test;Username=postgres;Password=postgres"
+          ConnectionStrings__Redis: "localhost:6379"
+
+      - name: Verify migrations apply to an empty database
+        working-directory: backend
+        run: |
+          dotnet tool restore
+          dotnet dotnet-ef database update \
+            --project src/OptimizeAll.Infrastructure \
+            --startup-project src/OptimizeAll.Infrastructure
+        env:
+          OPTIMIZEALL_DESIGN_CONNECTION: "Host=localhost;Port=5432;Database=optimizeall_test;Username=postgres;Password=postgres"
+
+      # A migration that cannot be reversed is a migration that cannot be rolled back under
+      # incident pressure, which is exactly when it matters.
+      - name: Verify the latest migration is reversible
+        working-directory: backend
+        run: |
+          dotnet dotnet-ef database update InitialSchema \
+            --project src/OptimizeAll.Infrastructure \
+            --startup-project src/OptimizeAll.Infrastructure
+        env:
+          OPTIMIZEALL_DESIGN_CONNECTION: "Host=localhost;Port=5432;Database=optimizeall_test;Username=postgres;Password=postgres"
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-test-results
+          path: backend/TestResults/**
+          retention-days: 14
+
+  frontend:
+    name: Frontend build and test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      # ci rather than install: fails when the lockfile and manifest disagree instead of quietly
+      # resolving something the lockfile never recorded.
+      - name: Install
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Test
+        run: npm run test
+
+      - name: Build
+        run: npm run build
+
+  containers:
+    name: Container images build
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    needs: [backend, frontend]
+
+    strategy:
+      matrix:
+        include:
+          - name: api
+            dockerfile: backend/src/OptimizeAll.Api/Dockerfile
+          - name: worker
+            dockerfile: backend/src/OptimizeAll.Worker/Dockerfile
+          - name: web
+            dockerfile: frontend/Dockerfile
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Build ${{ matrix.name }}
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ${{ matrix.dockerfile }}
+          push: false
+          load: true
+          tags: optimizeall/${{ matrix.name }}:${{ github.sha }}
+          cache-from: type=gha,scope=${{ matrix.name }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.name }}
+
+      - name: Scan ${{ matrix.name }} for vulnerabilities
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: optimizeall/${{ matrix.name }}:${{ github.sha }}
+          format: table
+          exit-code: '1'
+          ignore-unfixed: true
+          severity: HIGH,CRITICAL

@@ -50,11 +50,13 @@ Tools are declared centrally and granted per agent. Grants are a closed allow-li
 |---|---|---|
 | `knowledge.search` | Read | Semantic search over the tenant knowledge base |
 | `knowledge.write` | Write | Add or update a knowledge document |
+| `knowledge.deprecate` | Irreversible | Withdraw a document from retrieval; no agent can restore it |
 | `web.search` | Read | External web search |
 | `web.fetch` | Read | Fetch and extract a public URL |
 | `analytics.query` | Read | Query the platform's metric store |
 | `crm.read` | Read | Read CRM records |
 | `crm.write` | External | Create or update CRM records |
+| `crm.merge` | Irreversible | Merge two CRM records, destroying information that cannot be recovered |
 | `content.draft` | Write | Produce a content draft artefact |
 | `content.publish` | External | Publish to a CMS or channel |
 | `email.send` | External | Send email on the tenant's behalf |
@@ -163,7 +165,7 @@ a governance failure, not a feature.
 | **Mission** | Own the marketing plan: positioning, audience, channel mix, and campaign themes. |
 | **Inputs** | `MarketContext { icp, positioning, competitors, budget, priorPerformance }` |
 | **Outputs** | `MarketingPlan { themes[], channels[], calendar, budgetAllocation, successMetrics }` |
-| **Tools** | `web.search`, `knowledge.search`, `analytics.query`, `agent.delegate`, `report.generate` |
+| **Tools** | `web.search`, `knowledge.search`, `analytics.query`, `agent.delegate`, `report.generate`, `ads.spend` |
 | **Permissions** | `campaign:draft`, `kpi:read`, `knowledge:read` |
 | **Memory** | episodic (campaign performance) + semantic (brand guidelines, ICP) |
 | **Schedule** | Monthly plan; weekly adjustment review |
@@ -186,7 +188,7 @@ a governance failure, not a feature.
 | **Approval** | Any change to a live site is `External` — Operator approval. Recommendations are `Write`. |
 | **KPIs** | Organic sessions, ranking positions for target set, indexation health, Core Web Vitals |
 | **Escalation** | Detected penalty or de-indexation → immediate Critical notification, do not wait for cadence |
-| **Risk class** | `External` |
+| **Risk class** | `Write` — this agent recommends; changes to a live site are delegated to the agent that owns that surface, and gated there |
 
 ### 6.3 `content-planning-agent`
 
@@ -315,7 +317,7 @@ deletion request can be honoured at the source level.
 | **Approval** | Any outbound contact is gated. Any commercial term is `Financial` — Tenant Owner approval. |
 | **KPIs** | Qualified partner conversations, partnerships signed, sourced pipeline value |
 | **Escalation** | Exclusivity, revenue share, or IP terms → mandatory `legal-agent` review before human approval |
-| **Risk class** | `Financial` |
+| **Risk class** | `External` — commercial commitment routes to `finance-agent` and human counsel rather than being made here |
 
 ### 6.10 `pr-agent`
 
@@ -354,7 +356,7 @@ practice, so it always waits for a human.
 | **Approval** | Every outbound communication is gated. Any discount or non-standard term is `Financial`. |
 | **KPIs** | Stage conversion, cycle length, forecast accuracy, win rate |
 | **Escalation** | Discount beyond policy or non-standard terms → `finance-agent` and `legal-agent` before human approval |
-| **Risk class** | `Financial` |
+| **Risk class** | `External` — monetary commitment is made by `finance-agent`, not here |
 
 ### 7.2 `crm-agent`
 
@@ -363,7 +365,7 @@ practice, so it always waits for a human.
 | **Mission** | Keep CRM data complete, accurate, deduplicated, and compliant. |
 | **Inputs** | `CrmHygieneScope { objects[], rules[], dedupeStrategy, enrichmentSources }` |
 | **Outputs** | `HygieneReport { corrections[], merges[], enrichments[], dataQualityScore }` |
-| **Tools** | `crm.read`, `crm.write`, `web.fetch`, `knowledge.search` |
+| **Tools** | `crm.read`, `crm.write`, `crm.merge`, `web.fetch`, `knowledge.search` |
 | **Permissions** | `crm:read`, `crm:write`, `crm:merge` |
 | **Memory** | episodic + semantic |
 | **Schedule** | Nightly 02:00 |
@@ -403,7 +405,7 @@ practice, so it always waits for a human.
 | **Mission** | Support hiring, onboarding, and people operations without ever deciding about a person. |
 | **Inputs** | `HrContext { openRoles[], candidates[], onboardingPlans[], policies }` |
 | **Outputs** | `HrArtefacts { jobDescriptions[], screeningSummaries[], onboardingChecklists[], policyDrafts[] }` |
-| **Tools** | `content.draft`, `knowledge.search`, `ticket.write`, `report.generate` |
+| **Tools** | `content.draft`, `knowledge.search`, `ticket.write`, `report.generate`, `email.send` |
 | **Permissions** | `hr:draft`, `knowledge:read`, `ticket:write` |
 | **Memory** | episodic + semantic. **Candidate-identifying data is excluded from episodic memory.** |
 | **Schedule** | Event-driven; weekly pipeline summary |
@@ -429,7 +431,7 @@ summarise against stated criteria; a human decides. Protected characteristics ar
 | **Approval** | Output is advisory. It never constitutes legal advice or authorises execution. |
 | **KPIs** | Issue detection rate against human counsel review, false-negative rate on High severity |
 | **Escalation** | Any High severity finding → mandatory human counsel review; the workflow cannot proceed without it |
-| **Risk class** | `Read` |
+| **Risk class** | `Write` — it drafts suggested language as a platform artefact; it commits nothing |
 
 **Disclaimer, surfaced in the UI on every output.** Automated review is a triage aid, not legal
 advice, and does not replace qualified counsel.
@@ -556,8 +558,8 @@ source found" is a valid, expected output.
 | **Mission** | Turn platform and business data into correct, decision-grade analysis. |
 | **Inputs** | `AnalysisRequest { question, datasets[], dimensions[], period, comparisonBasis }` |
 | **Outputs** | `Analysis { metrics[], trends[], anomalies[], drivers[], caveats[], confidence }` |
-| **Tools** | `analytics.query`, `knowledge.search`, `report.generate` |
-| **Permissions** | `analytics:read`, `kpi:read`, `report:create` |
+| **Tools** | `analytics.query`, `knowledge.search`, `report.generate`, `data.export` |
+| **Permissions** | `analytics:read`, `kpi:read`, `report:create`, `analytics:export` |
 | **Memory** | episodic (metric definitions previously agreed) + semantic |
 | **Schedule** | Daily 05:00 aggregation; event-driven for ad-hoc questions |
 | **Approval** | None for analysis. Data export is `External` — always gated. |
@@ -612,7 +614,7 @@ never applies to commitments, refunds, or legal matters.
 | **Mission** | Keep the tenant knowledge base accurate, current, deduplicated, and well-governed. |
 | **Inputs** | `KnowledgeScope { sources[], taxonomy, freshnessPolicy, retentionPolicy }` |
 | **Outputs** | `KnowledgeUpdate { ingested[], updated[], deprecated[], conflicts[], taxonomyChanges[] }` |
-| **Tools** | `knowledge.search`, `knowledge.write`, `web.fetch`, `report.generate` |
+| **Tools** | `knowledge.search`, `knowledge.write`, `knowledge.deprecate`, `web.fetch`, `report.generate` |
 | **Permissions** | `knowledge:read`, `knowledge:write`, `knowledge:deprecate` |
 | **Memory** | episodic (retrieval effectiveness) + semantic |
 | **Schedule** | Nightly 01:00 ingestion; weekly quality review |
