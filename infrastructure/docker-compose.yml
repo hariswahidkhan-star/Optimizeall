@@ -1,0 +1,52 @@
+# Local development: `docker compose up` brings up everything the API needs.
+#
+# The api container runs migrations before serving, so a fresh checkout is one
+# command away from a working system.
+
+name: pciai
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: pciai
+    ports: ["5432:5432"]
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./initdb:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    ports: ["6379:6379"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  api:
+    build:
+      context: ..
+      dockerfile: infrastructure/Dockerfile.api
+    depends_on:
+      postgres: {condition: service_healthy}
+      redis: {condition: service_healthy}
+    environment:
+      PCIAI_ENVIRONMENT: local
+      PCIAI_DATABASE_URL: postgresql+asyncpg://pciai_app:pciai_app@postgres:5432/pciai
+      PCIAI_MIGRATION_DATABASE_URL: postgresql+asyncpg://pciai_owner:pciai_owner@postgres:5432/pciai
+    ports: ["8080:8080"]
+    command: >
+      sh -c "python -m alembic upgrade head &&
+             python -m uvicorn pciai.main:app --host 0.0.0.0 --port 8080"
+
+volumes:
+  pgdata:

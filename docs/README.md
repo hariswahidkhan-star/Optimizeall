@@ -1,6 +1,6 @@
 # PCI AI Autonomous Growth OS — Phase 0/1 Specification Set
 
-**Status:** Phase 5 (Agent Design) — AWAITING APPROVAL. Phase 1 delivered; five blocking prerequisites still unanswered and carried as explicit assumptions in document 08.
+**Status:** Phase 6 delivered; build slice 1 implemented and passing. Specifications 01–24 await approval; slice 1 is running code. Phase 1 delivered; five blocking prerequisites still unanswered and carried as explicit assumptions in document 08.
 **Source of truth:** `PCI_AI_Growth_OS.xlsx` (42 worksheets, read in full 18 Aug 2026)
 **Rule:** No application code, schema migrations, frontend, or deployment artefacts are produced until Phase 1 is explicitly approved.
 
@@ -36,6 +36,8 @@
 | 22 | [System Prompt Bodies](22-agent-prompts.md) | Layer-2 prompt text for all 24 agents |
 | 23 | [Evaluation & Test Cases](23-evaluation-and-tests.md) | Scoring method by criterion type; 15 adversarial cases; golden and boundary cases per agent; regression-set discipline; what evaluation cannot tell you |
 | — | [`phase-5-agents.html`](phase-5-agents.html) | The whole of Phase 5 as a single readable document with two figures (published version of documents 20–23) |
+| 24 | [Workflow Catalogue](24-workflow-catalogue.md) | Phase 6 — 40 workflows with source, trigger, agents, steps, conditions, approvals, failure path, retry, KPI, duration and cost; 16 enabled at launch, 24 specified and disabled |
+| 25 | [Build Slice 1](25-build-slice-1.md) | Authentication, organisation and RBAC: files, migrations, tests, run commands, verification performed, and the limitations that remain |
 
 ## Requirement ID namespaces
 
