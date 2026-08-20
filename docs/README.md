@@ -1,6 +1,6 @@
 # PCI AI Autonomous Growth OS — Phase 0/1 Specification Set
 
-**Status:** Phase 4 (Data & API) — AWAITING APPROVAL. Phase 1 delivered; five blocking prerequisites still unanswered and carried as explicit assumptions in document 08.
+**Status:** Phase 5 (Agent Design) — AWAITING APPROVAL. Phase 1 delivered; five blocking prerequisites still unanswered and carried as explicit assumptions in document 08.
 **Source of truth:** `PCI_AI_Growth_OS.xlsx` (42 worksheets, read in full 18 Aug 2026)
 **Rule:** No application code, schema migrations, frontend, or deployment artefacts are produced until Phase 1 is explicitly approved.
 
@@ -31,6 +31,11 @@
 | 18 | [Auth, Events & Webhooks](18-auth-events-webhooks.md) | Authentication per principal; the seven authorisation layers concretely; permission set and role matrix; 23 domain events; inbound and reserved outbound webhook architecture |
 | 19 | [Queues, Caching & Vectors](19-queues-caching-vectors.md) | Six queue classes; the version-keyed caching rule and what is never cached; chunking, retrieval, model-change and version-awareness for vector storage |
 | — | [`phase-4-data-api.html`](phase-4-data-api.html) | The whole of Phase 4 as a single readable document with three figures (published version of documents 16–19) |
+| 20 | [Agent Foundations](20-agent-foundations.md) | Four-layer prompt architecture; the standing preamble in full; the universal output envelope; model task classes; ceilings; shared failure, retry and escalation defaults; the evaluation harness |
+| 21 | [Agent Specifications](21-agent-specifications.md) | All 24 agents with role, objectives, contracts, tools, permissions, knowledge, memory, model, budget, schedule, trigger, workflow, approval, escalation and evaluation criteria |
+| 22 | [System Prompt Bodies](22-agent-prompts.md) | Layer-2 prompt text for all 24 agents |
+| 23 | [Evaluation & Test Cases](23-evaluation-and-tests.md) | Scoring method by criterion type; 15 adversarial cases; golden and boundary cases per agent; regression-set discipline; what evaluation cannot tell you |
+| — | [`phase-5-agents.html`](phase-5-agents.html) | The whole of Phase 5 as a single readable document with two figures (published version of documents 20–23) |
 
 ## Requirement ID namespaces
 
