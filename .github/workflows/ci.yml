@@ -21,7 +21,7 @@ jobs:
 
     env:
       PGPASSWORD: postgres
-      PYTHONPATH: apps/api/src
+      PYTHONPATH: ${{ github.workspace }}/apps/api/src
       PCIAI_ENVIRONMENT: test
       PCIAI_DATABASE_URL: postgresql+asyncpg://pciai_app:pciai_app@127.0.0.1:5432/pciai_test
       PCIAI_MIGRATION_DATABASE_URL: postgresql+asyncpg://pciai_owner:pciai_owner@127.0.0.1:5432/pciai_test

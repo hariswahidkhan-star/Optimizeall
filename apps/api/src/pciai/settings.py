@@ -26,7 +26,7 @@ class Settings(BaseSettings):
 
     # Dev token issuer. In staging and production the verifier is OIDC/JWKS and this
     # secret is unused; the validator below refuses the default outside local/test.
-    dev_jwt_secret: str = "dev-only-not-a-secret"
+    dev_jwt_secret: str = "dev-only-not-a-secret-change-me-please"
     dev_jwt_issuer: str = "pciai-dev"
     access_token_ttl_seconds: int = 900
 
@@ -47,7 +47,7 @@ class Settings(BaseSettings):
     def verify_startup(self) -> None:
         """Fail fast on a configuration that must not run in this environment."""
         if self.environment in ("staging", "production"):
-            if self.dev_jwt_secret == "dev-only-not-a-secret":
+            if self.dev_jwt_secret == "dev-only-not-a-secret-change-me-please":
                 raise RuntimeError(
                     "PCIAI_DEV_JWT_SECRET is at its default value outside local/test"
                 )

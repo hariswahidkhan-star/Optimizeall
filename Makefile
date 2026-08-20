@@ -1,6 +1,8 @@
 # PCI AI Autonomous Growth OS
 API := apps/api
-export PYTHONPATH := $(API)/src
+# Absolute: every target below changes directory, and a relative path would
+# silently resolve against the wrong root.
+export PYTHONPATH := $(CURDIR)/$(API)/src
 
 .DEFAULT_GOAL := help
 .PHONY: help install db-roles db-create migrate seed run test lint format typecheck check clean

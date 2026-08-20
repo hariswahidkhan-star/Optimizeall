@@ -137,7 +137,23 @@ Run in this environment against PostgreSQL 16.13, not described:
 6. **No web front end.** Phase 3 specified twenty-five screens; the API is the contract they will consume. The first screens land after the approval engine, because an approval inbox with nothing to approve is a demo rather than a slice.
 7. **`row_version` is returned as an ETag but `If-Match` is not yet enforced** on `PATCH`. The contract is specified in Phase 4 §17.1; the enforcement lands in slice 2 with the first concurrent-edit surface.
 
-## 25.10 Next slice
+## 25.10 A defect found after the first commit
+
+The first push contained a real fault: `PYTHONPATH` was set as a *relative* path in
+the Makefile and CI, while every target changes directory — so `make test` and the
+CI test step would both have failed to import the package. The suite passed locally
+only because I had exported an absolute path by hand.
+
+Fixed by removing the dependency entirely: pytest now resolves the package through
+`pythonpath = ["src"]` in its own configuration, and the Makefile and workflow use
+absolute paths. Verified by running `make check` from the repository root with
+`PYTHONPATH` explicitly unset — lint, strict types and 49 tests, clean.
+
+Recorded here rather than quietly amended, because "it works on my machine because
+of an environment variable I set earlier" is precisely the class of defect a build
+log exists to catch.
+
+## 25.11 Next slice
 
 Per the vertical order: **agent registry → scheduler → job execution → model gateway → one working agent → one working workflow → approval engine.**
 
