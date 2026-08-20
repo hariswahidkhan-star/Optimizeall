@@ -1,6 +1,6 @@
 # PCI AI Autonomous Growth OS — Phase 0/1 Specification Set
 
-**Status:** Phase 3 (UX) — AWAITING APPROVAL. Phase 1 delivered; five blocking prerequisites still unanswered and carried as explicit assumptions in document 08.
+**Status:** Phase 4 (Data & API) — AWAITING APPROVAL. Phase 1 delivered; five blocking prerequisites still unanswered and carried as explicit assumptions in document 08.
 **Source of truth:** `PCI_AI_Growth_OS.xlsx` (42 worksheets, read in full 18 Aug 2026)
 **Rule:** No application code, schema migrations, frontend, or deployment artefacts are produced until Phase 1 is explicitly approved.
 
@@ -26,6 +26,11 @@
 | 14 | [Information Architecture](14-information-architecture.md) | Product stance; the three questions; ten design principles; navigation; screen inventory; cross-cutting loading, empty, error, notification, permission and mobile patterns |
 | 15 | [Screen Specifications](15-screen-specifications.md) | All 25 screens with purpose, primary user, data, actions, filters, search, tables, cards, charts, notifications, empty/error/loading states, mobile behaviour and permissions |
 | — | [`phase-3-ux.html`](phase-3-ux.html) | The whole of Phase 3 as a single readable document with five wireframes (published version of documents 14–15) |
+| 16 | [Data Model & Schema](16-data-model.md) | Conventions; 17 schemas; row-level security; DDL with the workbook's rules as constraints and generated columns; lineage; indexes; partitioning; migration strategy |
+| 17 | [API Design](17-api-design.md) | API architecture; error model; idempotency at two levels; ~70 endpoints with method, route, purpose, auth, permission, request, response, validation, errors and idempotency |
+| 18 | [Auth, Events & Webhooks](18-auth-events-webhooks.md) | Authentication per principal; the seven authorisation layers concretely; permission set and role matrix; 23 domain events; inbound and reserved outbound webhook architecture |
+| 19 | [Queues, Caching & Vectors](19-queues-caching-vectors.md) | Six queue classes; the version-keyed caching rule and what is never cached; chunking, retrieval, model-change and version-awareness for vector storage |
+| — | [`phase-4-data-api.html`](phase-4-data-api.html) | The whole of Phase 4 as a single readable document with three figures (published version of documents 16–19) |
 
 ## Requirement ID namespaces
 

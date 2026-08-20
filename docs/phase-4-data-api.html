@@ -1,0 +1,996 @@
+<title>PCI AI Growth OS Phase 4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --paper:#F4F6F5;
+  --surface:#FFFFFF;
+  --surface-2:#EDF1EF;
+  --ink:#16211E;
+  --ink-2:#3D4E49;
+  --ink-3:#697A75;
+  --rule:#D5DDDA;
+  --rule-strong:#B6C3BF;
+  --accent:#0F5F52;
+  --accent-soft:#DCEBE7;
+  --warn:#8A6212;
+  --warn-soft:#F5EBD6;
+  --crit:#9B3A2E;
+  --crit-soft:#F6E2DE;
+  --ok:#2C6E49;
+  --ok-soft:#DFEDE4;
+
+  --f-display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --f-body:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --f-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+
+  --nav-w:16.5rem;
+  --measure:70ch;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#0D1412;
+    --surface:#141D1A;
+    --surface-2:#1B2724;
+    --ink:#E3EAE7;
+    --ink-2:#B4C2BE;
+    --ink-3:#849791;
+    --rule:#2A3733;
+    --rule-strong:#3C4B47;
+    --accent:#5BBBA6;
+    --accent-soft:#12332C;
+    --warn:#D9AC5B;
+    --warn-soft:#33290F;
+    --crit:#E28879;
+    --crit-soft:#37201B;
+    --ok:#6FBF8F;
+    --ok-soft:#14301F;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0D1412;
+  --surface:#141D1A;
+  --surface-2:#1B2724;
+  --ink:#E3EAE7;
+  --ink-2:#B4C2BE;
+  --ink-3:#849791;
+  --rule:#2A3733;
+  --rule-strong:#3C4B47;
+  --accent:#5BBBA6;
+  --accent-soft:#12332C;
+  --warn:#D9AC5B;
+  --warn-soft:#33290F;
+  --crit:#E28879;
+  --crit-soft:#37201B;
+  --ok:#6FBF8F;
+  --ok-soft:#14301F;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--f-body);
+  font-size:16.5px;
+  line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:var(--accent);text-underline-offset:.18em;text-decoration-thickness:.06em}
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+
+.skip{position:absolute;left:-9999px;top:0}
+.skip:focus{left:.75rem;top:.75rem;z-index:99;background:var(--surface);color:var(--ink);padding:.5rem .8rem;border:1px solid var(--rule-strong)}
+
+/* ---------- shell ---------- */
+.shell{display:grid;grid-template-columns:var(--nav-w) minmax(0,1fr);gap:0;align-items:start}
+
+/* ---------- nav ---------- */
+.nav{
+  position:sticky;top:0;height:100vh;overflow-y:auto;
+  border-right:1px solid var(--rule);
+  background:var(--surface);
+  padding:1.9rem 1.15rem 3rem 1.5rem;
+  font-family:var(--f-display);
+}
+.brandmark{font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+.brandname{font-size:1.06rem;font-weight:700;line-height:1.25;margin:.45rem 0 .1rem;letter-spacing:-.01em}
+.brandsub{font-size:.78rem;color:var(--ink-3);line-height:1.4}
+.navstatus{
+  margin:1.15rem 0 1.3rem;padding:.5rem .6rem;
+  background:var(--warn-soft);color:var(--warn);
+  font-size:.68rem;letter-spacing:.09em;text-transform:uppercase;font-weight:600;
+  border-left:2px solid currentColor;
+}
+.navlist{display:flex;flex-direction:column;gap:.06rem;margin:0;padding:0;list-style:none}
+.navlist a{
+  display:grid;grid-template-columns:1.5rem 1fr;gap:.4rem;
+  padding:.3rem .35rem;border-radius:2px;
+  font-size:.82rem;line-height:1.32;color:var(--ink-2);text-decoration:none;
+}
+.navlist a:hover{background:var(--surface-2);color:var(--ink)}
+.navlist a .n{font-family:var(--f-mono);font-size:.68rem;color:var(--ink-3);padding-top:.16em;font-variant-numeric:tabular-nums}
+.navlist a[aria-current="true"]{background:var(--accent-soft);color:var(--ink);font-weight:600}
+.navlist a[aria-current="true"] .n{color:var(--accent)}
+.navdiv{height:1px;background:var(--rule);margin:.85rem 0}
+
+/* ---------- main ---------- */
+main{padding:0 clamp(1.1rem,3.4vw,3.4rem) 7rem;min-width:0}
+.inner{max-width:76rem;margin:0 auto}
+.prose{max-width:var(--measure)}
+
+/* masthead */
+.masthead{padding:3.4rem 0 1.6rem;border-bottom:2px solid var(--ink)}
+.eyebrow{font-family:var(--f-display);font-size:.7rem;letter-spacing:.19em;text-transform:uppercase;color:var(--accent);font-weight:600}
+h1{
+  font-family:var(--f-display);font-weight:700;letter-spacing:-.026em;
+  font-size:clamp(2.1rem,5.2vw,3.4rem);line-height:1.03;margin:.55rem 0 .7rem;text-wrap:balance;
+}
+.standfirst{font-size:1.11rem;line-height:1.55;color:var(--ink-2);max-width:56ch;margin:0}
+
+/* doc control block */
+.control{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(11rem,1fr));
+  gap:0;border:1px solid var(--rule-strong);margin:1.9rem 0 0;background:var(--surface);
+}
+.control div{padding:.72rem .85rem;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.control div:last-child{border-right:none}
+.control dt{font-family:var(--f-display);font-size:.63rem;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);font-weight:600;margin:0 0 .25rem}
+.control dd{margin:0;font-family:var(--f-display);font-size:.9rem;font-weight:500;line-height:1.3}
+
+/* sections */
+section{padding-top:3.6rem;scroll-margin-top:1rem}
+.sechead{display:flex;align-items:baseline;gap:.8rem;border-top:1px solid var(--rule-strong);padding-top:.75rem;margin-bottom:1.15rem}
+.secnum{font-family:var(--f-mono);font-size:.78rem;color:var(--accent);font-weight:600;font-variant-numeric:tabular-nums;padding-top:.35em}
+h2{font-family:var(--f-display);font-weight:700;letter-spacing:-.018em;font-size:clamp(1.42rem,2.7vw,1.92rem);line-height:1.14;margin:0;text-wrap:balance}
+h3{font-family:var(--f-display);font-weight:600;font-size:1.08rem;letter-spacing:-.005em;margin:2.1rem 0 .55rem;text-wrap:balance}
+h4{font-family:var(--f-display);font-weight:600;font-size:.72rem;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);margin:1.7rem 0 .5rem}
+p{margin:0 0 .95rem}
+ul,ol{margin:0 0 1rem;padding-left:1.15rem}
+li{margin-bottom:.32rem}
+strong{font-weight:600}
+em{font-style:italic}
+
+/* callouts */
+.note{
+  border-left:3px solid var(--accent);background:var(--surface);
+  padding:.9rem 1.1rem;margin:1.3rem 0;max-width:var(--measure);
+}
+.note.warn{border-left-color:var(--warn);background:var(--warn-soft)}
+.note.crit{border-left-color:var(--crit);background:var(--crit-soft)}
+.note p:last-child{margin-bottom:0}
+.note .lbl{font-family:var(--f-display);font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--accent);display:block;margin-bottom:.35rem}
+.note.warn .lbl{color:var(--warn)}
+.note.crit .lbl{color:var(--crit)}
+
+/* tables */
+.scroller{overflow-x:auto;margin:1.15rem 0 1.5rem;border:1px solid var(--rule);background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-family:var(--f-display);font-size:.83rem;line-height:1.42}
+caption{text-align:left;font-family:var(--f-display);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);font-weight:600;padding:.7rem .85rem .1rem}
+th,td{padding:.52rem .8rem;text-align:left;vertical-align:top;border-bottom:1px solid var(--rule)}
+thead th{
+  font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:600;
+  background:var(--surface-2);border-bottom:1px solid var(--rule-strong);white-space:nowrap;position:sticky;top:0;
+}
+tbody tr:last-child td{border-bottom:none}
+td.num,th.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+.rid{font-family:var(--f-mono);font-size:.76rem;font-weight:600;color:var(--accent);white-space:nowrap;font-variant-numeric:tabular-nums}
+code{font-family:var(--f-mono);font-size:.86em;background:var(--surface-2);padding:.08em .32em;border-radius:2px}
+
+/* pills */
+.pill{
+  display:inline-block;font-family:var(--f-display);font-size:.65rem;font-weight:600;
+  letter-spacing:.07em;text-transform:uppercase;padding:.14rem .44rem;white-space:nowrap;border-radius:2px;
+}
+.p-ok{background:var(--ok-soft);color:var(--ok)}
+.p-warn{background:var(--warn-soft);color:var(--warn)}
+.p-crit{background:var(--crit-soft);color:var(--crit)}
+.p-neut{background:var(--surface-2);color:var(--ink-2)}
+.p-acc{background:var(--accent-soft);color:var(--accent)}
+
+/* severity stripe rows */
+tr.sev-h td:first-child{box-shadow:inset 3px 0 0 var(--crit)}
+tr.sev-m td:first-child{box-shadow:inset 3px 0 0 var(--warn)}
+tr.sev-l td:first-child{box-shadow:inset 3px 0 0 var(--ok)}
+tr.sev-x td:first-child{box-shadow:inset 3px 0 0 var(--ink)}
+
+/* stat strip */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(8.2rem,1fr));gap:0;border:1px solid var(--rule-strong);margin:1.4rem 0 1.8rem;background:var(--surface)}
+.stat{padding:.9rem .95rem;border-right:1px solid var(--rule)}
+.stat:last-child{border-right:none}
+.stat b{display:block;font-family:var(--f-display);font-weight:700;font-size:1.55rem;letter-spacing:-.02em;line-height:1;font-variant-numeric:tabular-nums}
+.stat span{display:block;font-family:var(--f-display);font-size:.67rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:600;margin-top:.4rem;line-height:1.3}
+
+/* decision cards */
+.dec{border:1px solid var(--rule);background:var(--surface);margin:1rem 0;padding:1rem 1.15rem}
+.dec .id{font-family:var(--f-mono);font-size:.72rem;font-weight:600;color:var(--accent)}
+.dec h3{margin:.25rem 0 .7rem;font-size:1.02rem}
+.dec dl{display:grid;grid-template-columns:7.2rem 1fr;gap:.3rem .9rem;margin:0;font-family:var(--f-display);font-size:.85rem;line-height:1.5}
+.dec dt{font-size:.65rem;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3);font-weight:600;padding-top:.28em}
+.dec dd{margin:0}
+
+/* agent grid */
+.agents{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);margin:1.1rem 0 1.6rem}
+.agent{background:var(--surface);padding:.8rem .9rem}
+.agent .code{font-family:var(--f-mono);font-size:.72rem;font-weight:600;color:var(--accent)}
+.agent .nm{font-family:var(--f-display);font-weight:600;font-size:.94rem;margin:.15rem 0 .3rem;line-height:1.25}
+.agent p{font-size:.82rem;font-family:var(--f-display);color:var(--ink-2);margin:0;line-height:1.45}
+.divhead{font-family:var(--f-display);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:700;margin:1.5rem 0 .5rem}
+
+footer{margin-top:4.5rem;border-top:2px solid var(--ink);padding:1.5rem 0 0;font-family:var(--f-display);font-size:.83rem;color:var(--ink-3);max-width:var(--measure)}
+
+@media (max-width:900px){
+  .shell{grid-template-columns:1fr}
+  .nav{position:static;height:auto;border-right:none;border-bottom:1px solid var(--rule-strong);padding:1.3rem 1.2rem}
+  .navlist{display:grid;grid-template-columns:repeat(auto-fit,minmax(13rem,1fr));gap:.05rem}
+  thead th{position:static}
+  body{font-size:16px}
+}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+html{scroll-behavior:smooth}
+</style>
+<style>
+figure{margin:1.5rem 0 1.9rem}
+figure svg{display:block;width:100%;max-width:100%;height:auto;color:var(--ink-2)}
+figcaption{font-family:var(--f-display);font-size:.79rem;line-height:1.45;color:var(--ink-3);margin-top:.65rem;max-width:64ch}
+figcaption b{color:var(--ink-2);font-weight:600}
+.figbox{border:1px solid var(--rule);background:var(--surface);padding:1.1rem 1.2rem .9rem}
+svg text{font-family:"Archivo","Helvetica Neue",Arial,sans-serif}
+.codeblk{border:1px solid var(--rule);background:var(--surface-2);padding:.9rem 1rem;overflow-x:auto;margin:1.1rem 0 1.5rem}
+.codeblk pre{margin:0;font-family:var(--f-mono);font-size:.755rem;line-height:1.62;white-space:pre}
+.codeblk .cap{font-family:var(--f-display);font-size:.63rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);font-weight:600;margin:0 0 .55rem}
+.ep{border:1px solid var(--rule);background:var(--surface);margin:1rem 0;padding:.95rem 1.1rem}
+.ep .route{font-family:var(--f-mono);font-size:.82rem;font-weight:600;color:var(--ink)}
+.ep .verb{display:inline-block;font-family:var(--f-mono);font-size:.68rem;font-weight:600;padding:.1rem .38rem;border-radius:2px;background:var(--accent-soft);color:var(--accent);margin-right:.45rem}
+.ep dl{display:grid;grid-template-columns:7.2rem 1fr;gap:.28rem .9rem;margin:.65rem 0 0;font-family:var(--f-display);font-size:.83rem;line-height:1.5}
+.ep dt{font-size:.62rem;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3);font-weight:600;padding-top:.3em}
+.ep dd{margin:0}
+</style>
+
+<a class="skip" href="#main">Skip to content</a>
+<div class="shell">
+<nav class="nav" aria-label="Data and API contents">
+  <div class="brandmark">PCI AI</div>
+  <div class="brandname">Autonomous Growth OS</div>
+  <div class="brandsub">Phase 4 — Data &amp; API Design</div>
+  <div class="navstatus">Awaiting approval</div>
+  <ul class="navlist">
+    <li><a href="#s0"><span class="n">00</span><span>Assumptions Carried</span></a></li>
+    <li><a href="#s1"><span class="n">01</span><span>Conventions &amp; Schema Map</span></a></li>
+    <li><a href="#s2"><span class="n">02</span><span>Invariants as Constraints</span></a></li>
+    <li><a href="#s3"><span class="n">03</span><span>Lineage &amp; Audit</span></a></li>
+    <li><a href="#s4"><span class="n">04</span><span>Indexes &amp; Partitioning</span></a></li>
+    <li><a href="#s5"><span class="n">05</span><span>Migration Strategy</span></a></li>
+    <li><a href="#s6"><span class="n">06</span><span>API Architecture</span></a></li>
+    <li><a href="#s7"><span class="n">07</span><span>Endpoint Contracts</span></a></li>
+    <li><a href="#s8"><span class="n">08</span><span>Auth &amp; Authorisation</span></a></li>
+    <li><a href="#s9"><span class="n">09</span><span>Events &amp; Webhooks</span></a></li>
+    <li><a href="#s10"><span class="n">10</span><span>Queues, Cache, Vectors</span></a></li>
+  </ul>
+  <div class="navdiv"></div>
+  <ul class="navlist">
+    <li><a href="#s11"><span class="n">A</span><span>Phase 5 Prerequisites</span></a></li>
+  </ul>
+</nav>
+
+<main id="main">
+<div class="inner">
+
+<header class="masthead">
+  <div class="eyebrow">Phase 4 deliverable · Design only</div>
+  <h1>Schema and Contracts</h1>
+  <p class="standfirst">The data model, the API surface, and the point of this phase: turning the workbook's rules from things code must remember into things the database will not permit.</p>
+  <dl class="control">
+    <div><dt>Status</dt><dd>Phase 4 — awaiting approval</dd></div>
+    <div><dt>Schemas</dt><dd>17 across 13 modules</dd></div>
+    <div><dt>Partitioned tables</dt><dd>3, monthly</dd></div>
+    <div><dt>Endpoints</dt><dd>~70, one internal gate</dd></div>
+    <div><dt>Domain events</dt><dd>23</dd></div>
+    <div><dt>Date</dt><dd>18 August 2026</dd></div>
+  </dl>
+</header>
+
+<section id="s0">
+  <div class="sechead"><span class="secnum">00</span><h2>Assumptions Carried</h2></div>
+  <div class="scroller"><table>
+    <thead><tr><th>Prereq</th><th>Assumption</th><th>Impact if different</th></tr></thead>
+    <tbody>
+      <tr><td class="rid">P4-02<br>Volumes</td><td><strong>A-07</strong> At 12 months: ~39k leads · ~500 content items · ~250k tasks · ~600k model executions · ~1.2M audit events · ~150k knowledge chunks</td><td>Below this, partitioning is early but harmless. An order of magnitude above moves <code>interaction</code> and <code>task</code> to monthly partitions and forces a read replica for analytics</td></tr>
+      <tr><td class="rid">P4-03<br>External API</td><td><strong>A-08</strong> Internal only; no third party calls our API in v1</td><td>A public contract adds per-consumer rate limits, scoped tokens, a deprecation policy and a published OpenAPI — additive, not a redesign</td></tr>
+      <tr><td class="rid">P4-04<br>Exports</td><td><strong>A-09</strong> Excel primary, PDF for reports, CSV for data</td><td>Configuration</td></tr>
+      <tr class="sev-h"><td class="rid">A-05<br>Residency</td><td>Single EU/UK region</td><td><strong>Still the expensive one.</strong> Per-organisation residency routing must land before production data exists. The column is reserved now so the change stays storage routing rather than a migration on populated tables</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="s1">
+  <div class="sechead"><span class="secnum">01</span><h2>Conventions &amp; Schema Map</h2></div>
+
+  <div class="scroller"><table>
+    <thead><tr><th>Concern</th><th>Decision</th><th>Reasoning</th></tr></thead>
+    <tbody>
+      <tr><td>Primary keys</td><td><code>uuid</code>, UUIDv7, generated application-side</td><td>Time-ordered gives index locality without exposing row counts, and survives future sharding. Sequences leak volume and break under multi-region</td></tr>
+      <tr><td>Organisation key</td><td><code>org_id uuid NOT NULL</code> on every business row</td><td>Row-level security is meaningless without it. No exceptions, including lookup data</td></tr>
+      <tr><td>Timestamps</td><td><code>timestamptz</code>, UTC; org time zone applied at read</td><td>The workbook's hardest debugging class is time-zone confusion; storing local time repeats it</td></tr>
+      <tr><td>Money</td><td><code>numeric(18,4)</code> + <code>currency char(3)</code></td><td>Never floating point</td></tr>
+      <tr><td>Concurrency</td><td><code>row_version</code>, surfaced as an ETag</td><td>Lost-update protection on every mutation</td></tr>
+      <tr><td>Soft delete</td><td><code>deleted_at</code> where records must survive correction</td><td>The workbook's rule: rows are never deleted, corrections are edits</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Two kinds of enumeration, deliberately</h3>
+  <p class="prose"><strong>Business enumerations become lookup tables in <code>config</code></strong> — platforms, objectives, brands, activity types, content types, outcomes, lead segments, organisation types, template codes, funnel stages. They are the workbook's <code>Lists</code> sheet, carrying the attributes it holds beside each value: the platform's area, priority, value rank, country strength and deduplication rule. Foreign keys to these give the platform what the spreadsheet never had — <strong>a value invisible to reporting cannot be selected</strong>, which is the workbook's worst structural defect fixed at schema level.</p>
+  <p class="prose"><strong>State machines become native PostgreSQL enums</strong> — <code>task_state</code>, <code>approval_state</code>, <code>external_action_state</code>, <code>content_status</code>, <code>outreach_state</code>. These are coupled to code, so the migration friction of a native enum is a feature: adding a value should require thinking about who handles it.</p>
+
+  <figure class="figbox">
+    <svg viewBox="0 0 960 470" role="img" aria-label="Seventeen schemas grouped by module. Only six kinds of edge cross module boundaries: actor references, objective and brand tags, approval links, external action links, model execution links, and outbox events.">
+      <defs>
+        <marker id="e1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" fill="currentColor"/></marker>
+        <marker id="e1a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" style="fill:var(--accent)"/></marker>
+      </defs>
+
+      <text x="16" y="18" font-size="10" fill="currentColor" fill-opacity=".6" letter-spacing="1.2">IDENTITY &amp; CONFIGURATION</text>
+      <rect x="16" y="26" width="200" height="58" fill="none" stroke="currentColor"/>
+      <text x="30" y="46" font-size="12" fill="currentColor">identity</text>
+      <text x="30" y="62" font-size="10" fill="currentColor" fill-opacity=".62">organization · actor · role</text>
+      <text x="30" y="76" font-size="10" fill="currentColor" fill-opacity=".62">permission · session</text>
+
+      <rect x="236" y="26" width="200" height="58" fill="none" stroke="currentColor"/>
+      <text x="250" y="46" font-size="12" fill="currentColor">registry</text>
+      <text x="250" y="62" font-size="10" fill="currentColor" fill-opacity=".62">agent_version · prompt_version</text>
+      <text x="250" y="76" font-size="10" fill="currentColor" fill-opacity=".62">tool · grant · evaluation</text>
+
+      <rect x="456" y="26" width="200" height="58" fill="none" stroke="currentColor"/>
+      <text x="470" y="46" font-size="12" fill="currentColor">config</text>
+      <text x="470" y="62" font-size="10" fill="currentColor" fill-opacity=".62">platform · objective · brand</text>
+      <text x="470" y="76" font-size="10" fill="currentColor" fill-opacity=".62">calendar · enums · kill_switch</text>
+
+      <rect x="676" y="26" width="200" height="58" fill="none" stroke="currentColor"/>
+      <text x="690" y="46" font-size="12" fill="currentColor">orchestration</text>
+      <text x="690" y="62" font-size="10" fill="currentColor" fill-opacity=".62">workflow_definition · run</text>
+      <text x="690" y="76" font-size="10" fill="currentColor" fill-opacity=".62">schedule · job_execution</text>
+
+      <text x="16" y="122" font-size="10" fill="currentColor" fill-opacity=".6" letter-spacing="1.2">DOMAIN</text>
+      <rect x="16" y="130" width="200" height="58" fill="none" stroke="currentColor" stroke-width="2"/>
+      <text x="30" y="150" font-size="12" fill="currentColor">worksurface</text>
+      <text x="30" y="166" font-size="10" fill="currentColor" fill-opacity=".62">goal · campaign · brief</text>
+      <text x="30" y="180" font-size="10" fill="currentColor" fill-opacity=".62">task · dependency · daily_plan</text>
+
+      <rect x="236" y="130" width="200" height="58" fill="none" stroke="currentColor" stroke-width="2"/>
+      <text x="250" y="150" font-size="12" fill="currentColor">pipeline</text>
+      <text x="250" y="166" font-size="10" fill="currentColor" fill-opacity=".62">account · contact · lead</text>
+      <text x="250" y="180" font-size="10" fill="currentColor" fill-opacity=".62">outreach_item · partnership</text>
+
+      <rect x="456" y="130" width="200" height="58" fill="none" stroke="currentColor" stroke-width="2"/>
+      <text x="470" y="150" font-size="12" fill="currentColor">content</text>
+      <text x="470" y="166" font-size="10" fill="currentColor" fill-opacity=".62">content_item · version · claim</text>
+      <text x="470" y="180" font-size="10" fill="currentColor" fill-opacity=".62">brief · schedule · template</text>
+
+      <rect x="676" y="130" width="200" height="58" fill="none" stroke="currentColor"/>
+      <text x="690" y="150" font-size="12" fill="currentColor">search</text>
+      <text x="690" y="166" font-size="10" fill="currentColor" fill-opacity=".62">cluster · keyword · opportunity</text>
+      <text x="690" y="180" font-size="10" fill="currentColor" fill-opacity=".62">aeo_audit · verification</text>
+
+      <text x="16" y="226" font-size="10" fill="currentColor" fill-opacity=".6" letter-spacing="1.2">GOVERNANCE &amp; EXECUTION</text>
+      <rect x="16" y="234" width="200" height="58" fill="none" stroke="currentColor"/>
+      <text x="30" y="254" font-size="12" fill="currentColor">policy</text>
+      <text x="30" y="270" font-size="10" fill="currentColor" fill-opacity=".62">policy · compliance_check</text>
+      <text x="30" y="284" font-size="10" fill="currentColor" fill-opacity=".62">suppression · consent</text>
+
+      <rect x="236" y="234" width="200" height="58" fill="none" style="stroke:var(--accent)" stroke-width="2"/>
+      <text x="250" y="254" font-size="12" fill="currentColor">approval</text>
+      <text x="250" y="270" font-size="10" fill="currentColor" fill-opacity=".62">approval_item · rule · edit</text>
+      <text x="250" y="284" font-size="10" style="fill:var(--accent)">four-eyes constraint lives here</text>
+
+      <rect x="456" y="234" width="200" height="58" fill="none" style="stroke:var(--accent)" stroke-width="2"/>
+      <text x="470" y="254" font-size="12" fill="currentColor">integration</text>
+      <text x="470" y="270" font-size="10" fill="currentColor" fill-opacity=".62">connector · credential_ref</text>
+      <text x="470" y="284" font-size="10" style="fill:var(--accent)">external_action · human_work_item</text>
+
+      <rect x="676" y="234" width="200" height="58" fill="none" stroke="currentColor"/>
+      <text x="690" y="254" font-size="12" fill="currentColor">knowledge</text>
+      <text x="690" y="270" font-size="10" fill="currentColor" fill-opacity=".62">document · version · chunk</text>
+      <text x="690" y="284" font-size="10" fill="currentColor" fill-opacity=".62">citation · import_run</text>
+
+      <text x="16" y="330" font-size="10" fill="currentColor" fill-opacity=".6" letter-spacing="1.2">MEASUREMENT &amp; RECORD</text>
+      <rect x="16" y="338" width="200" height="58" fill="none" stroke="currentColor"/>
+      <text x="30" y="358" font-size="12" fill="currentColor">insight</text>
+      <text x="30" y="374" font-size="10" fill="currentColor" fill-opacity=".62">kpi_definition · computation</text>
+      <text x="30" y="388" font-size="10" fill="currentColor" fill-opacity=".62">observation · input_ref · report</text>
+
+      <rect x="236" y="338" width="200" height="58" fill="none" stroke="currentColor"/>
+      <text x="250" y="358" font-size="12" fill="currentColor">ledger</text>
+      <text x="250" y="374" font-size="10" fill="currentColor" fill-opacity=".62">model_execution · budget</text>
+      <text x="250" y="388" font-size="10" fill="currentColor" fill-opacity=".62">cost_line</text>
+
+      <rect x="456" y="338" width="200" height="58" fill="none" stroke="currentColor"/>
+      <text x="470" y="358" font-size="12" fill="currentColor">audit</text>
+      <text x="470" y="374" font-size="10" fill="currentColor" fill-opacity=".62">audit_event (hash-chained)</text>
+      <text x="470" y="388" font-size="10" fill="currentColor" fill-opacity=".62">error_event · notification</text>
+
+      <rect x="676" y="338" width="200" height="58" fill="none" stroke="currentColor"/>
+      <text x="690" y="358" font-size="12" fill="currentColor">messaging · readmodel</text>
+      <text x="690" y="374" font-size="10" fill="currentColor" fill-opacity=".62">outbox · processed</text>
+      <text x="690" y="388" font-size="10" fill="currentColor" fill-opacity=".62">materialised projections</text>
+
+      <rect x="16" y="414" width="860" height="42" fill="none" stroke="currentColor" stroke-opacity=".4" stroke-dasharray="3 4"/>
+      <text x="30" y="431" font-size="10" fill="currentColor" fill-opacity=".72">Only six kinds of edge cross a module boundary:</text>
+      <text x="30" y="446" font-size="10" style="fill:var(--accent)">actor_id → identity.actor · objective_id / brand_id → config · approval_id → approval · external_action_id → integration · model_execution_id → ledger · events → messaging.outbox</text>
+    </svg>
+    <figcaption><b>Figure 1 — Seventeen schemas, six crossing edges.</b> Phase 2 said no module reads another module's tables. This is that rule made physical: every other relationship is contained inside a schema, and the six edges listed at the foot are the complete set of cross-module foreign keys. Two schemas are refinements of Phase 2's module list — <code>registry</code> splits out of <code>identity</code> because agent versions and authentication tables have different lifecycles, and <code>orchestration</code> splits out of <code>worksurface</code> for the same reason. The module boundaries themselves are unchanged.</figcaption>
+  </figure>
+
+  <h3>Row-level security</h3>
+  <div class="codeblk"><div class="cap">enabled and forced on every table carrying org_id</div><pre>ALTER TABLE pipeline.lead ENABLE ROW LEVEL SECURITY;
+ALTER TABLE pipeline.lead FORCE  ROW LEVEL SECURITY;
+
+CREATE POLICY org_isolation ON pipeline.lead
+  USING      (org_id = current_setting('app.org_id', true)::uuid)
+  WITH CHECK (org_id = current_setting('app.org_id', true)::uuid);</pre></div>
+  <p class="prose"><code>FORCE</code> matters: without it the table owner bypasses the policy, and the application's migration role is usually the owner. <code>app.org_id</code> is set per connection from the authenticated principal's claims and <strong>never</strong> from a request body.</p>
+</section>
+
+<section id="s2">
+  <div class="sechead"><span class="secnum">02</span><h2>Invariants as Constraints</h2></div>
+  <div class="prose">
+    <p>This is the point of Phase 4. The workbook's rules have been requirements since Phase 1 and architecture since Phase 2; here they become things the database will not permit. A rule enforced in application code is a rule one bug away from being unenforced.</p>
+    <p>The strongest instrument is the <strong>generated column</strong>. <code>FR-022</code> says the lead score is computed, never written. A generated column makes that literally true — there is no <code>UPDATE</code> that can set it, from any code path, including a mistaken migration.</p>
+  </div>
+
+  <figure class="figbox">
+    <svg viewBox="0 0 940 300" role="img" aria-label="Two agent-supplied ratings feed three generated columns — score, band and funnel stage — which no update statement can write, and five check constraints guard the outreach item that follows.">
+      <defs>
+        <marker id="e2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" fill="currentColor"/></marker>
+        <marker id="e2a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" style="fill:var(--accent)"/></marker>
+      </defs>
+
+      <text x="20" y="18" font-size="10" fill="currentColor" fill-opacity=".6" letter-spacing="1.2">AGENT SUPPLIES — WITH EVIDENCE, OR THE ROW IS INVALID</text>
+      <rect x="20" y="28" width="150" height="40" fill="none" stroke="currentColor"/>
+      <text x="95" y="53" font-size="12" text-anchor="middle" fill="currentColor">icp_fit 1–5</text>
+      <rect x="20" y="78" width="150" height="40" fill="none" stroke="currentColor"/>
+      <text x="95" y="103" font-size="12" text-anchor="middle" fill="currentColor">intent 1–5</text>
+      <rect x="20" y="132" width="150" height="40" fill="none" stroke="currentColor"/>
+      <text x="95" y="150" font-size="11" text-anchor="middle" fill="currentColor">lead_evidence</text>
+      <text x="95" y="164" font-size="10" text-anchor="middle" fill="currentColor" fill-opacity=".62">≥ 1 row required</text>
+
+      <text x="250" y="18" font-size="10" style="fill:var(--accent)" letter-spacing="1.2">DATABASE GENERATES — NO UPDATE CAN WRITE THESE</text>
+      <rect x="250" y="28" width="210" height="40" fill="none" style="stroke:var(--accent)" stroke-width="2"/>
+      <text x="355" y="46" font-size="11" text-anchor="middle" fill="currentColor">score</text>
+      <text x="355" y="60" font-size="10" text-anchor="middle" fill="currentColor" fill-opacity=".68">icp × 12 + intent × 8</text>
+
+      <rect x="250" y="78" width="210" height="40" fill="none" style="stroke:var(--accent)" stroke-width="2"/>
+      <text x="355" y="96" font-size="11" text-anchor="middle" fill="currentColor">band</text>
+      <text x="355" y="110" font-size="10" text-anchor="middle" fill="currentColor" fill-opacity=".68">A ≥80 · B ≥60 · C ≥40 · D</text>
+
+      <rect x="250" y="128" width="210" height="48" fill="none" style="stroke:var(--accent)" stroke-width="2"/>
+      <text x="355" y="147" font-size="11" text-anchor="middle" fill="currentColor">funnel_stage_code</text>
+      <text x="355" y="161" font-size="10" text-anchor="middle" fill="currentColor" fill-opacity=".68">derived from outcome + flags</text>
+      <text x="355" y="172" font-size="9"  text-anchor="middle" fill="currentColor" fill-opacity=".55">nine stages, exactly as the workbook derives them</text>
+
+      <line x1="172" y1="48"  x2="246" y2="48"  style="stroke:var(--accent)" marker-end="url(#e2a)"/>
+      <line x1="172" y1="98"  x2="246" y2="98"  style="stroke:var(--accent)" marker-end="url(#e2a)"/>
+      <line x1="172" y1="152" x2="246" y2="152" stroke="currentColor" stroke-opacity=".5" marker-end="url(#e2)"/>
+
+      <text x="540" y="18" font-size="10" fill="currentColor" fill-opacity=".6" letter-spacing="1.2">OUTREACH ITEM — FIVE RULES, FIVE CONSTRAINTS</text>
+      <rect x="540" y="28" width="380" height="148" fill="none" stroke="currentColor"/>
+      <text x="556" y="50" font-size="11" fill="currentColor">CHECK char_count &lt;= char_limit</text>
+      <text x="556" y="50" font-size="9"  fill="currentColor" fill-opacity="0"> </text>
+      <text x="556" y="66" font-size="9"  fill="currentColor" fill-opacity=".55">200 for notes, 300 for messages — Golden Rule 4</text>
+      <text x="556" y="86" font-size="11" fill="currentColor">CHECK length(personal_line) &gt; 0</text>
+      <text x="556" y="100" font-size="9" fill="currentColor" fill-opacity=".55">no personal line, no send — Golden Rule 3</text>
+      <text x="556" y="120" font-size="11" fill="currentColor">CHECK follow_up_number &lt;= 2</text>
+      <text x="556" y="134" font-size="9" fill="currentColor" fill-opacity=".55">two follow-ups maximum, ever</text>
+      <text x="556" y="154" font-size="11" fill="currentColor">CHECK sent_at IS NULL OR approval_id IS NOT NULL</text>
+      <text x="556" y="168" font-size="9" fill="currentColor" fill-opacity=".55">nothing is sent that was not approved</text>
+
+      <line x1="462" y1="100" x2="536" y2="100" stroke="currentColor" marker-end="url(#e2)"/>
+
+      <rect x="540" y="196" width="380" height="52" fill="none" style="stroke:var(--accent)" stroke-width="2"/>
+      <text x="556" y="216" font-size="11" fill="currentColor">divergence GENERATED AS (sent_text IS DISTINCT FROM approved_text)</text>
+      <text x="556" y="234" font-size="10" style="fill:var(--accent)">an amended message flags itself — the operator cannot forget to</text>
+
+      <rect x="20" y="212" width="440" height="36" fill="none" stroke="currentColor" stroke-opacity=".45" stroke-dasharray="3 4"/>
+      <text x="36" y="234" font-size="10" fill="currentColor" fill-opacity=".72">CHECK converted_at IS NULL OR pci_order_ref IS NOT NULL — unverifiable revenue is not revenue</text>
+
+      <rect x="20" y="260" width="900" height="30" fill="none" stroke="currentColor" stroke-opacity=".45" stroke-dasharray="3 4"/>
+      <text x="36" y="280" font-size="10" fill="currentColor" fill-opacity=".72">CHECK NOT accepted OR connection_sent — the workbook's data-health check, now impossible to violate</text>
+    </svg>
+    <figcaption><b>Figure 2 — The workbook's arithmetic, enforced by the database.</b> The agent supplies two judgements and the evidence for them; everything downstream is generated. A model is never asked to do arithmetic the database can do exactly, and no application bug can write a score that does not follow from its inputs. Seven of the workbook's own rules appear here as constraints rather than as conventions — including the one it currently checks after the fact, by counting.</figcaption>
+  </figure>
+
+  <div class="codeblk"><div class="cap">pipeline.lead — the generated columns</div><pre>score integer GENERATED ALWAYS AS
+  (COALESCE(icp_fit,0) * 12 + COALESCE(intent,0) * 8) STORED,
+
+band text GENERATED ALWAYS AS (
+  CASE WHEN icp_fit IS NULL AND intent IS NULL THEN NULL
+       WHEN COALESCE(icp_fit,0)*12 + COALESCE(intent,0)*8 >= 80 THEN 'A'
+       WHEN COALESCE(icp_fit,0)*12 + COALESCE(intent,0)*8 >= 60 THEN 'B'
+       WHEN COALESCE(icp_fit,0)*12 + COALESCE(intent,0)*8 >= 40 THEN 'C'
+       ELSE 'D' END) STORED,
+
+funnel_stage_code text GENERATED ALWAYS AS (
+  CASE
+    WHEN outcome_code = 'Converted'           THEN '8_won'
+    WHEN outcome_code = 'Application Started' THEN '7_opportunity'
+    WHEN outcome_code = 'Meeting Booked'      THEN '6_meeting'
+    WHEN outcome_code IN ('Interested','Info Requested') THEN '5_interested'
+    WHEN outcome_code IN ('Declined','Not Relevant',
+                          'Do Not Contact / Unsubscribed') THEN '9_closed_lost'
+    WHEN message_sent    THEN '4_contacted'
+    WHEN accepted        THEN '2_engaged'
+    WHEN connection_sent THEN '1_awareness'
+    WHEN COALESCE(icp_fit,0)*12 + COALESCE(intent,0)*8 >= 60 THEN '3_qualified'
+    ELSE '1_awareness'
+  END) STORED,
+
+CONSTRAINT converted_needs_order_ref
+  CHECK (converted_at IS NULL OR pci_order_ref IS NOT NULL),
+CONSTRAINT accepted_needs_request
+  CHECK (NOT accepted OR connection_sent)</pre></div>
+
+  <p class="prose">A generated column must depend only on columns in its own row, so the four outreach facts — <code>connection_sent</code>, <code>accepted</code>, <code>message_sent</code>, <code>outcome_code</code> — are denormalised onto the lead by the aggregate as they occur. That is a deliberate trade: a small amount of duplication buys a derivation that cannot drift from its definition.</p>
+
+  <div class="codeblk"><div class="cap">approval.approval_item — four eyes at the schema level</div><pre>CONSTRAINT four_eyes CHECK (
+  decided_by IS NULL
+  OR (decided_by &lt;&gt; generating_actor_id
+      AND (reviewing_actor_id IS NULL OR decided_by &lt;&gt; reviewing_actor_id))
+)
+-- plus a trigger rejecting any decided_by whose actor_type &lt;&gt; 'human'</pre></div>
+  <p class="prose">Generator, reviewer and approver are three distinct principals, and the constraint refuses any row where they are not. “The AI approved its own work” is not a bug that can occur — it is a row the database will not accept.</p>
+
+  <div class="codeblk"><div class="cap">content.message_template — closing an open item in the workbook itself</div><pre>CONSTRAINT approved_needs_approver
+  CHECK (status &lt;&gt; 'approved'
+         OR (approved_by IS NOT NULL AND approved_at IS NOT NULL))</pre></div>
+  <p class="prose">The workbook's message templates are currently marked Approved with no approver recorded — an open item its own changelog flags. Here that state cannot exist.</p>
+
+  <h3>The ten data-health checks</h3>
+  <p class="prose">Nine become impossible. The tenth cannot be a constraint, because the truth lives in another system.</p>
+  <div class="scroller"><table>
+    <thead><tr><th>Workbook check</th><th>Mechanism</th></tr></thead>
+    <tbody>
+      <tr><td>Unreadable (text) date</td><td><code>timestamptz</code> / <code>date</code> columns, parsed at the API boundary</td></tr>
+      <tr><td>Future-dated rows</td><td><code>CHECK (occurred_at &lt;= now() + interval '1 day')</code> on event-dated columns</td></tr>
+      <tr><td>Accepted without a logged request</td><td><code>CHECK (NOT accepted OR connection_sent)</code></td></tr>
+      <tr><td>Minutes under a name not on the roster</td><td><code>actor_id</code> foreign key to <code>identity.actor</code></td></tr>
+      <tr><td>Published with no date · dated but not published</td><td>One biconditional closes both directions: <code>CHECK ((status IN ('published','repurposed')) = (published_at IS NOT NULL))</code></td></tr>
+      <tr><td>Signed deal with no value</td><td><code>CHECK (contract_signed_at IS NULL OR deal_value IS NOT NULL)</code></td></tr>
+      <tr><td>Duplicate leads</td><td>Partial unique indexes on profile URL and email hash</td></tr>
+      <tr><td>Published content with no platform</td><td><code>platform_id NOT NULL</code></td></tr>
+      <tr><td>Negative values</td><td><code>CHECK (… &gt;= 0)</code> on every quantity, minute and money column</td></tr>
+      <tr class="sev-m"><td><em>Reconciliation against systems of record</em></td><td><strong>Not a constraint</strong> — a continuous job comparing conversions to PCI order references</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="s3">
+  <div class="sechead"><span class="secnum">03</span><h2>Lineage &amp; Audit</h2></div>
+  <p class="prose">“Every KPI exposes lineage” has been a requirement since Phase 1 and a principle since Phase 3. It is a table.</p>
+
+  <figure class="figbox">
+    <svg viewBox="0 0 900 210" role="img" aria-label="A KPI observation references a computation, which records the formula version and the source freshness, and links to every contributing source row through an input reference table.">
+      <defs><marker id="e3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" fill="currentColor"/></marker></defs>
+      <rect x="20" y="70" width="180" height="52" fill="none" style="stroke:var(--accent)" stroke-width="2"/>
+      <text x="110" y="92" font-size="12" text-anchor="middle" fill="currentColor">kpi_observation</text>
+      <text x="110" y="108" font-size="10" text-anchor="middle" fill="currentColor" fill-opacity=".62">the number on the screen</text>
+
+      <rect x="260" y="52" width="200" height="88" fill="none" stroke="currentColor"/>
+      <text x="360" y="74" font-size="12" text-anchor="middle" fill="currentColor">kpi_computation</text>
+      <text x="360" y="92" font-size="10" text-anchor="middle" fill="currentColor" fill-opacity=".62">formula_version</text>
+      <text x="360" y="107" font-size="10" text-anchor="middle" fill="currentColor" fill-opacity=".62">window start / end</text>
+      <text x="360" y="122" font-size="10" text-anchor="middle" fill="currentColor" fill-opacity=".62">source_freshness per feed</text>
+
+      <rect x="520" y="70" width="170" height="52" fill="none" stroke="currentColor"/>
+      <text x="605" y="92" font-size="12" text-anchor="middle" fill="currentColor">kpi_input_ref</text>
+      <text x="605" y="108" font-size="10" text-anchor="middle" fill="currentColor" fill-opacity=".62">module · aggregate · id</text>
+
+      <rect x="750" y="34" width="130" height="40" fill="none" stroke="currentColor"/><text x="815" y="59" font-size="11" text-anchor="middle" fill="currentColor">pipeline.lead</text>
+      <rect x="750" y="82" width="130" height="40" fill="none" stroke="currentColor"/><text x="815" y="107" font-size="11" text-anchor="middle" fill="currentColor">content_item</text>
+      <rect x="750" y="130" width="130" height="40" fill="none" stroke="currentColor"/><text x="815" y="155" font-size="11" text-anchor="middle" fill="currentColor">interaction</text>
+
+      <line x1="202" y1="96" x2="256" y2="96" stroke="currentColor" marker-end="url(#e3)"/>
+      <line x1="462" y1="96" x2="516" y2="96" stroke="currentColor" marker-end="url(#e3)"/>
+      <line x1="692" y1="88" x2="746" y2="58"  stroke="currentColor" marker-end="url(#e3)"/>
+      <line x1="692" y1="96" x2="746" y2="102" stroke="currentColor" marker-end="url(#e3)"/>
+      <line x1="692" y1="106" x2="746" y2="146" stroke="currentColor" marker-end="url(#e3)"/>
+
+      <text x="450" y="192" font-size="10" text-anchor="middle" fill="currentColor" fill-opacity=".72">without kpi_input_ref, lineage is a promise rather than a query</text>
+    </svg>
+    <figcaption><b>Figure 3 — Lineage is a table, not a feature.</b> Every displayed number resolves to the formula version that produced it and to the exact rows that fed it. This is also what makes the workbook's worst live defect impossible: KPIs are addressed by stable identifier, and a regression test asserts that every dashboard tile resolves to its intended definition.</figcaption>
+  </figure>
+
+  <div class="codeblk"><div class="cap">audit.audit_event — append-only, hash-chained per organisation</div><pre>CREATE TABLE audit.audit_event (
+  id             uuid NOT NULL,
+  org_id         uuid NOT NULL,
+  seq            bigint NOT NULL,
+  prev_hash      bytea  NOT NULL,          -- chain to the predecessor
+  payload_hash   bytea  NOT NULL,
+  occurred_at    timestamptz NOT NULL DEFAULT now(),
+  actor_id       uuid NOT NULL,
+  actor_type     identity.actor_type NOT NULL,
+  agent_version_id  uuid,
+  prompt_version_id uuid,
+  action         text NOT NULL,
+  entity_type    text NOT NULL,
+  entity_id      uuid,
+  correlation_id uuid NOT NULL,
+  risk_level     text,
+  result         text NOT NULL,
+  cost_amount    numeric(18,6),
+  payload        jsonb NOT NULL,
+  PRIMARY KEY (id, occurred_at),
+  UNIQUE (org_id, seq, occurred_at)
+) PARTITION BY RANGE (occurred_at);
+
+REVOKE UPDATE, DELETE ON audit.audit_event FROM app_role;</pre></div>
+  <p class="prose">The <code>REVOKE</code> is the important line. Tamper-evidence from the hash chain is worth little if the application role can rewrite history; here it cannot, and a daily anchor written to object storage makes any gap detectable.</p>
+</section>
+
+<section id="s4">
+  <div class="sechead"><span class="secnum">04</span><h2>Indexes &amp; Partitioning</h2></div>
+  <div class="codeblk"><pre>CREATE INDEX lead_stage_idx      ON pipeline.lead (org_id, funnel_stage_code, updated_at DESC);
+CREATE INDEX lead_band_score_idx ON pipeline.lead (org_id, band, score DESC)
+  WHERE qualified AND declined_at IS NULL;
+CREATE INDEX outreach_followup_idx ON pipeline.outreach_item (org_id, sent_at)
+  WHERE state IN ('awaiting_reply','follow_up_1');
+CREATE INDEX approval_queue_idx  ON approval.approval_item (org_id, state, expires_at)
+  WHERE state = 'pending_human';
+CREATE INDEX content_pub_idx     ON content.content_item (org_id, status, published_at DESC);
+CREATE INDEX task_queue_idx      ON worksurface.task (org_id, state, priority, scheduled_at);
+CREATE INDEX audit_corr_idx      ON audit.audit_event (org_id, correlation_id);
+CREATE INDEX outbox_unpublished  ON messaging.outbox (occurred_at) WHERE published_at IS NULL;
+CREATE INDEX chunk_ann_idx       ON knowledge.chunk
+  USING hnsw (embedding vector_cosine_ops) WHERE superseded_at IS NULL;</pre></div>
+  <p class="prose">Three of these are <strong>partial</strong>, and deliberately so. The approval queue is only ever queried in one state; the follow-up sweep only cares about two; the outbox relay has exactly one query. A partial index on the state anyone actually asks about is a fraction of the size and stays in memory. The vector index excludes superseded chunks so retrieval never filters them out after the fact.</p>
+
+  <div class="scroller"><table>
+    <caption>Partitioning — monthly, with three months pre-created by a scheduled job</caption>
+    <thead><tr><th>Table</th><th>Key</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td><code>insight.kpi_observation</code></td><td><code>period_start</code></td><td>Queried by period; retention becomes <code>DROP PARTITION</code></td></tr>
+      <tr><td><code>ledger.model_execution</code></td><td><code>created_at</code></td><td>~600k rows a year; cost queries are always time-bounded</td></tr>
+      <tr><td><code>audit.audit_event</code></td><td><code>occurred_at</code></td><td>~1.2M rows a year, append-only, never updated — the ideal partitioning case</td></tr>
+    </tbody>
+  </table></div>
+  <p class="prose">Partitions are created by a scheduled job rather than by migrations, so a deployment gap never causes an insert failure at midnight on the first of the month.</p>
+</section>
+
+<section id="s5">
+  <div class="sechead"><span class="secnum">05</span><h2>Migration Strategy</h2></div>
+  <p class="prose"><strong>No release contains a change that requires the previous release to be down.</strong> Every structural change is expand → migrate → contract, spanning at least two releases.</p>
+  <div class="scroller"><table>
+    <thead><tr><th>Phase</th><th>What ships</th><th>Rule</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Expand</strong></td><td>New column nullable, new table, new index <code>CONCURRENTLY</code></td><td>Old code still works unchanged</td></tr>
+      <tr><td><strong>Migrate</strong></td><td>Idempotent, batched, resumable backfill run as a job — <em>never inside the migration</em></td><td>Batches of ~5,000 rows with bounded lock time</td></tr>
+      <tr><td><strong>Contract</strong></td><td><code>SET NOT NULL</code>; constraints added <code>NOT VALID</code> then <code>VALIDATE</code>; old column dropped</td><td>Only after the release that stopped reading it is live</td></tr>
+    </tbody>
+  </table></div>
+  <ul class="prose">
+    <li>Adding a <code>CHECK</code> constraint takes a strong lock — add it <code>NOT VALID</code>, then <code>VALIDATE CONSTRAINT</code>, which takes a weaker one.</li>
+    <li>Indexes are always built <code>CONCURRENTLY</code>; a failed concurrent build leaves an invalid index the next migration must drop.</li>
+    <li>Enum values can be added but not removed; removal is a new type plus a rewrite, planned across two releases.</li>
+  </ul>
+
+  <div class="note">
+    <span class="lbl">Seed data is not migration data</span>
+    <p>The workbook's content — 133 platforms, 11 objectives, 7 brands, 5 domains, 15 templates, 15 compliance checks, 63 tasks, 7 pillars, 76 keywords, 5,683 briefs, the KPI catalogue — loads through the <strong>governed import path</strong>, not through migration scripts. It is business configuration: it must be diffable, approvable and audited, and a migration script is none of those. Only the enumerations that code depends on structurally ship as migrations.</p>
+  </div>
+
+  <p class="prose"><strong>Rollback.</strong> Every migration declares a down path or is explicitly marked irreversible with a reason, and irreversible migrations require approval before merge. In practice forward-fix is preferred — and the expand/contract discipline is exactly what makes forward-fix possible without downtime.</p>
+</section>
+
+<section id="s6">
+  <div class="sechead"><span class="secnum">06</span><h2>API Architecture</h2></div>
+  <div class="scroller"><table>
+    <thead><tr><th>Concern</th><th>Decision</th></tr></thead>
+    <tbody>
+      <tr><td>Style</td><td>REST over HTTPS, JSON, resource-oriented. <strong>Not GraphQL</strong> — the client is one first-party UI with known screens, and GraphQL would trade a solved problem (typed endpoints per screen) for an unsolved one (per-field authorisation across seven layers)</td></tr>
+      <tr><td>Base &amp; evolution</td><td><code>/api/v1</code>; additive within a major version, breaking changes create <code>v2</code> with a published deprecation window. Clients tolerate unknown fields</td></tr>
+      <tr><td>Contract</td><td>OpenAPI 3.1 generated from server types and checked in; the TypeScript client is generated from it, so contract drift breaks the build rather than production</td></tr>
+      <tr><td>Pagination</td><td>Cursor-based. Offsets are not offered — they drift under concurrent writes and get slow at depth</td></tr>
+      <tr><td>Filtering</td><td>Explicit named parameters per endpoint. <strong>No query language</strong> — an expressive filter grammar becomes an unauthorised query surface</td></tr>
+      <tr><td>Concurrency</td><td><code>ETag</code> from <code>row_version</code>; mutations require <code>If-Match</code>; a missing one is <code>428</code></td></tr>
+      <tr><td>Idempotency</td><td><code>Idempotency-Key</code> required on every <code>POST</code> that creates a record or causes an external effect</td></tr>
+      <tr><td>Correlation</td><td><code>X-Correlation-Id</code> accepted and echoed, flowing into audit, workflow, agent and model records</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Error model — RFC 9457</h3>
+  <div class="codeblk"><pre>{
+  "type":   "https://pciai.org/problems/policy-violation",
+  "title":  "Policy denied this action",
+  "status": 422,
+  "detail": "Outreach text contains award language prohibited by Golden Rule 1.",
+  "instance": "/api/v1/outreach-items/018f…/submit",
+  "correlation_id": "9f2c…",
+  "rule": "policy.no_award_language",
+  "errors": [
+    { "field": "composed_text", "code": "banned_phrase", "message": "'you have been selected'" }
+  ]
+}</pre></div>
+
+  <div class="scroller"><table>
+    <thead><tr><th>Status</th><th>Used for</th><th>Never used for</th></tr></thead>
+    <tbody>
+      <tr><td class="rid">400</td><td>Malformed syntax</td><td>Business-rule failure</td></tr>
+      <tr><td class="rid">403</td><td>Authenticated but not permitted — names the missing permission</td><td>Hiding the existence of a record</td></tr>
+      <tr><td class="rid">404</td><td>Not found <strong>or</strong> not visible to this organisation — deliberately indistinguishable</td><td>—</td></tr>
+      <tr><td class="rid">409</td><td>State conflict, e.g. approving an already-decided item</td><td>Optimistic-concurrency failure</td></tr>
+      <tr><td class="rid">412</td><td><code>If-Match</code> mismatch — someone else changed the row</td><td>—</td></tr>
+      <tr class="sev-m"><td class="rid">422</td><td><strong>Business rule or policy denial</strong>, with <code>rule</code> naming the exact rule</td><td>Syntax validation</td></tr>
+      <tr class="sev-h"><td class="rid">423</td><td>Locked by emergency stop</td><td>—</td></tr>
+      <tr><td class="rid">428</td><td>Mutation attempted without <code>If-Match</code></td><td>—</td></tr>
+    </tbody>
+  </table></div>
+  <p class="prose">The line between <code>400</code> and <code>422</code> carries weight: a client can retry a <code>400</code> after fixing the payload, but a <code>422</code> means the platform's rules rejected the <em>intent</em> — and the correct response is usually to change the plan, not the JSON.</p>
+
+  <h3>Idempotency, at two levels</h3>
+  <ul class="prose">
+    <li>Same key, same body → the stored response is replayed with <code>Idempotency-Replayed: true</code>.</li>
+    <li>Same key, <strong>different</strong> body → <code>422 type: idempotency-key-reuse</code>. Silently accepting it is how duplicate posts happen.</li>
+    <li>Endpoints causing external effects additionally reserve an <code>external_action</code> row before the connector runs. <strong>The API key protects against duplicate requests; the ledger protects against duplicate effects.</strong> They are not the same problem, and solving only one of them leaves the failure that matters.</li>
+  </ul>
+</section>
+
+<section id="s7">
+  <div class="sechead"><span class="secnum">07</span><h2>Endpoint Contracts</h2></div>
+  <p class="prose">Around seventy endpoints. Full contracts follow for the four where the platform's guarantees actually live; the rest are tabulated in the repository with the same attribute set.</p>
+
+  <div class="ep">
+    <span class="verb">POST</span><span class="route">/api/v1/approvals/{id}/decision</span>
+    <dl>
+      <dt>Purpose</dt><dd>Approve, reject, or request revision — the highest-value contract in the system</dd>
+      <dt>Auth</dt><dd>Session, <strong>human only</strong></dd>
+      <dt>Permission</dt><dd><code>approval.grant</code> to approve; <code>approval.reject</code> to reject or request revision</dd>
+      <dt>Request</dt><dd><code>{ decision: "approve"|"reject"|"request_revision", feedback_code, note }</code> · headers <code>If-Match</code>, <code>Idempotency-Key</code></dd>
+      <dt>Response</dt><dd><code>200 ApprovalItem</code> with new <code>state</code>, <code>decided_by</code>, <code>decided_at</code></dd>
+      <dt>Validation</dt><dd><code>feedback_code</code> <strong>required</strong> for reject and revision, from the fixed set — it is training data for evaluation, so it is not optional. Approval requires <code>state = pending_human</code></dd>
+      <dt>Errors</dt><dd><code>403 type: four-eyes-violation</code> if the principal is an agent, or is the generating or reviewing actor · <code>409</code> already decided · <code>412</code> stale · <code>422 type: approval-expired</code> · <code>423</code> emergency stop engaged</dd>
+      <dt>Idempotency</dt><dd>Required. Replay returns the original decision rather than re-deciding</dd>
+    </dl>
+  </div>
+
+  <div class="ep">
+    <span class="verb">POST</span><span class="route">/api/v1/content-items/{id}/publish</span>
+    <dl>
+      <dt>Purpose</dt><dd>Execute publication of an approved item</dd>
+      <dt>Auth</dt><dd>Session or agent token (<code>PUB</code> principal)</dd>
+      <dt>Permission</dt><dd><code>content.publish</code> <strong>and</strong> an approved <code>approval_id</code> on the item</dd>
+      <dt>Request</dt><dd><code>{ channel_id, scheduled_at }</code> · <code>Idempotency-Key</code> required</dd>
+      <dt>Response</dt><dd><code>202 { external_action_id, state: "reserved" }</code> — publication is asynchronous</dd>
+      <dt>Validation</dt><dd>Approval granted · <strong>canonical rule satisfied for the target channel</strong> · original indexed if this is a syndication · derivative cap not exceeded · connector healthy</dd>
+      <dt>Errors</dt><dd><code>422 rule: policy.canonical_unsupported</code> — a copy of a rankable page cannot go to a channel with no canonical support · <code>422 rule: policy.original_not_indexed</code> · <code>422 rule: policy.derivative_cap</code> · <code>423</code> · <code>503</code></dd>
+      <dt>Idempotency</dt><dd>Required at the API, <strong>and</strong> an external-action reservation keyed on <code>(org, publish, content_id, content_hash)</code> before the connector runs. A timeout after a successful write resolves through reconciliation, never a second publish</dd>
+    </dl>
+  </div>
+
+  <div class="ep">
+    <span class="verb">POST</span><span class="route">/api/v1/send-queue/{work_item_id}/confirm</span>
+    <dl>
+      <dt>Purpose</dt><dd>An operator confirms a message was actually sent</dd>
+      <dt>Auth</dt><dd>Session, <strong>human only</strong></dd>
+      <dt>Permission</dt><dd><code>outreach.confirm_send</code></dd>
+      <dt>Request</dt><dd><code>{ sent_text, sent_at }</code> · <code>Idempotency-Key</code></dd>
+      <dt>Response</dt><dd><code>200 { outreach_item, divergence: true, divergence_effects: ["char_limit_breach"] }</code></dd>
+      <dt>Validation</dt><dd>Work item <code>queued</code>, approval still valid, <code>sent_at</code> not in the future, <code>sent_text</code> re-checked against character limit and banned phrases</dd>
+      <dt>Errors</dt><dd><code>403</code> if the confirming principal is an agent — no agent may confirm a human send · <code>409</code> already confirmed · <code>422</code> approval expired before send</dd>
+      <dt>Idempotency</dt><dd>Required</dd>
+    </dl>
+  </div>
+
+  <div class="ep">
+    <span class="verb">POST</span><span class="route">/internal/v1/tool-requests</span>
+    <dl>
+      <dt>Purpose</dt><dd>The execution gate. The only route by which an agent can affect anything</dd>
+      <dt>Auth</dt><dd>mTLS plus an agent token scoped to one <code>task_id</code></dd>
+      <dt>Request</dt><dd><code>{ tool_key, arguments, task_id, agent_version_id, correlation_id }</code></dd>
+      <dt>Response</dt><dd><code>200 { result }</code> · <code>202 { parked: "awaiting_approval", approval_id }</code> · <code>403 { denied_by: "tool_grant" | "scope_binding" | "policy" }</code></dd>
+      <dt>Validation</dt><dd>The ten gate stages in order: schema · tool grant · scope binding · policy · approval · kill switch · rate limit · idempotency · execution · audit</dd>
+      <dt>Errors</dt><dd>Every denial is terminal and non-retryable, and is written to the audit chain with the matched rule <em>before</em> the response returns</dd>
+      <dt>Idempotency</dt><dd><strong>Derived server-side. The agent does not supply a key</strong> — letting the caller choose the key for an external effect would hand a prompt-injected agent the ability to collide with or evade the ledger</dd>
+    </dl>
+  </div>
+
+  <div class="scroller"><table>
+    <caption>Catalogue — the remainder</caption>
+    <thead><tr><th>Route</th><th>Purpose</th><th>Permission</th><th>Idem.</th></tr></thead>
+    <tbody>
+      <tr><td><code>GET /approvals</code></td><td>Queue grouped by expiry, risk, type, with throughput</td><td><code>approval.read</code></td><td>—</td></tr>
+      <tr><td><code>POST /outreach-items</code></td><td>Compose from an approved template</td><td><code>outreach.compose</code></td><td>required</td></tr>
+      <tr><td><code>POST /send-queue/{id}/report-warning</code></td><td><strong>Pauses the channel for the day</strong> and notifies the manager</td><td><code>outreach.report_warning</code></td><td>required</td></tr>
+      <tr><td><code>POST /leads</code></td><td>Create a qualified lead; <code>409 type: duplicate-lead</code> returns the existing record and its outcome rather than creating</td><td><code>lead.create</code></td><td>required</td></tr>
+      <tr><td><code>PATCH /leads/{id}/qualification</code></td><td>Change ratings; requires evidence per changed rating; score recomputes by generation</td><td><code>lead.qualify</code></td><td>—</td></tr>
+      <tr><td><code>POST /leads/{id}/decline</code></td><td>Writes a <strong>permanent</strong> suppression entry</td><td><code>lead.decline</code></td><td>required</td></tr>
+      <tr><td><code>GET /kpis/{code}/lineage</code></td><td>Source → observation → transformation → formula version → value, with links to contributing rows</td><td><code>analytics.read</code></td><td>—</td></tr>
+      <tr><td><code>POST /agent-versions/{id}/promote</code></td><td>Production requires Owner and a non-regressing evaluation; <code>422 rule: evaluation_regression</code> names the criterion and delta</td><td><code>agent.promote</code></td><td>required</td></tr>
+      <tr><td><code>GET /schedules</code></td><td>Jobs with <strong>both</strong> <code>intended_at</code> and <code>actual_at</code></td><td><code>schedule.read</code></td><td>—</td></tr>
+      <tr><td><code>POST /knowledge/imports/{id}/decision</code></td><td>Approve or reject <strong>per change group</strong>; partial imports are never applied</td><td><code>import.approve</code></td><td>required</td></tr>
+      <tr><td><code>POST /system/emergency-stop</code></td><td>Engage — scope all writes, channel, workflow or agent</td><td><code>system.emergency_stop</code></td><td>required</td></tr>
+      <tr><td><code>DELETE /system/emergency-stop</code></td><td>Release</td><td><strong>Owner only</strong></td><td>—</td></tr>
+      <tr><td><code>POST /errors/{id}/retry</code></td><td>Retry — <strong>absent</strong> from <code>_actions</code> when the retry taxonomy forbids it</td><td><code>error.retry</code></td><td>required</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="s8">
+  <div class="sechead"><span class="secnum">08</span><h2>Authentication &amp; Authorisation</h2></div>
+
+  <div class="scroller"><table>
+    <thead><tr><th>Principal</th><th>Credential</th><th>Lifetime</th></tr></thead>
+    <tbody>
+      <tr><td>Human</td><td>OIDC authorisation-code + PKCE</td><td>Access 15 min; refresh 8 h with rotation and reuse detection</td></tr>
+      <tr><td><strong>Agent</strong></td><td>Internal token bound to <code>(agent_version_id, task_id)</code></td><td>The activity timeout, max 15 min. Never leaves the internal network; carries no external credential</td></tr>
+      <tr><td>Service</td><td>mTLS workload identity + service token</td><td>Platform-rotated, one per connector</td></tr>
+      <tr><td>Webhook sender</td><td>Per-connector signature with timestamp and replay window</td><td>No session created</td></tr>
+    </tbody>
+  </table></div>
+  <p class="prose"><strong>The agent token is the mechanism behind scope binding.</strong> Because it is minted per task and carries the task id, the gate can verify that every entity a tool request references lies inside that task's scope graph — without trusting anything the model asserted. An agent prompt-injected into requesting an action against an unrelated entity fails there, before policy, because the token cannot address it.</p>
+
+  <div class="scroller"><table>
+    <caption>Role matrix — three deliberate asymmetries</caption>
+    <thead><tr><th>Permission group</th><th>Owner</th><th>Admin</th><th>Manager</th><th>Operator</th><th>Closer</th><th>Analyst</th><th>Compliance</th></tr></thead>
+    <tbody>
+      <tr><td>Read operational data</td><td>●</td><td>●</td><td>●</td><td>own</td><td>own</td><td>●</td><td>●</td></tr>
+      <tr><td>Content create / draft / QA</td><td>●</td><td>●</td><td>●</td><td>●</td><td>—</td><td>—</td><td>—</td></tr>
+      <tr><td>Content publish</td><td>●</td><td>●</td><td>●</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+      <tr><td>Outreach compose / submit</td><td>●</td><td>●</td><td>●</td><td>●</td><td>—</td><td>—</td><td>—</td></tr>
+      <tr><td>Outreach confirm send</td><td>●</td><td>—</td><td>●</td><td>●</td><td>—</td><td>—</td><td>—</td></tr>
+      <tr class="sev-h"><td><strong>Approval grant</strong></td><td>●</td><td><strong>—</strong></td><td>●</td><td>—</td><td>—</td><td>—</td><td><strong>—</strong></td></tr>
+      <tr><td>Approval reject</td><td>●</td><td>—</td><td>●</td><td>—</td><td>—</td><td>—</td><td>●</td></tr>
+      <tr><td>Agent / workflow edit</td><td>●</td><td>●</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+      <tr><td>Agent promote to production</td><td>●</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+      <tr><td>Budgets and policies</td><td>●</td><td>●</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+      <tr><td>Emergency stop engage</td><td>●</td><td>●</td><td>●</td><td>—</td><td>—</td><td>—</td><td>●</td></tr>
+      <tr class="sev-h"><td><strong>Emergency stop release</strong></td><td>●</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+      <tr><td><code>hr.read</code> (Employee Score)</td><td>●</td><td>—</td><td>●</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+    </tbody>
+  </table></div>
+  <ul class="prose">
+    <li><strong>Admin cannot approve.</strong> Administering the system and authorising its outward actions are different duties.</li>
+    <li><strong>Compliance can reject but never approve.</strong> A safety role that could also authorise is not a safety role.</li>
+    <li><strong>Only the Owner can release an emergency stop</strong>, though several roles can engage one. Stopping should be easy; restarting should not.</li>
+  </ul>
+  <p class="prose"><strong>No agent principal holds any permission in this matrix.</strong> Agent capability comes solely from <code>registry.agent_tool_grant</code>, and every tool maps to a permission the <em>platform</em> holds on the agent's behalf during execution. That is why an agent can publish content but can never approve it: no grant maps to <code>approval.grant</code>, and a trigger additionally rejects any <code>decided_by</code> whose actor type is not human.</p>
+</section>
+
+<section id="s9">
+  <div class="sechead"><span class="secnum">09</span><h2>Events &amp; Webhooks</h2></div>
+
+  <div class="codeblk"><div class="cap">event envelope</div><pre>{
+  "event_id":       "018f2c…",
+  "event_type":     "ContentPublished",
+  "event_version":  1,
+  "org_id":         "018e…",
+  "occurred_at":    "2026-08-18T11:22:04.117Z",
+  "correlation_id": "9f2c…",
+  "causation_id":   "018f2b…",
+  "actor":          { "id": "018a…", "type": "agent", "agent_version_id": "018c…" },
+  "payload":        { }
+}</pre></div>
+  <p class="prose">Consumers tolerate unknown fields. <code>event_version</code> increments only for breaking payload changes, and both versions publish for one release. <code>causation_id</code> names the event or command that produced this one — which is what makes a causal chain reconstructable rather than inferred.</p>
+
+  <div class="scroller"><table>
+    <caption>Twenty-three domain events — the ones whose payload carries a guarantee</caption>
+    <thead><tr><th>Event</th><th>Payload essentials</th><th>Notable consumer</th></tr></thead>
+    <tbody>
+      <tr><td><code>TaskFailed</code></td><td>reason, <strong>ceiling_breached</strong>, retryable</td><td>Errors, notifications</td></tr>
+      <tr><td><code>ResearchCompleted</code></td><td>evidence[] with claim, source, <strong>retrieved_at, published_at</strong></td><td>Pipeline, knowledge</td></tr>
+      <tr><td><code>QARejected</code></td><td>criteria_failed[], feedback_code</td><td>Writer, evaluation set</td></tr>
+      <tr><td><code>ApprovalExpired</code></td><td>disposition: <code>cancel</code> or <code>regenerate</code></td><td>Originating workflow</td></tr>
+      <tr><td><code>ContentPublished</code></td><td>published_url, provider_ref, external_action_id</td><td>Analytics at +1d, +7d, +30d</td></tr>
+      <tr><td><code>LeadQualified</code></td><td>icp_fit, intent, score, band, <strong>evidence_count</strong></td><td>Outreach, dashboards</td></tr>
+      <tr class="sev-m"><td><code>HumanActionConfirmed</code></td><td>work_item_id, <strong>sent_at</strong>, divergence</td><td><strong>Starts the day-4 and day-10 follow-up timers</strong></td></tr>
+      <tr><td><code>KpiThresholdBreached</code></td><td>kpi_code, value, threshold, severity, computation_id</td><td>Orchestrator, notifications</td></tr>
+      <tr><td><code>BudgetThresholdReached</code></td><td>scope, spent, limit, <strong>action_taken</strong></td><td>Model gateway</td></tr>
+      <tr><td><code>PolicyViolationRaised</code></td><td>rule, subject_ref, actor_id, denied_action</td><td>Audit, security alerts</td></tr>
+    </tbody>
+  </table></div>
+  <p class="prose"><code>HumanActionConfirmed</code> deserves the emphasis: anchoring the follow-up timers to this event rather than to record creation is the fix for the defect the workbook found in itself. Delivery is at-least-once, ordered per aggregate, idempotent at the consumer. <strong>No consumer may assume global ordering</strong>, and none needs to.</p>
+
+  <h3>Inbound webhooks</h3>
+  <div class="codeblk"><pre>receive → verify signature and timestamp window
+        → persist raw body to object storage
+        → INSERT webhook_event  (unique on org + connector + provider_event_id)
+        → 200 within 500 ms
+        → enqueue normalisation asynchronously</pre></div>
+  <p class="prose">Five properties, each earning its place: signature verified <em>before</em> anything is persisted, so a replayed event never enters the system; the raw body kept, so a normalisation bug found three weeks later can be replayed against the original; deduplicated on the provider's event id, because at-least-once delivery is the norm; acknowledged fast, with no AI work inside the handler; and processed through the same queue classes as everything else, so a webhook flood cannot starve interactive work.</p>
+  <p class="prose">Outbound webhooks are not in v1 scope, but the contract is reserved now — HMAC-SHA256 over the raw body with a timestamped signature header, exponential retry over 24 hours, per-subscription dead-lettering — so adding it later is additive rather than a redesign.</p>
+</section>
+
+<section id="s10">
+  <div class="sechead"><span class="secnum">10</span><h2>Queues, Caching &amp; Vectors</h2></div>
+
+  <div class="scroller"><table>
+    <caption>Six queue classes as separate Temporal task queues — separation, not priority numbers, is what prevents starvation</caption>
+    <thead><tr><th>Queue</th><th>Carries</th><th>Concurrency</th><th>Rationale</th></tr></thead>
+    <tbody>
+      <tr><td><code>critical</code></td><td>Emergency stop propagation, kill-switch checks, security alerts</td><td class="num">8</td><td>Must never queue behind anything</td></tr>
+      <tr><td><code>standard</code></td><td>Planning, drafting, QA, compliance, scoring</td><td class="num">16</td><td>The bulk of the work</td></tr>
+      <tr><td><code>research</code></td><td>Web research, competitor scans, answer-engine audits</td><td class="num">6</td><td>Slow and bursty; isolating it stops one 90-second fetch blocking a draft</td></tr>
+      <tr class="sev-m"><td><code>external-write</code></td><td>Publishing, sending, CRM writes</td><td class="num">4</td><td><strong>Deliberately narrow.</strong> External writes are rate-limited by the provider; more concurrency buys nothing but 429s</td></tr>
+      <tr><td><code>approval-dependent</code></td><td>Work resuming after a human decision</td><td class="num">8</td><td>Bursty — a manager clearing twelve approvals should not stall the standard queue</td></tr>
+      <tr><td><code>retry</code></td><td>Backoff re-attempts</td><td class="num">4</td><td>Isolated so a failing integration cannot consume the standard pool</td></tr>
+    </tbody>
+  </table></div>
+  <p class="prose">Workflow <em>timers</em> — the day-4 and day-10 follow-ups, approval expiry, the 30-day indexation gate — are Temporal timers, not queue entries. They cost nothing while waiting and survive restarts, which is precisely why the workflow engine exists. When <code>external-write</code> depth exceeds its threshold the platform slows <em>upstream preparation</em> rather than accumulating approved work that cannot be executed; the alternative is a queue of approvals that expire before they are reached.</p>
+
+  <h3>Caching</h3>
+  <p class="prose"><strong>The governing rule: cache keys embed a version, so invalidation is unnecessary.</strong> A key like <code>agentver:{agent_version_id}</code> addresses immutable content — a new version is a new key, and the old entry expires on its own. Most cache bugs come from invalidation logic, so the design removes the need for it wherever possible.</p>
+  <div class="scroller"><table>
+    <thead><tr><th>Cached</th><th>TTL</th><th>Invalidation</th></tr></thead>
+    <tbody>
+      <tr><td>Agent version + grants · prompt version</td><td>1 h</td><td>None needed — immutable by key</td></tr>
+      <tr><td>Org config · enumerations</td><td>1–6 h</td><td>Version bump on write</td></tr>
+      <tr><td>Connector health</td><td>30 s</td><td>Pub/sub on state change</td></tr>
+      <tr><td>KPI read models</td><td>5 min</td><td>Event-driven refresh</td></tr>
+      <tr><td>Idempotency guard · rate-limit buckets</td><td>24 h · window</td><td>Expiry only</td></tr>
+      <tr class="sev-h"><td><strong>Never cached:</strong> approval state, external-action state, suppression entries</td><td>—</td><td>Each is a decision point where a stale read causes a real-world error — publishing something whose approval was withdrawn, sending twice, or contacting someone who declined</td></tr>
+    </tbody>
+  </table></div>
+  <div class="note warn">
+    <span class="lbl">The kill switch — a deliberate exception</span>
+    <p>It is checked on every tool call, so a database read per call is wasteful — but a stale <em>off</em> value is the dangerous direction. So: Redis-backed with pub/sub invalidation and a <strong>two-second</strong> maximum staleness, <strong>plus an unconditional database read immediately before connector execution</strong>. Cheap in the common path, correct in the path that matters.</p>
+  </div>
+
+  <h3>Vector storage</h3>
+  <div class="scroller"><table>
+    <thead><tr><th>Source</th><th>Chunking strategy</th></tr></thead>
+    <tbody>
+      <tr><td>Prose documents</td><td>Structure-aware: split at headings, then 600–900 tokens with 100-token overlap, never mid-sentence</td></tr>
+      <tr class="sev-m"><td><strong>Spreadsheets</strong></td><td><strong>One chunk per logical row group</strong>, carrying the header as context. A 5,683-row brief bank chunked by token count produces fragments that mean nothing; chunked by row it produces 5,683 individually retrievable briefs</td></tr>
+      <tr><td>Presentations</td><td>One chunk per slide, speaker notes appended</td></tr>
+      <tr><td>Policies and playbooks</td><td>One chunk per numbered technique or rule, so retrieval returns a complete rule rather than half of one</td></tr>
+    </tbody>
+  </table></div>
+  <div class="codeblk"><pre>filter (org_id via RLS · classification vs agent scope · document ACL · not superseded)
+  → ANN search over the surviving set
+  → optional rerank of the top 30
+  → return top k with citations {document_id, document_version_id, chunk_id, ordinal}</pre></div>
+  <p class="prose"><strong>Filter before ANN, never after.</strong> Retrieving fifty neighbours and discarding the ones the agent may not see silently degrades recall — and leaks the existence of restricted material through result counts.</p>
+  <p class="prose"><strong>Embedding model changes are additive, never in place.</strong> <code>embedding_model_key</code> is stored per chunk; changing models means new rows under a new key and a second index, then a cutover. Re-embedding in place makes the index temporarily incoherent, with old and new vectors sharing one space, and there is no way to detect that from the results.</p>
+  <p class="prose">A second embedding serves a different purpose entirely: <code>content_item.embedding</code> powers near-duplicate detection before drafting — one of the three controls standing between the 5,683-brief bank and the thin-content failure mode the workbook itself warns about.</p>
+</section>
+
+<section id="s11">
+  <div class="sechead"><span class="secnum">A</span><h2>Phase 5 Prerequisites</h2></div>
+  <p class="prose">Phase 5 is agent design: for each of the twenty-four agents, the system prompt, role, objectives, input and output contracts, tools and permissions, knowledge and memory access, model requirements, execution budget, schedule, triggers, workflow, approval, retry, failure and escalation rules, evaluation criteria and test cases.</p>
+  <div class="scroller"><table>
+    <thead><tr><th>ID</th><th>Needed</th><th>Why</th><th>Default if not provided</th></tr></thead>
+    <tbody>
+      <tr class="sev-h"><td class="rid">P5-01</td><td>Approval of this schema and API, or amendments</td><td>Output contracts are the schema's write surface</td><td>—</td></tr>
+      <tr class="sev-h"><td class="rid">P5-02</td><td><strong>The brand system content</strong> — voice, prohibited terminology, positioning, approved claims, proof points, CTA library</td><td>Every content and outreach agent retrieves this rather than embedding it in a prompt. Without it, prompts get written against guesses and then rewritten</td><td>Extracted from the workbook's Message Bank, Golden Rules and Playbook — thinner than a real brand system, and it will show in the output</td></tr>
+      <tr class="sev-m"><td class="rid">P5-03</td><td>Whether PCI has worked examples of good and bad output — approved posts, rejected drafts, real replies</td><td>Evaluation sets built from real examples beat synthetic ones by a wide margin</td><td>Synthetic evaluation cases derived from the workbook's criteria; replaced as real examples accumulate</td></tr>
+      <tr class="sev-m"><td class="rid">P5-04</td><td>Fee positions and approved claims (still open from Phase 1)</td><td>Three agents cannot be given a complete prompt without them; the approval gate blocks the output anyway</td><td>Agents instructed to escalate rather than state — correct, but it makes a human answer every fee question</td></tr>
+    </tbody>
+  </table></div>
+  <p class="prose">The five original blockers remain open. <strong>Region and residency is now the one with a deadline attached</strong>: this phase defines the schema, the next phases fill it, and per-organisation residency routing is materially cheaper to add before there is data than after.</p>
+</section>
+
+<footer>
+  <p><strong>Phase 4 ends here.</strong> This is the schema and contract <em>design</em>: DDL as specification. Versioned migration files, application code, generated clients and tests are produced in the build phase, not here. On approval, Phase 5 delivers the implementation specification for all twenty-four agents.</p>
+  <p>Full documents in the repository under <code>docs/</code> — data model and schema, API architecture and endpoint contracts, authentication, authorisation, events and webhooks, and queue, caching and vector-storage architecture.</p>
+</footer>
+
+</div>
+</main>
+</div>
+
+<script>
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('.navlist a'));
+  var map = {};
+  links.forEach(function(a){ map[a.getAttribute('href').slice(1)] = a; });
+  var sections = Array.prototype.slice.call(document.querySelectorAll('section[id]'));
+  if(!('IntersectionObserver' in window)) return;
+  var visible = {};
+  var obs = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ visible[e.target.id] = e.isIntersecting ? e.intersectionRatio : 0; });
+    var best=null, bestVal=0;
+    Object.keys(visible).forEach(function(id){ if(visible[id] > bestVal){ bestVal = visible[id]; best = id; } });
+    links.forEach(function(a){ a.removeAttribute('aria-current'); });
+    if(best && map[best]) map[best].setAttribute('aria-current','true');
+  }, {rootMargin:'-10% 0px -70% 0px', threshold:[0,0.05,0.25,0.5,1]});
+  sections.forEach(function(s){ obs.observe(s); });
+})();
+</script>
